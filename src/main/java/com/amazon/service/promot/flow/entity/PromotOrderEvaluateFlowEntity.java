@@ -34,42 +34,42 @@ public class PromotOrderEvaluateFlowEntity extends IdEntity implements Serializa
     private String asinId;
 
     /**
-     *买家ID号
+     * 买家ID号
      */
     private String buyerId;
     /**
-     *亚马逊订单号
+     * 亚马逊订单号
      */
     private String amzOrderId;
     /**
-     *评价内容
+     * 评价内容
      */
     private String reviewContent;
     /**
-     *评级星级
+     * 评级星级
      */
     private Integer reviewStar;
     /**
-     *评价日期
+     * 评价日期
      */
-    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
-    @JSONField(format="yyyy-MM-dd HH:mm:ss")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JSONField(format = "yyyy-MM-dd HH:mm:ss")
     private Date reviewDate;
     /**
-     *投诉 0-无投诉 1 2 3 4 5
+     * 投诉 0-无投诉 1 2 3 4 5
      */
     private Integer complaint;
     /**
-     *创建时间
+     * 创建时间
      */
-    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
-    @JSONField(format="yyyy-MM-dd HH:mm:ss")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JSONField(format = "yyyy-MM-dd HH:mm:ss")
     private Date createTime;
     /**
-     *修改时间
+     * 修改时间
      */
-    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
-    @JSONField(format="yyyy-MM-dd HH:mm:ss")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JSONField(format = "yyyy-MM-dd HH:mm:ss")
     private Date updateTime;
 
 
@@ -126,6 +126,7 @@ public class PromotOrderEvaluateFlowEntity extends IdEntity implements Serializa
     public void setReviewContent(String reviewContent) {
         this.reviewContent = reviewContent;
     }
+
     @Column(name = "reviewStar", nullable = true, length = 11)
     public Integer getReviewStar() {
         return reviewStar;
@@ -135,7 +136,7 @@ public class PromotOrderEvaluateFlowEntity extends IdEntity implements Serializa
         this.reviewStar = reviewStar;
     }
 
-    @Column(name ="reviewDate",nullable=true,length=20)
+    @Column(name = "reviewDate", nullable = true, length = 20)
     public Date getReviewDate() {
         return reviewDate;
     }
@@ -143,7 +144,8 @@ public class PromotOrderEvaluateFlowEntity extends IdEntity implements Serializa
     public void setReviewDate(Date reviewDate) {
         this.reviewDate = reviewDate;
     }
-    @Column(name ="complaint",nullable=true,length=11)
+
+    @Column(name = "complaint", nullable = true, length = 11)
     public Integer getComplaint() {
         return complaint;
     }
@@ -151,7 +153,8 @@ public class PromotOrderEvaluateFlowEntity extends IdEntity implements Serializa
     public void setComplaint(Integer complaint) {
         this.complaint = complaint;
     }
-    @Column(name ="createTime",nullable=true,length=20)
+
+    @Column(name = "createTime", nullable = true, length = 20)
     public Date getCreateTime() {
         return createTime;
     }
@@ -159,7 +162,8 @@ public class PromotOrderEvaluateFlowEntity extends IdEntity implements Serializa
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
     }
-    @Column(name ="updateTime",nullable=true,length=20)
+
+    @Column(name = "updateTime", nullable = true, length = 20)
     public Date getUpdateTime() {
         return updateTime;
     }

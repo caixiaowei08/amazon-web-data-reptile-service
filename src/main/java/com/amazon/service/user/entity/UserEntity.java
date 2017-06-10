@@ -15,7 +15,6 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "amazon_user_info_table")
-@SuppressWarnings("serial")
 public class UserEntity extends IdEntity implements Serializable {
 
     /**
