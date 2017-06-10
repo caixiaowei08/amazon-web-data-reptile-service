@@ -1,0 +1,25 @@
+.app{
+    display: flex;
+    min-height: 100vh;
+    align-items: center;
+    flex-direction:row;
+    background-color: #dbf57d;
+}
+
+.bg{
+    background-image: url("./img_bg/img_bg_1.jpg");
+    background-size: 100% 100%;
+    -moz-background-size: 100% 100%;
+    -webkit-background-size: 100% 100%;
+}
+
+.sign-left{
+    font-family: "open sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    color: #676a6c;
+    font-size: 16px;
+    line-height: 28px;
+}
+
+.login-content{
+    margin: 0px 40px;
+}
