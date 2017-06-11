@@ -21,4 +21,9 @@ public class Constant {
     public static final Integer STATE_N = 2;
 
 
+    /**
+     * 随机验证码
+     */
+    public static final String EMAIL_CODE = "SESSION_NAME_EMAIL_CODE";
+
 }

@@ -1,22 +1,15 @@
-package com.amazon.service.user.entity;
+package com.amazon.service.user.vo;
 
 import com.alibaba.fastjson.annotation.JSONField;
-import org.framework.core.common.entity.IdEntity;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
 import java.io.Serializable;
 import java.util.Date;
 
 /**
- * Created by User on 2017/6/6.
+ * Created by User on 2017/6/11.
  */
-@Entity
-@Table(name = "amazon_user_info_table",uniqueConstraints={@UniqueConstraint(columnNames={"account"})})
-public class UserEntity extends IdEntity implements Serializable {
+public class UserVo implements Serializable{
 
     /**
      * 账号编码 邮箱地址
@@ -26,6 +19,11 @@ public class UserEntity extends IdEntity implements Serializable {
      * 账号密码
      */
     private String pwd;
+
+    /**
+     * 验证码
+     */
+    private String emailCode;
     /**
      * 账户状态 1-激活 2-禁用
      */
@@ -50,7 +48,6 @@ public class UserEntity extends IdEntity implements Serializable {
     @JSONField(format="yyyy-MM-dd HH:mm:ss")
     private Date updateTime;
 
-    @Column(name = "account", nullable = false, length = 100)
     public String getAccount() {
         return account;
     }
@@ -59,7 +56,6 @@ public class UserEntity extends IdEntity implements Serializable {
         this.account = account;
     }
 
-    @Column(name = "pwd", nullable = false, length = 50)
     public String getPwd() {
         return pwd;
     }
@@ -68,7 +64,14 @@ public class UserEntity extends IdEntity implements Serializable {
         this.pwd = pwd;
     }
 
-    @Column(name = "state", nullable = false, length = 11)
+    public String getEmailCode() {
+        return emailCode;
+    }
+
+    public void setEmailCode(String emailCode) {
+        this.emailCode = emailCode;
+    }
+
     public Integer getState() {
         return state;
     }
@@ -77,7 +80,14 @@ public class UserEntity extends IdEntity implements Serializable {
         this.state = state;
     }
 
-    @Column(name ="createTime",nullable=true,length=20)
+    public Date getLoginTime() {
+        return loginTime;
+    }
+
+    public void setLoginTime(Date loginTime) {
+        this.loginTime = loginTime;
+    }
+
     public Date getCreateTime() {
         return createTime;
     }
@@ -86,21 +96,11 @@ public class UserEntity extends IdEntity implements Serializable {
         this.createTime = createTime;
     }
 
-    @Column(name ="updateTime",nullable=true,length=20)
     public Date getUpdateTime() {
         return updateTime;
     }
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
-    }
-
-    @Column(name ="loginTime",nullable=true,length=20)
-    public Date getLoginTime() {
-        return loginTime;
-    }
-
-    public void setLoginTime(Date loginTime) {
-        this.loginTime = loginTime;
     }
 }

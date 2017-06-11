@@ -56,7 +56,7 @@
                             </div>
                             <div class="form-group" style="height: 54px;">
                                 <label for="repassword"
-                                       class="col-sm-3 control-label">密&nbsp;&nbsp;&nbsp;&nbsp;码:</label>
+                                       class="col-sm-3 control-label">再次输入密码:</label>
                                 <div class="col-sm-7">
                                     <input type="password" recheck="pwd" id="repassword" datatype="*"
                                            class="form-control" placeholder="请再次输入密码！"
