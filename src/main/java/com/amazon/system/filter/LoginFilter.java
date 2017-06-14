@@ -18,7 +18,6 @@ public class LoginFilter implements Filter {
     public void init(FilterConfig filterConfig) throws ServletException {
 
     }
-
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest req = (HttpServletRequest) request;
         HttpServletResponse res = (HttpServletResponse) response;
@@ -34,7 +33,6 @@ public class LoginFilter implements Filter {
             chain.doFilter(request, response);
         }
     }
-
     public void destroy() {
 
     }

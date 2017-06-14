@@ -20,10 +20,16 @@ public class Constant {
      */
     public static final Integer STATE_N = 2;
 
-
     /**
      * 随机验证码
      */
     public static final String EMAIL_CODE = "SESSION_NAME_EMAIL_CODE";
+
+    /**
+     * 亚马逊产品模板链接
+     */
+    public static final String AMAZON_URL_PRODUCT = "https://www.amazon.com/JINRI-Negative-Button-Speeds-Settings/dp/#/ref=cm_rdp_product";
+
+
 
 }

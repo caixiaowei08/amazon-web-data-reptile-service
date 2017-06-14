@@ -22,4 +22,7 @@ public interface GlobalService extends BaseService{
 
 
 
+
+
+
 }

@@ -21,4 +21,7 @@ public class MainController extends BaseController{
         return "pages/main/index";
     }
 
+
+
+
 }

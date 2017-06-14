@@ -53,14 +53,14 @@
     <listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
   </listener>
   <!--判断操作是否超时-->
-  <filter>
+<!--  <filter>
     <filter-name>login-filter</filter-name>
     <filter-class>com.amazon.system.filter.LoginFilter</filter-class>
   </filter>
   <filter-mapping>
     <filter-name>login-filter</filter-name>
     <url-pattern>*.do</url-pattern>
-  </filter-mapping>
+  </filter-mapping>-->
   <!--session超时30分钟-->
   <session-config>
     <session-timeout>30</session-timeout>

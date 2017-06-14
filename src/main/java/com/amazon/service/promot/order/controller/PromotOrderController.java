@@ -2,19 +2,27 @@ package com.amazon.service.promot.order.controller;
 
 import com.amazon.service.promot.order.entity.PromotOrderEntity;
 import com.amazon.service.promot.order.service.PromotOrderService;
+import com.amazon.system.Constant;
 import org.framework.core.common.controller.BaseController;
 import org.framework.core.common.model.json.AjaxJson;
 import org.framework.core.utils.BeanUtils;
+import org.framework.core.utils.RegularExpressionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.tinygroup.tinyspider.Spider;
+import org.tinygroup.tinyspider.Watcher;
+import org.tinygroup.tinyspider.impl.SpiderImpl;
+import org.tinygroup.tinyspider.impl.WatcherImpl;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by User on 2017/6/10.
@@ -26,6 +34,36 @@ public class PromotOrderController extends BaseController {
 
     @Autowired
     private PromotOrderService promotOrderService;
+
+    @RequestMapping(params = "goNewPromot")
+    public String login(HttpServletRequest request, HttpServletResponse response) {
+        return "pages/promot/newPromot";
+    }
+
+    @RequestMapping(params = "doDealAsinOrUrl")
+    @ResponseBody
+    public AjaxJson doDealAsinOrUrl(HttpServletRequest request, HttpServletResponse response) {
+        AjaxJson j = new AjaxJson();
+        String asinOrUrl = request.getParameter("asinOrUrl");
+        if (!StringUtils.hasText(asinOrUrl)) {
+            j.setSuccess(AjaxJson.CODE_FAIL);
+            j.setMsg("请输入ASIN或者亚马逊商品主页链接！");
+            return j;
+        }
+        String asin = "";
+        String url = "";
+        if (RegularExpressionUtils.isHttpOrHttps(asinOrUrl)) {
+            int start = asinOrUrl.indexOf("/dp/") + 4;
+            int end = asinOrUrl.indexOf("/ref=");
+            asin = asinOrUrl.substring(start, end);
+            url = asinOrUrl;
+        } else {
+            asin = asinOrUrl;
+            String baseUrl = Constant.AMAZON_URL_PRODUCT;
+            url = baseUrl.replace("#", asinOrUrl);
+        }
+        return j;
+    }
 
     @RequestMapping(params = "doAdd")
     @ResponseBody
@@ -50,12 +88,12 @@ public class PromotOrderController extends BaseController {
         String ids = request.getParameter("ids");
         try {
             if (StringUtils.hasText(ids)) {
-                String [] id_array = ids.split(",");
-                for (int i = 0; i < id_array.length ; i++) {
-                    promotOrderEntity = promotOrderService.find(PromotOrderEntity.class,Integer.parseInt(id_array[i]));
+                String[] id_array = ids.split(",");
+                for (int i = 0; i < id_array.length; i++) {
+                    promotOrderEntity = promotOrderService.find(PromotOrderEntity.class, Integer.parseInt(id_array[i]));
                     promotOrderService.delete(promotOrderEntity);
                 }
-            }else{
+            } else {
                 j.setSuccess(AjaxJson.CODE_FAIL);
                 j.setMsg("请选择需要删除的数据！");
                 return j;
@@ -73,13 +111,13 @@ public class PromotOrderController extends BaseController {
     public AjaxJson doGet(PromotOrderEntity promotOrderEntity, HttpServletRequest request, HttpServletResponse response) {
         AjaxJson j = new AjaxJson();
         Integer id = promotOrderEntity.getId();
-        if(id == null){
+        if (id == null) {
             j.setSuccess(AjaxJson.CODE_FAIL);
             j.setMsg("请选择你需要查看详情的数据！");
             return j;
         }
         PromotOrderEntity promotOrderEntityDb = promotOrderService.find(PromotOrderEntity.class, id);
-        if(promotOrderEntityDb == null){
+        if (promotOrderEntityDb == null) {
             j.setSuccess(AjaxJson.CODE_FAIL);
             j.setMsg("数据不存在！");
             return j;

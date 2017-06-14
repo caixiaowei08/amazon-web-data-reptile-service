@@ -1,6 +1,23 @@
-.main-header{
-    color: #ffffff;
-    padding: 10px 0;
-    background-size: cover;
+.main-container{
+    max-width: 100%;
+    margin: 0 auto;
+    overflow-x: hidden;
+}
+
+.main-content{
+    top: 50px;
+    position: fixed;
+    min-width: 100%;
+    margin: 0 auto;
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+
+.header-section{
     position: relative;
+    padding: 0;
+}
+
+.font-color{
+    color: #b6795f !important;
 }
