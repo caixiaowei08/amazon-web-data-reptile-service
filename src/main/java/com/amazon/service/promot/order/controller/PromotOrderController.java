@@ -2,10 +2,15 @@ package com.amazon.service.promot.order.controller;
 
 import com.amazon.service.promot.order.entity.PromotOrderEntity;
 import com.amazon.service.promot.order.service.PromotOrderService;
+import com.amazon.service.spider.SpiderConstant;
+import com.amazon.service.spider.pojo.AmazonPageInfoPojo;
+import com.amazon.service.spider.service.SpiderService;
 import com.amazon.system.Constant;
+import org.apache.commons.collections.CollectionUtils;
 import org.framework.core.common.controller.BaseController;
 import org.framework.core.common.model.json.AjaxJson;
 import org.framework.core.utils.BeanUtils;
+import org.framework.core.utils.ContextHolderUtils;
 import org.framework.core.utils.RegularExpressionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -13,16 +18,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.tinygroup.tinyspider.Spider;
-import org.tinygroup.tinyspider.Watcher;
-import org.tinygroup.tinyspider.impl.SpiderImpl;
-import org.tinygroup.tinyspider.impl.WatcherImpl;
+
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+
 
 /**
  * Created by User on 2017/6/10.
@@ -34,6 +35,9 @@ public class PromotOrderController extends BaseController {
 
     @Autowired
     private PromotOrderService promotOrderService;
+
+    @Autowired
+    private SpiderService spiderService;
 
     @RequestMapping(params = "goNewPromot")
     public String login(HttpServletRequest request, HttpServletResponse response) {
@@ -62,6 +66,11 @@ public class PromotOrderController extends BaseController {
             String baseUrl = Constant.AMAZON_URL_PRODUCT;
             url = baseUrl.replace("#", asinOrUrl);
         }
+
+      boolean flag  =  spiderService.spiderAmazonPageInfoSaveToHttpSession(url,2);
+        AmazonPageInfoPojo amazonPageInfoPojo = (AmazonPageInfoPojo)ContextHolderUtils.getSession().getAttribute(SpiderConstant.AMAZON_PAGE_INFO_POJO);
+
+
         return j;
     }
 

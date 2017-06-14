@@ -35,7 +35,11 @@
                     <h5>
                         <strong>第一步</strong>:&nbsp;&nbsp;输入亚马逊商品ASIN编码
                     </h5>
-                    <div style="height: 10px;"></div>
+                    <div style="height: 25px;">
+                        <div class="row">
+                              <div id="loading" class="hidden col-lg-6 col-lg-offset-3">爬虫正在抓取网页数据。。。</div>
+                        </div>
+                    </div>
                     <div class="form-group">
                         <div class="input-group">
                             <span class="input-group-addon" id="basic-addon1">ASIN编码：</span>
@@ -95,9 +99,23 @@
             console.log("true");
             return;
         }
+        
+        function beforeSend() {
+            $("#loading").removeClass("hidden");
+            $("#btn_sub").addClass("disabled"); // Disables visually
+            $("#btn_sub").prop("disabled", true); // Disables visually + functionally
+        }
+
+        function SendComplete() {
+            $("#loading").addClass("hidden");
+            $("#btn_sub").removeClass("disabled"); // Disables visually
+            $("#btn_sub").prop("disabled", false); // Disables visually + functionally
+        }
+        
         $.ajax({
             url:"/promotOrderController.do?doDealAsinOrUrl",
             type:'post',
+            beforeSend:beforeSend,
             data:$('#formObj').serialize(),
             success:function(data){
                 if(data.success==="success"){
@@ -111,7 +129,7 @@
                 console.log(errorThrow);
             },
             complete:function () {
-                $("#addAdCarousel").modal("hide");
+                SendComplete();
             },
             statusCode:{
                 404:function(){console.log('not found');},
