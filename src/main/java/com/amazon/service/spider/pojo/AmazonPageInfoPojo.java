@@ -13,6 +13,11 @@ public class AmazonPageInfoPojo implements Serializable{
     private String pageUrl;
 
     /**
+     * ASIN
+     */
+    private String asin;
+
+    /**
      * 产品的标题
      */
     private String productTitle;
@@ -20,12 +25,22 @@ public class AmazonPageInfoPojo implements Serializable{
     /**
      * 产品的价格
      */
-    private String priceblock_saleprice;
+    private String priceblockSaleprice;
+
+    /**
+     * 单价 美元
+     */
+    private String reviewPrice;
 
     /**
      * 店铺名称
      */
     private String brand;
+
+    /**
+     * 商品主图
+     */
+    private String landingImage;
 
     public String getPageUrl() {
         return pageUrl;
@@ -43,12 +58,12 @@ public class AmazonPageInfoPojo implements Serializable{
         this.productTitle = productTitle;
     }
 
-    public String getPriceblock_saleprice() {
-        return priceblock_saleprice;
+    public String getPriceblockSaleprice() {
+        return priceblockSaleprice;
     }
 
-    public void setPriceblock_saleprice(String priceblock_saleprice) {
-        this.priceblock_saleprice = priceblock_saleprice;
+    public void setPriceblockSaleprice(String priceblockSaleprice) {
+        this.priceblockSaleprice = priceblockSaleprice;
     }
 
     public String getBrand() {
@@ -57,5 +72,29 @@ public class AmazonPageInfoPojo implements Serializable{
 
     public void setBrand(String brand) {
         this.brand = brand;
+    }
+
+    public String getAsin() {
+        return asin;
+    }
+
+    public void setAsin(String asin) {
+        this.asin = asin;
+    }
+
+    public String getReviewPrice() {
+        return reviewPrice;
+    }
+
+    public void setReviewPrice(String reviewPrice) {
+        this.reviewPrice = reviewPrice;
+    }
+
+    public String getLandingImage() {
+        return landingImage;
+    }
+
+    public void setLandingImage(String landingImage) {
+        this.landingImage = landingImage;
     }
 }

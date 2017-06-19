@@ -17,6 +17,7 @@ public class AmazonOrderPipeline implements Pipeline {
 
     public void process(ResultItems resultItems, Task task) {
         AmazonPageInfoPojo amazonPageInfoPojo = (AmazonPageInfoPojo)resultItems.get(SpiderConstant.AMAZON_PAGE_INFO_POJO);
+        amazonPageInfoPojo.setLandingImage(amazonPageInfoPojo.getLandingImage().replaceAll("[\\s*|\t|\r|\n]", ""));
         session.setAttribute(SpiderConstant.AMAZON_PAGE_INFO_POJO,amazonPageInfoPojo);
     }
 

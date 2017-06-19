@@ -18,8 +18,9 @@ public class AmazonPageProcessor implements PageProcessor {
         AmazonPageInfoPojo amazonPageInfoPojo = new AmazonPageInfoPojo();
         amazonPageInfoPojo.setPageUrl(page.getRequest().getUrl());
         amazonPageInfoPojo.setProductTitle(page.getHtml().xpath("//span[@id='productTitle']/tidyText()").toString());
-        amazonPageInfoPojo.setPriceblock_saleprice(page.getHtml().xpath("//span[@id='priceblock_saleprice']/tidyText()").toString());
+        amazonPageInfoPojo.setPriceblockSaleprice(page.getHtml().xpath("//span[@class='a-size-medium a-color-price']/tidyText()").toString());
         amazonPageInfoPojo.setBrand(page.getHtml().xpath("//a[@id='brand']/text()").toString());
+        amazonPageInfoPojo.setLandingImage(page.getHtml().xpath("//img[@id='landingImage']/@src").toString());
         page.putField(SpiderConstant.AMAZON_PAGE_INFO_POJO,amazonPageInfoPojo);
     }
 

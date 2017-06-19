@@ -5,7 +5,12 @@ import com.amazon.service.promot.order.service.PromotOrderService;
 import com.amazon.service.spider.SpiderConstant;
 import com.amazon.service.spider.pojo.AmazonPageInfoPojo;
 import com.amazon.service.spider.service.SpiderService;
+import com.amazon.service.user.entity.UserEntity;
 import com.amazon.system.Constant;
+import com.amazon.system.system.bootstrap.hibernate.CriteriaQuery;
+import com.amazon.system.system.bootstrap.json.DataGrid;
+import com.amazon.system.system.bootstrap.json.DataGridReturn;
+import com.amazon.system.system.bootstrap.utils.DatagridJsonUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.framework.core.common.controller.BaseController;
 import org.framework.core.common.model.json.AjaxJson;
@@ -22,6 +27,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.math.BigDecimal;
 import java.util.Date;
 
 
@@ -39,10 +45,45 @@ public class PromotOrderController extends BaseController {
     @Autowired
     private SpiderService spiderService;
 
-    @RequestMapping(params = "goNewPromot")
-    public String login(HttpServletRequest request, HttpServletResponse response) {
-        return "pages/promot/newPromot";
+    @RequestMapping(params = "goNewPromotOne")
+    public String goNewPromotOne(HttpServletRequest request, HttpServletResponse response) {
+        return "pages/promot/newPromotStepOne";
     }
+
+    @RequestMapping(params = "goNewPromotTwo")
+    public String goNewPromotOneTwo(HttpServletRequest request, HttpServletResponse response) {
+        return "pages/promot/newPromotStepTwo";
+    }
+
+    @RequestMapping(params = "dataGrid")
+    public void dataGrid(DataGrid dataGrid,HttpServletRequest request, HttpServletResponse response) {
+        CriteriaQuery criteriaQuery = new CriteriaQuery(PromotOrderEntity.class, dataGrid, request.getParameterMap());
+        try {
+            criteriaQuery.installHqlParams();
+        }catch (Exception e){
+
+        }
+        DataGridReturn dataGridReturn = promotOrderService.getDataGridReturn(criteriaQuery);
+        DatagridJsonUtils.listToObj(dataGridReturn, PromotOrderEntity.class, dataGrid.getField());
+        DatagridJsonUtils.datagrid(response, dataGridReturn);
+    }
+
+    @RequestMapping(params = "doGetPromotOrderTemp")
+    @ResponseBody
+    public AjaxJson doGetPromotOrderTemp(HttpServletRequest request, HttpServletResponse response) {
+        AjaxJson j = new AjaxJson();
+        AmazonPageInfoPojo amazonPageInfoPojo = (AmazonPageInfoPojo) ContextHolderUtils.getSession().getAttribute(SpiderConstant.AMAZON_PAGE_INFO_POJO);
+        if(amazonPageInfoPojo == null){
+            j.setSuccess(AjaxJson.CODE_FAIL);
+            j.setMsg("请回到新建订单第一步，重新进行！");
+            return j;
+        }
+        j.setSuccess(AjaxJson.CODE_SUCCESS);
+        j.setContent(amazonPageInfoPojo);
+        return j;
+    }
+
+
 
     @RequestMapping(params = "doDealAsinOrUrl")
     @ResponseBody
@@ -67,26 +108,59 @@ public class PromotOrderController extends BaseController {
             url = baseUrl.replace("#", asinOrUrl);
         }
 
-      boolean flag  =  spiderService.spiderAmazonPageInfoSaveToHttpSession(url,2);
-        AmazonPageInfoPojo amazonPageInfoPojo = (AmazonPageInfoPojo)ContextHolderUtils.getSession().getAttribute(SpiderConstant.AMAZON_PAGE_INFO_POJO);
-
-
+        boolean flag = spiderService.spiderAmazonPageInfoSaveToHttpSession(url, 2);
+        AmazonPageInfoPojo amazonPageInfoPojo = (AmazonPageInfoPojo) ContextHolderUtils.getSession().getAttribute(SpiderConstant.AMAZON_PAGE_INFO_POJO);
+        if (amazonPageInfoPojo != null
+                && StringUtils.hasText(amazonPageInfoPojo.getProductTitle())
+                && StringUtils.hasText(amazonPageInfoPojo.getPriceblockSaleprice())
+                && StringUtils.hasText(amazonPageInfoPojo.getPageUrl())
+                ) {
+            amazonPageInfoPojo.setAsin(asin);
+            amazonPageInfoPojo.setReviewPrice("$3");
+            ContextHolderUtils.getSession().setAttribute(SpiderConstant.AMAZON_PAGE_INFO_POJO, amazonPageInfoPojo);
+        } else {
+            j.setSuccess(AjaxJson.CODE_FAIL);
+            j.setMsg("ASIN或者亚马逊商品主页链接有误，请确认之后，再尝试！");
+            return j;
+        }
         return j;
     }
 
     @RequestMapping(params = "doAdd")
     @ResponseBody
-    public AjaxJson doAdd(PromotOrderEntity promotOrderEntity, HttpServletRequest request, HttpServletResponse response) {
+    public AjaxJson doAdd(PromotOrderEntity promotOrderEntity,HttpServletRequest request, HttpServletResponse response) {
         AjaxJson j = new AjaxJson();
-        try {
-            promotOrderEntity.setUpdateTime(new Date());
-            promotOrderEntity.setCreateTime(new Date());
-            promotOrderService.save(promotOrderEntity);
-        } catch (Exception e) {
-            e.printStackTrace();
+        AmazonPageInfoPojo amazonPageInfoPojo = (AmazonPageInfoPojo) ContextHolderUtils.getSession().getAttribute(SpiderConstant.AMAZON_PAGE_INFO_POJO);
+        if(amazonPageInfoPojo == null){
             j.setSuccess(AjaxJson.CODE_FAIL);
-            j.setMsg("保存失败！");
+            j.setMsg("请重新建推广活动订单！");
+            return j;
         }
+        UserEntity userEntity = (UserEntity )ContextHolderUtils.getSession().getAttribute(Constant.USER_SESSION_CONSTANTS);
+        if(userEntity == null){
+            j.setSuccess(AjaxJson.CODE_FAIL);
+            j.setMsg("请重新登录！");
+            return j;
+        }
+        promotOrderEntity.setSellerId(userEntity.getId());
+        promotOrderEntity.setAsinId(amazonPageInfoPojo.getAsin());
+        promotOrderEntity.setProductUrl(amazonPageInfoPojo.getPageUrl());
+        promotOrderEntity.setProductTitle(amazonPageInfoPojo.getProductTitle());
+        promotOrderEntity.setBrand(amazonPageInfoPojo.getBrand());
+        promotOrderEntity.setThumbnail(amazonPageInfoPojo.getLandingImage());
+        promotOrderEntity.setState(Constant.STATE_Y);
+        promotOrderEntity.setSalePrice(amazonPageInfoPojo.getPriceblockSaleprice());
+        promotOrderEntity.setAddDate(new Date());
+        promotOrderEntity.setFinishDate(promotOrderEntity.getFinishDate());
+        promotOrderEntity.setReviewPrice(new BigDecimal("0.00"));
+        promotOrderEntity.setGuaranteeFund(new BigDecimal("0.00"));
+        promotOrderEntity.setConsumption(new BigDecimal("0.00"));
+        promotOrderEntity.setNeedReviewNum(promotOrderEntity.getNeedReviewNum());
+        promotOrderEntity.setDayReviewNum(promotOrderEntity.getDayReviewNum());
+        promotOrderEntity.setBuyerNum(0);
+        promotOrderEntity.setCreateTime(new Date());
+        promotOrderEntity.setUpdateTime(new Date());
+        promotOrderService.save(promotOrderEntity);
         return j;
     }
 

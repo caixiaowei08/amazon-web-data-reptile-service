@@ -35,6 +35,26 @@ public class PromotOrderEntity extends IdEntity implements Serializable {
     private String productUrl;
 
     /**
+     *商品标题
+     */
+    private String productTitle;
+
+    /**
+     *商品店家
+     */
+    private String brand;
+
+    /**
+     * 商品缩略图
+     */
+    private String thumbnail;
+
+    /**
+     *商品价格
+     */
+    private String salePrice;
+
+    /**
      * 状态 1-开启  2-关闭
      */
     private Integer state;
@@ -42,15 +62,15 @@ public class PromotOrderEntity extends IdEntity implements Serializable {
     /**
      * 下单日期
      */
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @JSONField(format = "yyyy-MM-dd HH:mm:ss")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @JSONField(format = "yyyy-MM-dd")
     private Date addDate;
 
     /**
      * 结束日期
      */
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @JSONField(format = "yyyy-MM-dd HH:mm:ss")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @JSONField(format = "yyyy-MM-dd")
     private Date finishDate;
 
     /**
@@ -77,6 +97,11 @@ public class PromotOrderEntity extends IdEntity implements Serializable {
      * 已联系到的买家数
      */
     private Integer buyerNum;
+
+    /**
+     * 评价扣款
+     */
+    private BigDecimal reviewPrice;
 
     /**
      * 创建时间
@@ -207,5 +232,49 @@ public class PromotOrderEntity extends IdEntity implements Serializable {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    @Column(name = "brand", nullable = true, length = 100)
+    public String getBrand() {
+        return brand;
+    }
+
+    public void setBrand(String brand) {
+        this.brand = brand;
+    }
+    @Column(name = "thumbnail", nullable = true)
+    public String getThumbnail() {
+        return thumbnail;
+    }
+
+    public void setThumbnail(String thumbnail) {
+        this.thumbnail = thumbnail;
+    }
+
+    @Column(name = "salePrice", nullable = true,length = 50)
+    public String getSalePrice() {
+        return salePrice;
+    }
+
+    public void setSalePrice(String salePrice) {
+        this.salePrice = salePrice;
+    }
+
+    @Column(name = "productTitle", nullable = false)
+    public String getProductTitle() {
+        return productTitle;
+    }
+
+    public void setProductTitle(String productTitle) {
+        this.productTitle = productTitle;
+    }
+
+    @Column(name = "reviewPrice", nullable = false,precision = 50, scale = 4)
+    public BigDecimal getReviewPrice() {
+        return reviewPrice;
+    }
+
+    public void setReviewPrice(BigDecimal reviewPrice) {
+        this.reviewPrice = reviewPrice;
     }
 }

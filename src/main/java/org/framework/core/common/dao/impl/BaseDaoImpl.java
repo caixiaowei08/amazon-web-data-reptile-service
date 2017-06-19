@@ -1,12 +1,19 @@
 package org.framework.core.common.dao.impl;
 
+import com.amazon.system.system.bootstrap.hibernate.CriteriaQuery;
+import com.amazon.system.system.bootstrap.hibernate.SortDirection;
+import com.amazon.system.system.bootstrap.json.DataGrid;
+import com.amazon.system.system.bootstrap.json.DataGridReturn;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.framework.core.common.dao.BaseDao;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Projections;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
@@ -103,5 +110,23 @@ public class BaseDaoImpl implements BaseDao{
     public List getListByCriteriaQuery(DetachedCriteria cq) {
         Criteria criteria = cq.getExecutableCriteria(getSession());
         return criteria.list();
+    }
+
+    public DataGridReturn getDataGridReturn(CriteriaQuery criteriaQuery) {
+        Criteria criteria = criteriaQuery.getDetachedCriteria().getExecutableCriteria(getSession());
+        final int allCounts = ((Long) criteria.setProjection(Projections.rowCount()).uniqueResult()).intValue();
+        DataGrid dataGrid = criteriaQuery.getDataGrid();
+        criteria.setProjection(null);
+        criteria.setResultTransformer(CriteriaSpecification.ROOT_ENTITY);
+        //排序
+        if(SortDirection.asc.equals(dataGrid.getOrder())){
+            criteria.addOrder(Order.asc(dataGrid.getSort()));
+        }else{
+            criteria.addOrder(Order.desc(dataGrid.getSort()));
+        }
+        criteria.setFirstResult(dataGrid.getOffset());
+        criteria.setMaxResults(dataGrid.getLimit());
+        List list = criteria.list();
+        return new DataGridReturn(allCounts,list);
     }
 }

@@ -1,5 +1,7 @@
 package org.framework.core.common.dao;
 
+import com.amazon.system.system.bootstrap.hibernate.CriteriaQuery;
+import com.amazon.system.system.bootstrap.json.DataGridReturn;
 import org.hibernate.criterion.DetachedCriteria;
 
 import java.io.Serializable;
@@ -55,5 +57,13 @@ public interface BaseDao {
      * @return
      */
     public List getListByCriteriaQuery(DetachedCriteria cq);
+
+    /**
+     * 返回easyui datagrid模型
+     *
+     * @param criteriaQuery
+     * @return
+     */
+    public DataGridReturn getDataGridReturn(final CriteriaQuery criteriaQuery);
 
 }

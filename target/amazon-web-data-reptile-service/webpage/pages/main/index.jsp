@@ -36,18 +36,14 @@
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle " data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">我的推广 <span class="caret"></span></a>
                         <ul class="dropdown-menu">
-                            <li><a href="promotOrderController.do?goNewPromot" target="main-content-name">新建推广</a></li>
-                            <li><a href="#">管理推广</a></li>
+                            <li><a href="promotOrderController.do?goNewPromotOne" target="main-content-name">新建推广</a></li>
+                            <li><a href="redirectionController.do?goManagePromot">管理推广</a></li>
                         </ul>
                     </li>
                 </ul>
             </div>
         </div>
     </nav>
-    <div class="main-content">
-        <iframe src=""  id="main-content-id"  name="main-content-name"frameborder="0" scrolling="no" style="height: 100%;width: 100%">
-        </iframe>
-    </div>
 </div>
 </body>
 </html>

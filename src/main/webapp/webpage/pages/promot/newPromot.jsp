@@ -17,6 +17,7 @@
     <script type="text/javascript" src="/webpage/plug-in/bootstrap/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="/webpage/plug-in/bootstrapvalidator/dist/js/bootstrapValidator.min.js"></script>
     <script type="text/javascript" src="/webpage/plug-in/toastr/toastr.min.js"></script>
+    <script type="text/javascript" src="/webpage/plug-in/bootstrap/js/jquery.bootstrap.wizard.min.js"></script>
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
     <script src="http://apps.bdimg.com/libs/html5shiv/3.7/html5shiv.min.js"></script>
@@ -25,116 +26,67 @@
 </head>
 <body>
 <div class="container">
-    <div style="height: 20px;"></div>
-    <div class="panel panel-warning">
-            <div class="panel-heading">
-                <h3 class="panel-title">新建推广活动</h3>
-            </div>
-            <div class="panel-body">
-                <form id="formObj" onsubmit="return doDealAsinOrUrl()">
-                    <h5>
-                        <strong>第一步</strong>:&nbsp;&nbsp;输入亚马逊商品ASIN编码
-                    </h5>
-                    <div style="height: 25px;">
-                        <div class="row">
-                              <div id="loading" class="hidden col-lg-6 col-lg-offset-3">爬虫正在抓取网页数据。。。</div>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="input-group">
-                            <span class="input-group-addon" id="basic-addon1">ASIN编码：</span>
-                            <input type="text" class="form-control" id="asinOrUrl" name="asinOrUrl" placeholder="请输入亚马逊ASIN或者商品主页链接！"
-                                   aria-describedby="basic-addon1">
-                        </div>
-                    </div>
-                </form>
-            </div>
-            <div style="height: 20px;"></div>
-            <div class="panel-footer">
+    <div id="rootwizard">
+        <div class="navbar">
+            <div class="navbar-inner">
                 <div class="container">
-                    <div class="row">
-                        <div class="col-md-2 col-md-offset-8">
-                            <div class="btn-group" role="group">
-                                <button type="button" id="btn_sub" class="btn btn-default">下一步</button>
-                            </div>
-                        </div>
-                    </div>
+                    <ul>
+                        <li><a href="#tab1" data-toggle="tab">First</a></li>
+                        <li><a href="#tab2" data-toggle="tab">Second</a></li>
+                        <li><a href="#tab3" data-toggle="tab">Third</a></li>
+                        <li><a href="#tab4" data-toggle="tab">Forth</a></li>
+                        <li><a href="#tab5" data-toggle="tab">Fifth</a></li>
+                        <li><a href="#tab6" data-toggle="tab">Sixth</a></li>
+                        <li><a href="#tab7" data-toggle="tab">Seventh</a></li>
+                    </ul>
                 </div>
             </div>
+        </div>
+        <div id="bar" class="progress progress-striped active">
+            <div class="progress-bar"></div>
+        </div>
+        <div class="tab-content">
+            <div class="tab-pane" id="tab1">
+                1
+            </div>
+            <div class="tab-pane" id="tab2">
+                2
+            </div>
+            <div class="tab-pane" id="tab3">
+                3
+            </div>
+            <div class="tab-pane" id="tab4">
+                4
+            </div>
+            <div class="tab-pane" id="tab5">
+                5
+            </div>
+            <div class="tab-pane" id="tab6">
+                6
+            </div>
+            <div class="tab-pane" id="tab7">
+                7
+            </div>
+            <ul class="pager wizard">
+                <li class="previous first" style="display:none;"><a href="javascript:;">First</a></li>
+                <li class="previous"><a href="javascript:;">Previous</a></li>
+                <li class="next last" style="display:none;"><a href="javascript:;">Last</a></li>
+                <li class="next"><a href="javascript:;">Next</a></li>
+            </ul>
+        </div>
     </div>
 </div>
 </body>
-</body>
 </html>
 <script>
-    $(function () {
-        $('#formObj').bootstrapValidator({
-            framework: 'bootstrap',
-            icon: {
-                valid: 'glyphicon glyphicon-ok',
-                invalid: 'glyphicon glyphicon-remove',
-                validating: 'glyphicon glyphicon-refresh'
-            },
-            fields: {
-                asinOrUrl: {
-                    validators: {
-                        notEmpty: {
-                            message: '请输入亚马逊ASIN或者商品主页链接！'
-                        }
-                    }
-                }
+    $(document).ready(function () {
+        $('#rootwizard').bootstrapWizard({
+            onTabShow: function (tab, navigation, index) {
+                var $total = navigation.find('li').length;
+                var $current = index + 1;
+                var $percent = ($current / $total) * 100;
+                $('#rootwizard').find('.progress-bar').css({width: $percent + '%'});
             }
         });
     });
-
-    $("#btn_sub").click(function(){
-        $('#formObj').submit();
-    });
-
-    function doDealAsinOrUrl() {
-        var asinOrUrl = $("#asinOrUrl").val();
-        console.log(asinOrUrl);
-
-        if (asinOrUrl === null || asinOrUrl === undefined || asinOrUrl === '') {
-            console.log("true");
-            return;
-        }
-        
-        function beforeSend() {
-            $("#loading").removeClass("hidden");
-            $("#btn_sub").addClass("disabled"); // Disables visually
-            $("#btn_sub").prop("disabled", true); // Disables visually + functionally
-        }
-
-        function SendComplete() {
-            $("#loading").addClass("hidden");
-            $("#btn_sub").removeClass("disabled"); // Disables visually
-            $("#btn_sub").prop("disabled", false); // Disables visually + functionally
-        }
-        
-        $.ajax({
-            url:"/promotOrderController.do?doDealAsinOrUrl",
-            type:'post',
-            beforeSend:beforeSend,
-            data:$('#formObj').serialize(),
-            success:function(data){
-                if(data.success==="success"){
-                    toastr.success("新增成功！");
-                }else{
-                    toastr.error(data.msg);
-                }
-            },
-            error:function(jqxhr,textStatus,errorThrow){
-                toastr.success("服务器异常,请联系管理员！");
-                console.log(errorThrow);
-            },
-            complete:function () {
-                SendComplete();
-            },
-            statusCode:{
-                404:function(){console.log('not found');},
-                500:function(){console.log('error by server');},
-            }
-        });
-    }
 </script>

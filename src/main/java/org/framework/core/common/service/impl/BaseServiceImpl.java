@@ -1,5 +1,7 @@
 package org.framework.core.common.service.impl;
 
+import com.amazon.system.system.bootstrap.hibernate.CriteriaQuery;
+import com.amazon.system.system.bootstrap.json.DataGridReturn;
 import org.framework.core.common.dao.BaseDao;
 import org.framework.core.common.service.BaseService;
 import org.hibernate.criterion.DetachedCriteria;
@@ -42,6 +44,10 @@ public class BaseServiceImpl implements BaseService{
 
     public List getListByCriteriaQuery(DetachedCriteria cq) {
         return baseDao.getListByCriteriaQuery(cq);
+    }
+
+    public DataGridReturn getDataGridReturn(CriteriaQuery criteriaQuery) {
+        return baseDao.getDataGridReturn(criteriaQuery);
     }
 
 
