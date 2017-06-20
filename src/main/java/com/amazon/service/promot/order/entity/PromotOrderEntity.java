@@ -99,6 +99,11 @@ public class PromotOrderEntity extends IdEntity implements Serializable {
     private Integer buyerNum;
 
     /**
+     * 获取评论数
+     */
+    private Integer evaluateNum;
+
+    /**
      * 评价扣款
      */
     private BigDecimal reviewPrice;
@@ -276,5 +281,14 @@ public class PromotOrderEntity extends IdEntity implements Serializable {
 
     public void setReviewPrice(BigDecimal reviewPrice) {
         this.reviewPrice = reviewPrice;
+    }
+
+    @Column(name = "evaluateNum", nullable = false, length = 11)
+    public Integer getEvaluateNum() {
+        return evaluateNum;
+    }
+
+    public void setEvaluateNum(Integer evaluateNum) {
+        this.evaluateNum = evaluateNum;
     }
 }

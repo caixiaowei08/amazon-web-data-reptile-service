@@ -57,6 +57,12 @@
                         </ul>
                     </li>
                     <li><a href="#">我的账户</a></li>
+                    <li>
+                        <a href="/userController.do?doLogOff">
+                            退出
+                            <i class="fa fa-power-off" style="color: red" aria-hidden="true"></i>
+                        </a>
+                    </li>
                 </ul>
             </div>
         </div>

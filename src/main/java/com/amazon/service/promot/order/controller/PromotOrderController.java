@@ -17,6 +17,8 @@ import org.framework.core.common.model.json.AjaxJson;
 import org.framework.core.utils.BeanUtils;
 import org.framework.core.utils.ContextHolderUtils;
 import org.framework.core.utils.RegularExpressionUtils;
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -29,6 +31,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 
 /**
@@ -56,11 +59,11 @@ public class PromotOrderController extends BaseController {
     }
 
     @RequestMapping(params = "dataGrid")
-    public void dataGrid(DataGrid dataGrid,HttpServletRequest request, HttpServletResponse response) {
+    public void dataGrid(DataGrid dataGrid, HttpServletRequest request, HttpServletResponse response) {
         CriteriaQuery criteriaQuery = new CriteriaQuery(PromotOrderEntity.class, dataGrid, request.getParameterMap());
         try {
             criteriaQuery.installHqlParams();
-        }catch (Exception e){
+        } catch (Exception e) {
 
         }
         DataGridReturn dataGridReturn = promotOrderService.getDataGridReturn(criteriaQuery);
@@ -73,7 +76,7 @@ public class PromotOrderController extends BaseController {
     public AjaxJson doGetPromotOrderTemp(HttpServletRequest request, HttpServletResponse response) {
         AjaxJson j = new AjaxJson();
         AmazonPageInfoPojo amazonPageInfoPojo = (AmazonPageInfoPojo) ContextHolderUtils.getSession().getAttribute(SpiderConstant.AMAZON_PAGE_INFO_POJO);
-        if(amazonPageInfoPojo == null){
+        if (amazonPageInfoPojo == null) {
             j.setSuccess(AjaxJson.CODE_FAIL);
             j.setMsg("请回到新建订单第一步，重新进行！");
             return j;
@@ -82,7 +85,6 @@ public class PromotOrderController extends BaseController {
         j.setContent(amazonPageInfoPojo);
         return j;
     }
-
 
 
     @RequestMapping(params = "doDealAsinOrUrl")
@@ -128,18 +130,28 @@ public class PromotOrderController extends BaseController {
 
     @RequestMapping(params = "doAdd")
     @ResponseBody
-    public AjaxJson doAdd(PromotOrderEntity promotOrderEntity,HttpServletRequest request, HttpServletResponse response) {
+    public AjaxJson doAdd(PromotOrderEntity promotOrderEntity, HttpServletRequest request, HttpServletResponse response) {
         AjaxJson j = new AjaxJson();
         AmazonPageInfoPojo amazonPageInfoPojo = (AmazonPageInfoPojo) ContextHolderUtils.getSession().getAttribute(SpiderConstant.AMAZON_PAGE_INFO_POJO);
-        if(amazonPageInfoPojo == null){
+        if (amazonPageInfoPojo == null) {
             j.setSuccess(AjaxJson.CODE_FAIL);
             j.setMsg("请重新建推广活动订单！");
             return j;
         }
-        UserEntity userEntity = (UserEntity )ContextHolderUtils.getSession().getAttribute(Constant.USER_SESSION_CONSTANTS);
-        if(userEntity == null){
+        UserEntity userEntity = (UserEntity) ContextHolderUtils.getSession().getAttribute(Constant.USER_SESSION_CONSTANTS);
+        if (userEntity == null) {
             j.setSuccess(AjaxJson.CODE_FAIL);
             j.setMsg("请重新登录！");
+            return j;
+        }
+        DetachedCriteria promotOrderDetachedCriteria = DetachedCriteria.forClass(PromotOrderEntity.class);
+        promotOrderDetachedCriteria.add(Restrictions.eq("asinId", amazonPageInfoPojo.getAsin()));
+        promotOrderDetachedCriteria.add(Restrictions.eq("sellerId", userEntity.getId()));
+        promotOrderDetachedCriteria.add(Restrictions.eq("state", Constant.STATE_Y));
+        List<PromotOrderEntity> promotOrderEntityList = promotOrderService.getListByCriteriaQuery(promotOrderDetachedCriteria);
+        if (CollectionUtils.isNotEmpty(promotOrderEntityList)) {
+            j.setSuccess(AjaxJson.CODE_FAIL);
+            j.setMsg("不能重复建立ASIN编号相同且处于开启状态的活动！");
             return j;
         }
         promotOrderEntity.setSellerId(userEntity.getId());
@@ -158,6 +170,7 @@ public class PromotOrderController extends BaseController {
         promotOrderEntity.setNeedReviewNum(promotOrderEntity.getNeedReviewNum());
         promotOrderEntity.setDayReviewNum(promotOrderEntity.getDayReviewNum());
         promotOrderEntity.setBuyerNum(0);
+        promotOrderEntity.setEvaluateNum(0);
         promotOrderEntity.setCreateTime(new Date());
         promotOrderEntity.setUpdateTime(new Date());
         promotOrderService.save(promotOrderEntity);

@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="/webpage/plug-in/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css"/>
     <link rel="stylesheet" href="/webpage/pages/manage/managePromot.css"/>
     <link rel="stylesheet" href="/webpage/pages/main/index.css"/>
+    <link rel="stylesheet" href="/webpage/plug-in/toastr/toastr.css"/>
     <script type="text/javascript" src="/webpage/plug-in/jquery/jquery.min.js"></script>
     <script type="text/javascript" src="/webpage/plug-in/bootstrap/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="/webpage/plug-in/bootstrap-table/dist/bootstrap-table.min.js"></script>
@@ -21,6 +22,7 @@
     <script type="text/javascript" src="/webpage/plug-in/bootstrap-table/dist/locale/bootstrap-table-zh-CN.js"></script>
     <script type="text/javascript" src="/webpage/plug-in/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
     <script type="text/javascript" src="/webpage/plug-in/bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js"></script>
+    <script type="text/javascript" src="/webpage/plug-in/toastr/toastr.min.js"></script>
 
 </head>
 <body>
@@ -86,10 +88,10 @@
                             <div class="form-group">
                                 <label class="col-xs-3 control-label amazon-label" for="amazon_state"><nobr>状态</nobr></label>
                                 <div class="col-xs-8">
-                                    <select id="disabledSelect" id="amazon_state" class="form-control">
-                                        <option>--选择--</option>
-                                        <option>开启</option>
-                                        <option>关闭</option>
+                                    <select id="amazon_state" class="form-control">
+                                        <option value="">--选择--</option>
+                                        <option value="1">开启</option>
+                                        <option value="2">关闭</option>
                                     </select>
                                 </div>
                             </div>
@@ -100,20 +102,20 @@
                                 <div class="col-xs-5">
                                     <div class="input-group date form_date" id="addDate_begin" data-date-format="yyyy-mm-dd"
                                          data-link-field="addDate_begin_input" data-link-format="yyyy-mm-dd">
-                                        <input class="form-control" name="addDate_begin" id="addDate_begin_value" size="16" type="text" value="" readonly>
+                                        <input class="form-control" name="addDate_begin" id="addDate_begin_value" size="16" type="text" value="" readonly placeholder="开始时间">
                                         <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
                                         <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                                     </div>
-                                    <input type="hidden" id="addDate_begin_input" value=""/><br/>
+                                    <input type="hidden" id="addDate_begin_input" value=""/>
                                 </div>
                                 <div class="col-xs-5">
                                     <div class="input-group date form_date" id="addDate_end" data-date-format="yyyy-mm-dd"
                                          data-link-field="addDate_end_input" data-link-format="yyyy-mm-dd">
-                                        <input class="form-control" name="addDate_end" id="addDate_end_value" size="16" type="text" value="" readonly>
+                                        <input class="form-control" name="addDate_end" id="addDate_end_value" size="16" type="text" value="" readonly placeholder="结束时间">
                                         <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
                                         <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                                     </div>
-                                    <input type="hidden" id="addDate_end_input" value=""/><br/>
+                                    <input type="hidden" id="addDate_end_input" value=""/>
                                 </div>
                             </div>
                         </div>
@@ -125,7 +127,7 @@
                         <div class="col-sm-4 col-sm-offset-8">
                             <div class="btn-group" role="group">
                                 <%--<button type="button" class="btn btn-default">重置</button>--%>
-                                <button type="button" onclick="doPromotSearch()" class="btn btn-default">查询</button>
+                                <button type="button" onclick="doPromotSearch();" class="btn btn-default" style="width: 104px;">查询</button>
                             </div>
                         </div>
                     </div>

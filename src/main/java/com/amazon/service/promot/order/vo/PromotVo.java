@@ -12,4 +12,6 @@ public class PromotVo implements Serializable{
     private Integer sellerId;
 
 
+
+
 }
