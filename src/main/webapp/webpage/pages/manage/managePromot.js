@@ -2,21 +2,50 @@
  * Created by User on 2017/6/18.
  */
 $(function () {
+    $('#addDate_begin').datetimepicker({
+        weekStart: 1,
+        todayBtn: 1,
+        autoclose: 1,
+        todayHighlight: 1,
+        startView: 2,
+        minView: 2,
+        endDate: new Date(),
+        forceParse: 0
+    }).on('changeDate',function (ev) {
+        var startTime = $("#addDate_begin_value").val();
+        $("#addDate_end").datetimepicker('setStartDate',startTime);
+        $('#addDate_begin').datetimepicker('hide');
+    });
+
+    $('#addDate_end').datetimepicker({
+        weekStart: 1,
+        todayBtn: 1,
+        autoclose: 1,
+        todayHighlight: 1,
+        startView: 2,
+        minView: 2,
+        endDate: new Date(),
+        forceParse: 0
+    }).on('changeDate',function (ev) {
+        var endTime = $("#addDate_end_value").val();
+        $("#addDate_begin").datetimepicker('setEndDate',endTime);
+        $('#addDate_end').datetimepicker('hide');
+    });
+
     $('#promotListTable').bootstrapTable({
         url: "/promotOrderController.do?dataGrid",
         sidePagination: "server",
         dataType: "json",
-        search:true,
+        search:false,
         pageNumber:1,
         pageSize: 20,
         pageList: [10, 20, 30, 50,100],
         pagination: true,
-        searchPlaceholder:"根据ASIN进行搜索！",
         height: tableHeight(),
         clickToSelect: true,//是否启用点击选中行
         uniqueId: "id",
         locale: "zh-CN",
-        showColumns: true,
+        showColumns: false,
         singleSelect: true,
         columns: [[
             {
@@ -115,6 +144,24 @@ $(function () {
     })
 
     function tableHeight() {
-        return $(window).height() - 250;
+        return $(window).height() - 350;
     }
+
+    function searchReset() {
+        $("#userListtb").find(":input").val("");
+        var queryParams = $('#userList').datagrid('options').queryParams;
+        $('#userListtb').find('*').each(function() {
+            queryParams[$(this).attr('name')] = $(this).val();
+        });
+        $('#userList').datagrid({
+            url:"userController.do?datagrid&field=id,userId,userName,phone,state,source,authority,area,updateTime,createTime",
+            pageNumber: 1
+        });
+    }
+    
+    function doPromotSearch() {
+        
+    }
+
+
 })

@@ -28,23 +28,36 @@
     <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
         <div class="container">
             <div class="navbar-header">
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-                    <span class="sr-only">Toggle navigation</span>
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                        data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                    <span class="sr-only">Seller Assistant</span>
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand font-color" href="#">Seller Assistant</a>
+                <a class="navbar-brand font-color" href="/mainController.do?index" target="_parent">Seller Assistant</a>
             </div>
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">
                     <li class="dropdown">
-                        <a href="#" class="dropdown-toggle " data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">我的推广 <span class="caret"></span></a>
+                        <a href="#" class="dropdown-toggle " data-toggle="dropdown" role="button" aria-haspopup="true"
+                           aria-expanded="false">我的推广活动 <span class="caret"></span></a>
                         <ul class="dropdown-menu">
-                            <li><a href="promotOrderController.do?goNewPromotOne" target="main-content-name">新建推广</a></li>
-                            <li><a href="redirectionController.do?goManagePromot">管理推广</a></li>
+                            <li><a href="promotOrderController.do?goNewPromotOne" target="_parent">新建推广活动</a>
+                            </li>
+                            <li><a href="redirectionController.do?goManagePromot" target="_parent">推广活动管理</a></li>
                         </ul>
                     </li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle " data-toggle="dropdown" role="button" aria-haspopup="true"
+                           aria-expanded="false">充值<span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="promotOrderController.do?goNewPromotOne">保证金充值</a></li>
+                            <li><a href="promotOrderController.do?goNewPromotOne">购买会员</a></li>
+                            <li><a href="redirectionController.do?goManagePromot">充值记录</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="#">我的账户</a></li>
                 </ul>
             </div>
         </div>
