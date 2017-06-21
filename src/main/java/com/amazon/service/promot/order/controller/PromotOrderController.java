@@ -58,6 +58,11 @@ public class PromotOrderController extends BaseController {
         return "pages/promot/newPromotStepTwo";
     }
 
+    @RequestMapping(params = "goLookOrderDetail")
+    public String goLookOrderDetail(HttpServletRequest request, HttpServletResponse response) {
+        return "pages/promot/newPromotStepTwo";
+    }
+
     @RequestMapping(params = "dataGrid")
     public void dataGrid(DataGrid dataGrid, HttpServletRequest request, HttpServletResponse response) {
         CriteriaQuery criteriaQuery = new CriteriaQuery(PromotOrderEntity.class, dataGrid, request.getParameterMap());
@@ -177,27 +182,30 @@ public class PromotOrderController extends BaseController {
         return j;
     }
 
-    @RequestMapping(params = "doDel")
+    @RequestMapping(params = "doCloseById")
     @ResponseBody
-    public AjaxJson doDel(PromotOrderEntity promotOrderEntity, HttpServletRequest request) {
+    public AjaxJson doCloseById(PromotOrderEntity promotOrderEntity, HttpServletRequest request) {
         AjaxJson j = new AjaxJson();
-        String ids = request.getParameter("ids");
+        //安全校验
+        UserEntity userEntity = (UserEntity) ContextHolderUtils.getSession().getAttribute(Constant.USER_SESSION_CONSTANTS);
+        if (userEntity == null) {
+            j.setSuccess(AjaxJson.CODE_FAIL);
+            j.setMsg("请重新登录！");
+            return j;
+        }
         try {
-            if (StringUtils.hasText(ids)) {
-                String[] id_array = ids.split(",");
-                for (int i = 0; i < id_array.length; i++) {
-                    promotOrderEntity = promotOrderService.find(PromotOrderEntity.class, Integer.parseInt(id_array[i]));
-                    promotOrderService.delete(promotOrderEntity);
-                }
-            } else {
-                j.setSuccess(AjaxJson.CODE_FAIL);
-                j.setMsg("请选择需要删除的数据！");
-                return j;
+            DetachedCriteria promotOrderDetachedCriteria = DetachedCriteria.forClass(PromotOrderEntity.class);
+            promotOrderDetachedCriteria.add(Restrictions.eq("sellerId", userEntity.getId()));
+            promotOrderDetachedCriteria.add(Restrictions.eq("id", promotOrderEntity.getId()));
+            List<PromotOrderEntity> promotOrderEntityList = promotOrderService.getListByCriteriaQuery(promotOrderDetachedCriteria);
+            if (CollectionUtils.isNotEmpty(promotOrderEntityList)) {
+                PromotOrderEntity promotOrderEntityDb = promotOrderEntityList.get(0);
+                promotOrderEntityDb.setState(Constant.STATE_N);
+                promotOrderService.saveOrUpdate(promotOrderEntityDb);
             }
         } catch (Exception e) {
-            e.printStackTrace();
             j.setSuccess(AjaxJson.CODE_FAIL);
-            j.setMsg("删除失败！");
+            j.setMsg("关闭失败！");
         }
         return j;
     }

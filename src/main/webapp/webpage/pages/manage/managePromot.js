@@ -106,7 +106,7 @@ $(function () {
                 valign: "middle"//垂直
             },
             {
-                title: '费用',
+                title: '费用(美元)',
                 field: "consumption",
                 width: "10%",//宽度
                 align: "center",//水平
@@ -133,11 +133,11 @@ $(function () {
                 field: "id",
                 width: "10%",//宽度
                 formatter: function (value, row, index) {
-                    if(row.state === 1){//开启状态
-                        return "<a href='' target='_blank' title='查看详情'><i class='fa fa-search'></i></a>&nbsp;&nbsp;<a href='' title='关闭推广'><i class='fa fa-window-close'></i></a>"
-                    }else if(row.state === 2){ //关闭状态
-                        return "<a href='' title='查看详情'><i class='fa fa-search'></i></a>"
-                    }else{
+                    if (row.state === 1) {//开启状态
+                        return "<a onclick='loadPromotOrder(" + value + ")' title='查看详情' data-target='#orderDetailModal' data-toggle='modal'><i class='fa fa-search'></i></a>&nbsp;&nbsp;<a onclick='clickDeleteModel("+value+");' title='关闭推广' data-target='#deleteOrderModel' data-toggle='modal'><i class='fa fa-window-close'></i></a>"
+                    } else if (row.state === 2) { //关闭状态
+                        return "<a onclick='loadPromotOrder(" + value + ")'title='查看详情' data-target='#orderDetailModal' data-toggle='modal'><i class='fa fa-search'></i></a>"
+                    } else {
                         return "";
                     }
                 }
@@ -161,6 +161,8 @@ $(function () {
     function tableHeight() {
         return $(window).height() - 350;
     }
+
+
 })
 
 function doPromotSearch() {
@@ -171,4 +173,109 @@ function doPromotSearch() {
         return;
     }
     $('#promotListTable').bootstrapTable("refresh");
+}
+
+var viewModel = {
+    id:ko.observable(),
+    asinId: ko.observable(),
+    productUrl: ko.observable(),
+    productTitle: ko.observable(),
+    brand: ko.observable(),
+    landingImage: ko.observable(),
+    salePrice: ko.observable(),
+    state: ko.observable(),
+    addDate: ko.observable(),
+    finishDate: ko.observable(),
+    guaranteeFund: ko.observable(),
+    consumption: ko.observable(),
+    needReviewNum: ko.observable(),
+    dayReviewNum: ko.observable(),
+    buyerNum: ko.observable(),
+    evaluateNum: ko.observable(),
+    reviewPrice: ko.observable()
+};
+
+ko.applyBindings(viewModel);
+
+function loadPromotOrder(promotId) {
+    $.ajax({
+        url: "/promotOrderController.do?doGet",
+        type: 'post',
+        data: {id: promotId},
+        success: function (data) {
+            if (data.success === "success") {
+                    viewModel.id(data.content.id);
+                    viewModel.asinId(data.content.asinId);
+                    viewModel.productUrl(data.content.productUrl);
+                    viewModel.productTitle(data.content.productTitle);
+                    viewModel.brand(data.content.brand);
+                    viewModel.landingImage(data.content.thumbnail);
+                    viewModel.salePrice(data.content.salePrice);
+                    viewModel.state(data.content.state);
+                    viewModel.addDate(data.content.addDate);
+                    viewModel.finishDate(data.content.finishDate);
+                    viewModel.guaranteeFund(data.content.guaranteeFund);
+                    viewModel.consumption(data.content.consumption);
+                    viewModel.needReviewNum(data.content.needReviewNum);
+                    viewModel.dayReviewNum(data.content.dayReviewNum);
+                    viewModel.buyerNum(data.content.buyerNum);
+                    viewModel.evaluateNum(data.content.evaluateNum);
+                    viewModel.reviewPrice(data.content.reviewPrice);
+            } else {
+                window.location = '/loginController.do?login'
+            }
+        },
+        error: function (jqxhr, textStatus, errorThrow) {
+            toastr.success("服务器异常,请联系管理员！");
+        },
+        statusCode: {
+            404: function () {
+                console.log('not found');
+            },
+            500: function () {
+                console.log('error by server');
+            },
+        }
+    });
+}
+
+function clickDeleteModel(id){
+    viewModel.id(id);
+}
+
+
+function beforeSend() {
+    $("#deleteOrderByIdBtn").addClass("disabled"); // Disables visually
+    $("#deleteOrderByIdBtn").prop("disabled", true); // Disables visually + functionally
+}
+
+function SendComplete() {
+    $("#deleteOrderByIdBtn").removeClass("disabled"); // Disables visually
+    $("#deleteOrderByIdBtn").prop("disabled", false); // Disables visually + functionally
+}
+
+function deleteOrderById(){
+    var promotId = $("#deleteId").val();
+    $.ajax({
+        url: "/promotOrderController.do?doCloseById",
+        type: 'post',
+        beforeSend:beforeSend,
+        data: {id: promotId},
+        success: function (data) {
+            if(data.success==="success"){
+                $('#promotListTable').bootstrapTable("refresh");
+                toastr.success("关闭成功！");
+            }else{
+                toastr.warning("关闭失败！");
+            }
+        },
+        complete:function () {
+            $('#deleteOrderModel').modal('hide');
+            SendComplete();
+        },
+        error: function (jqxhr, textStatus, errorThrow) {
+            toastr.success("服务器异常,请联系管理员！");
+        }
+    })
+
 }

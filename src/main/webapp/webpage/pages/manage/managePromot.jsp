@@ -18,10 +18,14 @@
     <script type="text/javascript" src="/webpage/plug-in/jquery/jquery.min.js"></script>
     <script type="text/javascript" src="/webpage/plug-in/bootstrap/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="/webpage/plug-in/bootstrap-table/dist/bootstrap-table.min.js"></script>
-    <script type="text/javascript" src="/webpage/plug-in/bootstrap-table/dist/bootstrap-table-locale-all.min.js"></script>
+    <script type="text/javascript"
+            src="/webpage/plug-in/bootstrap-table/dist/bootstrap-table-locale-all.min.js"></script>
     <script type="text/javascript" src="/webpage/plug-in/bootstrap-table/dist/locale/bootstrap-table-zh-CN.js"></script>
-    <script type="text/javascript" src="/webpage/plug-in/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
-    <script type="text/javascript" src="/webpage/plug-in/bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js"></script>
+    <script type="text/javascript"
+            src="/webpage/plug-in/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
+    <script type="text/javascript"
+            src="/webpage/plug-in/bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js"></script>
+    <script type="text/javascript" src="/webpage/plug-in/knockoutjs/dist/knockout.js"></script>
     <script type="text/javascript" src="/webpage/plug-in/toastr/toastr.min.js"></script>
 
 </head>
@@ -86,7 +90,9 @@
                         </div>
                         <div class="col-sm-3">
                             <div class="form-group">
-                                <label class="col-xs-3 control-label amazon-label" for="amazon_state"><nobr>状态</nobr></label>
+                                <label class="col-xs-3 control-label amazon-label" for="amazon_state">
+                                    <nobr>状态</nobr>
+                                </label>
                                 <div class="col-xs-8">
                                     <select id="amazon_state" class="form-control">
                                         <option value="">--选择--</option>
@@ -98,22 +104,30 @@
                         </div>
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label class="col-xs-2 control-label amazon-label" for="amazon_state"><nobr>创建时间</nobr></label>
+                                <label class="col-xs-2 control-label amazon-label" for="amazon_state">
+                                    <nobr>创建时间</nobr>
+                                </label>
                                 <div class="col-xs-5">
-                                    <div class="input-group date form_date" id="addDate_begin" data-date-format="yyyy-mm-dd"
+                                    <div class="input-group date form_date" id="addDate_begin"
+                                         data-date-format="yyyy-mm-dd"
                                          data-link-field="addDate_begin_input" data-link-format="yyyy-mm-dd">
-                                        <input class="form-control" name="addDate_begin" id="addDate_begin_value" size="16" type="text" value="" readonly placeholder="开始时间">
+                                        <input class="form-control" name="addDate_begin" id="addDate_begin_value"
+                                               size="16" type="text" value="" readonly placeholder="开始时间">
                                         <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
-                                        <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                                        <span class="input-group-addon"><span
+                                                class="glyphicon glyphicon-calendar"></span></span>
                                     </div>
                                     <input type="hidden" id="addDate_begin_input" value=""/>
                                 </div>
                                 <div class="col-xs-5">
-                                    <div class="input-group date form_date" id="addDate_end" data-date-format="yyyy-mm-dd"
+                                    <div class="input-group date form_date" id="addDate_end"
+                                         data-date-format="yyyy-mm-dd"
                                          data-link-field="addDate_end_input" data-link-format="yyyy-mm-dd">
-                                        <input class="form-control" name="addDate_end" id="addDate_end_value" size="16" type="text" value="" readonly placeholder="结束时间">
+                                        <input class="form-control" name="addDate_end" id="addDate_end_value" size="16"
+                                               type="text" value="" readonly placeholder="结束时间">
                                         <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
-                                        <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                                        <span class="input-group-addon"><span
+                                                class="glyphicon glyphicon-calendar"></span></span>
                                     </div>
                                     <input type="hidden" id="addDate_end_input" value=""/>
                                 </div>
@@ -127,7 +141,9 @@
                         <div class="col-sm-4 col-sm-offset-8">
                             <div class="btn-group" role="group">
                                 <%--<button type="button" class="btn btn-default">重置</button>--%>
-                                <button type="button" onclick="doPromotSearch();" class="btn btn-default" style="width: 104px;">查询</button>
+                                <button type="button" onclick="doPromotSearch();" class="btn btn-default"
+                                        style="width: 104px;">查询
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -135,6 +151,169 @@
             </div>
             <table id="promotListTable" class="table table-hover">
             </table>
+        </div>
+    </div>
+</div>
+<div class="modal fade bs-example-modal-sm" id="deleteOrderModel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close"
+                        data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title" id="deleteOrderByIdLabel">
+                    关闭订单
+                </h4>
+            </div>
+            <div class="modal-body">
+                  <input type="hidden" id="deleteId" data-bind="value:id">
+                  确认关闭订单 <span data-bind="text:id"></span>吗？
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" id="deleteOrderByIdBtn" onclick="deleteOrderById();">确定</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="orderDetailModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close"
+                        data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title" id="myModalLabel">
+                    推广活动详情
+                </h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <span class="input-group-addon" style="width: 80px;" id="id">订单编号</span>
+                                <input type="text" class="form-control" data-bind="value:id" placeholder="订单编号" readonly
+                                       aria-describedby="salePrice">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="input-group">
+                                <span class="input-group-addon" style="width: 80px;" id="asinId">ASIN</span>
+                                <input type="text" class="form-control" data-bind="value:asinId" placeholder="ASIN"
+                                       readonly aria-describedby="asin">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="input-group">
+                                <span class="input-group-addon" style="width: 80px;" id="salePrice">商品价格</span>
+                                <input type="text" class="form-control" data-bind="value:salePrice"
+                                       placeholder="salePrice" readonly aria-describedby="productTitle">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="input-group">
+                                <span class="input-group-addon" style="width: 80px;" id="brand">商品店家</span>
+                                <input type="text" class="form-control" data-bind="value:brand" placeholder="" readonly
+                                       aria-describedby="brand">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <img src="" data-bind="attr:{src:landingImage}" alt="产品主图" style="height:180px; "
+                             class="img-responsive center-block">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <span class="input-group-addon" style="width: 80px;" id="productTitle">商品标题</span>
+                                <input type="text" class="form-control" data-bind="value:productTitle"
+                                       placeholder="商品标题" readonly aria-describedby="productTitle">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="input-group">
+                                <span class="input-group-addon" style="width: 80px;" id="addDate">下单日期</span>
+                                <input type="text" class="form-control" data-bind="value:addDate" placeholder="下单日期"
+                                       readonly aria-describedby="addDate">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="input-group">
+                                <span class="input-group-addon" style="width: 80px;" id="finishDate">结束日期</span>
+                                <input type="text" class="form-control" data-bind="value:finishDate" placeholder="结束日期"
+                                       readonly aria-describedby="finishDate">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="input-group">
+                                <span class="input-group-addon" style="width: 80px;" id="guaranteeFund">保证金(美元)</span>
+                                <input type="text" class="form-control" data-bind="value:guaranteeFund"
+                                       placeholder="保证金(美元)" readonly aria-describedby="guaranteeFund">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="input-group">
+                                <span class="input-group-addon" style="width: 80px;" id="evaluateNum">获取评论数</span>
+                                <input type="text" class="form-control" data-bind="value:evaluateNum"
+                                       placeholder="获取评论数" readonly aria-describedby="evaluateNum">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <span class="input-group-addon" style="width: 160px;" id="consumption">已花费(美元)</span>
+                                <input type="text" class="form-control" data-bind="value:consumption" placeholder="已花费"
+                                       readonly aria-describedby="consumption">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="input-group">
+                                <span class="input-group-addon" style="width: 160px;" id="needReviewNum">总目标好评数</span>
+                                <input type="text" class="form-control" data-bind="value:needReviewNum"
+                                       placeholder="目标好评数"
+                                       readonly aria-describedby="needReviewNum">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="input-group">
+                                <span class="input-group-addon" style="width: 160px;" id="dayReviewNum">每日目标评论</span>
+                                <input type="text" class="form-control" data-bind="value:dayReviewNum"
+                                       placeholder="每天目标好评数"
+                                       readonly aria-describedby="dayReviewNum">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="input-group">
+                                <span class="input-group-addon" style="width: 160px;" id="buyerNum">联系买家</span>
+                                <input type="text" class="form-control" data-bind="value:buyerNum"
+                                       placeholder="已联系到的买家数"
+                                       readonly aria-describedby="buyerNum">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="input-group">
+                                <span class="input-group-addon" style="width: 160px;" id="reviewPrice">评论费用(美元)</span>
+                                <input type="text" class="form-control" data-bind="value:reviewPrice"
+                                       placeholder="每个评论费用"
+                                       readonly aria-describedby="reviewPrice">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭
+                </button>
+            </div>
         </div>
     </div>
 </div>

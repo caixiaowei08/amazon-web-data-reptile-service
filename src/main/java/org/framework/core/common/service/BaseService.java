@@ -5,6 +5,7 @@ import com.amazon.system.system.bootstrap.json.DataGridReturn;
 import org.hibernate.criterion.DetachedCriteria;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -65,6 +66,22 @@ public interface BaseService {
      * @return
      */
     public DataGridReturn getDataGridReturn(final CriteriaQuery criteriaQuery);
+
+    /**
+     * 根据条件获取条数
+     * @param detachedCriteria
+     * @return
+     */
+    public Integer getRowCount(DetachedCriteria detachedCriteria);
+
+    /**
+     * 求和
+     * @param detachedCriteria
+     * @return
+     */
+    public Integer getRowSum(DetachedCriteria detachedCriteria);
+
+    public BigDecimal getRowBigDecimalSum(DetachedCriteria detachedCriteria);
 
 
 }

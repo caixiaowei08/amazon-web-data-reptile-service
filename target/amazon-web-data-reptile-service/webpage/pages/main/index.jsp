@@ -17,6 +17,7 @@
     <script type="text/javascript" src="/webpage/plug-in/bootstrap/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="/webpage/pages/main/index.js"></script>
     <script type="text/javascript" src="/webpage/plug-in/toastr/toastr.min.js"></script>
+    <script type="text/javascript" src="/webpage/plug-in/knockoutjs/dist/knockout.js"></script>
     <!--[if lt IE 9]>
     <script src="http://apps.bdimg.com/libs/html5shiv/3.7/html5shiv.min.js"></script>
     <script src="http://apps.bdimg.com/libs/respond.js/1.4.2/respond.min.js"></script>
@@ -83,7 +84,7 @@
                                     <i class="ace-icon fa fa-shopping-cart"></i>
                                 </div>
                                 <div class="infobox-data">
-                                    <span class="infobox-data-number">8</span>
+                                    <span class="infobox-data-number" data-bind="text:activeOrderNum">0</span>
                                     <a href="/redirectionController.do?goManagePromot" target="_parent" class="infobox-content">我的活动订单</a>
                                 </div>
                                 <%--<div class="stat stat-important">4%</div>--%>
@@ -93,7 +94,7 @@
                                     <i class="ace-icon fa fa-comments"></i>
                                 </div>
                                 <div class="infobox-data">
-                                    <span class="infobox-data-number">32</span>
+                                    <span class="infobox-data-number" data-bind="text:todayEvaluateNum">0</span>
                                     <a href="" class="infobox-content">今日评论</a>
                                 </div>
                                 <%--<div class="stat stat-success">8%</div>--%>
@@ -103,7 +104,7 @@
                                     <i class="ace-icon fa fa-amazon"></i>
                                 </div>
                                 <div class="infobox-data">
-                                    <span class="infobox-data-number">11</span>
+                                    <span class="infobox-data-number" data-bind="text:buyerNum">0</span>
                                     <a href="" class="infobox-content">联系买家</a>
                                 </div>
                             </div>
@@ -112,7 +113,7 @@
                                     <i class="ace-icon fa fa-pencil-square-o"></i>
                                 </div>
                                 <div class="infobox-data">
-                                    <span class="infobox-data-number">523</span>
+                                    <span class="infobox-data-number" data-bind="text:totalEvaluateNum">0</span>
                                     <a href="" class="infobox-content">总好评数</a>
                                 </div>
                             </div>
@@ -121,7 +122,7 @@
                                     <i class="ace-icon fa fa-history"></i>
                                 </div>
                                 <div class="infobox-data">
-                                    <span class="infobox-data-number">6,251</span>
+                                    <span class="infobox-data-number" data-bind="text:historyOrderNum">0</span>
                                     <a href="" class="infobox-content">完成的推广</a>
                                 </div>
                             </div>
@@ -130,8 +131,8 @@
                                     <i class="ace-icon fa fa-file-archive-o" aria-hidden="true"></i>
                                 </div>
                                 <div class="infobox-data">
-                                    <span class="infobox-data-number">156</span>
-                                    <a href="" class="infobox-content">消费明细</a>
+                                    <span class="infobox-data-number" data-bind="text:totalConsumption">$0.00</span>
+                                    <a href="" class="infobox-content">消费明细(美元)</a>
                                 </div>
                             </div>
                             <div class="space-6"></div>

@@ -19,13 +19,14 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
  * Created by User on 2017/6/5.
  */
 @Repository("baseDao")
-public class BaseDaoImpl implements BaseDao{
+public class BaseDaoImpl implements BaseDao {
 
     private static Logger logger = LogManager.getLogger(BaseDaoImpl.class.getName());
 
@@ -55,7 +56,6 @@ public class BaseDaoImpl implements BaseDao{
      * 根据传入的实体添加或更新对象
      *
      * @param <T>
-     *
      * @param entity
      */
 
@@ -96,7 +96,7 @@ public class BaseDaoImpl implements BaseDao{
     }
 
     public <T> void deleteEntityById(Class entityName, Serializable id) {
-        delete(find(entityName,id));
+        delete(find(entityName, id));
         getSession().flush();
     }
 
@@ -119,14 +119,36 @@ public class BaseDaoImpl implements BaseDao{
         criteria.setProjection(null);
         criteria.setResultTransformer(CriteriaSpecification.ROOT_ENTITY);
         //排序
-        if(SortDirection.asc.equals(dataGrid.getOrder())){
+        if (SortDirection.asc.equals(dataGrid.getOrder())) {
             criteria.addOrder(Order.asc(dataGrid.getSort()));
-        }else{
+        } else {
             criteria.addOrder(Order.desc(dataGrid.getSort()));
         }
         criteria.setFirstResult(dataGrid.getOffset());
         criteria.setMaxResults(dataGrid.getLimit());
         List list = criteria.list();
-        return new DataGridReturn(allCounts,list);
+        return new DataGridReturn(allCounts, list);
+    }
+
+    public Integer getRowCount(DetachedCriteria detachedCriteria) {
+        Criteria criteria = detachedCriteria.getExecutableCriteria(getSession());
+        final int allCounts = ((Long) criteria.setProjection(Projections.rowCount()).uniqueResult()).intValue();
+        return allCounts;
+    }
+
+    public Integer getRowSum(DetachedCriteria detachedCriteria) {
+        Criteria criteria = detachedCriteria.getExecutableCriteria(getSession());
+        if (criteria.uniqueResult() != null) {
+            return ((Long)(criteria.uniqueResult())).intValue();
+        }
+        return 0;
+    }
+
+    public BigDecimal getRowBigDecimalSum(DetachedCriteria detachedCriteria) {
+        Criteria criteria = detachedCriteria.getExecutableCriteria(getSession());
+        if (criteria.uniqueResult() != null) {
+            return ((BigDecimal)(criteria.uniqueResult()));
+        }
+        return new BigDecimal(0.00);
     }
 }

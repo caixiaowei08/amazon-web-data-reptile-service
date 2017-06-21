@@ -24,9 +24,9 @@ public class PromotOrderEvaluateFlowEntity extends IdEntity implements Serializa
     private Integer promotId;
 
     /**
-     * 状态 1-reviewed  2-pending
+     * 账户id
      */
-    private Integer state;
+    private Integer sellerId;
 
     /**
      * 评价商品ID
@@ -82,13 +82,13 @@ public class PromotOrderEvaluateFlowEntity extends IdEntity implements Serializa
         this.promotId = promotId;
     }
 
-    @Column(name = "state", nullable = false, length = 11)
-    public Integer getState() {
-        return state;
+    @Column(name = "sellerId", nullable = false, length = 20)
+    public Integer getSellerId() {
+        return sellerId;
     }
 
-    public void setState(Integer state) {
-        this.state = state;
+    public void setSellerId(Integer sellerId) {
+        this.sellerId = sellerId;
     }
 
     @Column(name = "asinId", nullable = true, length = 50)

@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -50,5 +51,15 @@ public class BaseServiceImpl implements BaseService{
         return baseDao.getDataGridReturn(criteriaQuery);
     }
 
+    public Integer getRowCount(DetachedCriteria detachedCriteria) {
+        return baseDao.getRowCount(detachedCriteria);
+    }
 
+    public Integer getRowSum(DetachedCriteria detachedCriteria){
+        return baseDao.getRowSum(detachedCriteria);
+    }
+
+    public BigDecimal getRowBigDecimalSum(DetachedCriteria detachedCriteria){
+        return baseDao.getRowBigDecimalSum(detachedCriteria);
+    }
 }

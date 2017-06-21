@@ -2,6 +2,7 @@ package com.amazon.service.user.controller;
 
 import com.amazon.service.user.entity.UserEntity;
 import com.amazon.service.user.service.UserService;
+import com.amazon.service.user.vo.UserBaseInfoVo;
 import com.amazon.service.user.vo.UserVo;
 import com.amazon.system.Constant;
 import org.apache.commons.collections.CollectionUtils;
@@ -75,8 +76,8 @@ public class UserController extends BaseController {
         session.invalidate();//清空session中的所有数据
         try {
             response.sendRedirect("/loginController.do?login");
-        }catch (IOException e){
-            logger.info("退出登录失败！",e);
+        } catch (IOException e) {
+            logger.info("退出登录失败！", e);
         }
     }
 
@@ -178,6 +179,24 @@ public class UserController extends BaseController {
         }
         j.setSuccess(AjaxJson.CODE_FAIL);
         j.setMsg("验证码错误！");
+        return j;
+    }
+
+    @RequestMapping(params = "doGetBaseUserInfo")
+    @ResponseBody
+    public AjaxJson doGetBaseUserInfo(HttpServletRequest request, HttpServletResponse response) {
+        AjaxJson j = new AjaxJson();
+        UserEntity userSession = (UserEntity) ContextHolderUtils.getSession().getAttribute(Constant.USER_SESSION_CONSTANTS);
+        if (userSession == null) {
+            ContextHolderUtils.getSession().invalidate();
+            j.setSuccess(AjaxJson.CODE_FAIL);
+            j.setMsg("跳转登录页失败！");
+            return j;
+        }
+
+        UserBaseInfoVo userBaseInfoVo = userService.doGetBaseUserInfo(userSession);
+        j.setContent(userBaseInfoVo);
+
         return j;
     }
 
