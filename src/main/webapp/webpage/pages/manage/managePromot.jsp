@@ -134,7 +134,6 @@
                             </div>
                         </div>
                     </div>
-
                 </div>
                 <div class="panel-footer">
                     <div class="row">
