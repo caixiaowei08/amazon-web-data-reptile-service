@@ -1,9 +1,28 @@
 package com.amazon.service.promot.order.service.impl;
 
+import com.amazon.service.fund.entity.UserFundEntity;
+import com.amazon.service.fund.service.UserFundService;
+import com.amazon.service.promot.order.entity.PromotOrderEntity;
 import com.amazon.service.promot.order.service.PromotOrderService;
+import com.amazon.service.promot.price.entity.PromotPriceEntity;
+import com.amazon.service.promot.price.service.PromotPriceService;
+import com.amazon.service.spider.pojo.AmazonPageInfoPojo;
+import com.amazon.service.user.entity.UserEntity;
+import com.amazon.service.vip.entity.UserMembershipEntity;
+import com.amazon.service.vip.service.UserMembershipService;
+import com.amazon.system.Constant;
+import org.apache.commons.collections.CollectionUtils;
+import org.framework.core.common.model.json.AjaxJson;
 import org.framework.core.common.service.impl.BaseServiceImpl;
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Restrictions;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.List;
 
 /**
  * Created by User on 2017/6/10.
@@ -11,4 +30,96 @@ import org.springframework.transaction.annotation.Transactional;
 @Service("promotOrderService")
 @Transactional
 public class PromotOrderServiceImpl extends BaseServiceImpl implements PromotOrderService {
+
+    @Autowired
+    private PromotOrderService promotOrderService;
+
+    @Autowired
+    private UserFundService userFundService;
+
+    @Autowired
+    private UserMembershipService userMembershipService;
+
+    @Autowired
+    private PromotPriceService promotPriceService;
+
+
+    public AjaxJson doAddNewPromot(UserEntity userEntity, AmazonPageInfoPojo amazonPageInfoPojo, PromotOrderEntity promotOrderEntity) {
+        AjaxJson j = new AjaxJson();
+        //获取账户资金信息
+        DetachedCriteria userFundDetachedCriteria = DetachedCriteria.forClass(UserFundEntity.class);
+        userFundDetachedCriteria.add(Restrictions.eq("sellerId", userEntity.getId()));
+        List<UserFundEntity> userFundEntityList = userFundService.getListByCriteriaQuery(userFundDetachedCriteria);
+        if (CollectionUtils.isEmpty(userFundEntityList)) {
+            j.setSuccess(AjaxJson.CODE_FAIL);
+            j.setMsg("未能获取账户资金信息！");
+            return j;
+        }
+        //获取账户会员信息
+        DetachedCriteria userMembershipDetachedCriteria = DetachedCriteria.forClass(UserMembershipEntity.class);
+        userMembershipDetachedCriteria.add(Restrictions.eq("sellerId", userEntity.getId()));
+        List<UserMembershipEntity> userMembershipEntityList = userMembershipService.getListByCriteriaQuery(userMembershipDetachedCriteria);
+        if (CollectionUtils.isEmpty(userMembershipEntityList)) {
+            j.setSuccess(AjaxJson.CODE_FAIL);
+            j.setMsg("未能获取账户会员信息！");
+            return j;
+        }
+        UserFundEntity userFundEntity = userFundEntityList.get(0);
+        UserMembershipEntity userMembershipEntity = userMembershipEntityList.get(0);
+        Date membershipEndTime = userMembershipEntity.getMembershipEndTime();
+        if (membershipEndTime == null) {
+            j.setSuccess(AjaxJson.CODE_FAIL);
+            j.setMsg("您还不是会员,请开通会员！");
+            return j;
+        }
+        if (membershipEndTime.compareTo(new Date()) < 0) {
+            j.setSuccess(AjaxJson.CODE_FAIL);
+            j.setMsg("您的会员已到期，请购买会员！");
+            return j;
+        }
+        PromotPriceEntity promotPriceEntity = promotPriceService.find(PromotPriceEntity.class, 1);
+        if (promotPriceEntity == null) {
+            j.setSuccess(AjaxJson.CODE_FAIL);
+            j.setMsg("未设置价格信息，请联系管理员！");
+            return j;
+        }
+
+        //目标好评数
+        Integer needReviewNum = promotOrderEntity.getNeedReviewNum();
+        //好评价
+        BigDecimal reviewPrice = promotPriceEntity.getReviewPrice();
+        //总价
+        BigDecimal totalPrice = (new BigDecimal(needReviewNum)).multiply(reviewPrice);
+        if (totalPrice.compareTo(userFundEntity.getUsableFund()) > 0) {
+            j.setSuccess(AjaxJson.CODE_FAIL);
+            j.setMsg("可用余额不足，请充值！");
+            return j;
+        }
+
+        userFundEntity.setUsableFund(userFundEntity.getUsableFund().subtract(totalPrice));
+        userFundEntity.setFreezeFund(userFundEntity.getFreezeFund().add(totalPrice));
+        userFundService.saveOrUpdate(userFundEntity);
+        //检查资金情况
+        promotOrderEntity.setSellerId(userEntity.getId());
+        promotOrderEntity.setAsinId(amazonPageInfoPojo.getAsin());
+        promotOrderEntity.setProductUrl(amazonPageInfoPojo.getPageUrl());
+        promotOrderEntity.setProductTitle(amazonPageInfoPojo.getProductTitle());
+        promotOrderEntity.setBrand(amazonPageInfoPojo.getBrand());
+        promotOrderEntity.setThumbnail(amazonPageInfoPojo.getLandingImage());
+        promotOrderEntity.setState(Constant.STATE_Y);
+        promotOrderEntity.setSalePrice(amazonPageInfoPojo.getPriceblockSaleprice());
+        promotOrderEntity.setAddDate(new Date());
+        promotOrderEntity.setFinishDate(promotOrderEntity.getFinishDate());
+        promotOrderEntity.setReviewPrice(reviewPrice);
+        promotOrderEntity.setGuaranteeFund(totalPrice);
+        promotOrderEntity.setConsumption(new BigDecimal("0.00"));
+        promotOrderEntity.setNeedReviewNum(promotOrderEntity.getNeedReviewNum());
+        promotOrderEntity.setDayReviewNum(promotOrderEntity.getDayReviewNum());
+        promotOrderEntity.setBuyerNum(0);
+        promotOrderEntity.setEvaluateNum(0);
+        promotOrderEntity.setCreateTime(new Date());
+        promotOrderEntity.setUpdateTime(new Date());
+        promotOrderService.save(promotOrderEntity);
+        return j;
+    }
 }

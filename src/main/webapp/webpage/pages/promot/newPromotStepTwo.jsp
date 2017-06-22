@@ -372,7 +372,7 @@
             data:$('#formObj').serialize(),
             success:function(data){
                 if(data.success === "success"){
-                    //window.location='/promotOrderController.do?goNewPromotTwo'
+                    window.location='/redirectionController.do?goManagePromot'
                 }else{
                     toastr.error(data.msg);
                 }

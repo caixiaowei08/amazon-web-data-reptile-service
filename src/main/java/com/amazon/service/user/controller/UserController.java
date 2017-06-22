@@ -58,7 +58,11 @@ public class UserController extends BaseController {
         List<UserEntity> userEntityList = userService.getListByCriteriaQuery(detachedCriteria);
         if (CollectionUtils.isNotEmpty(userEntityList)) {
             UserEntity sessionUser = userEntityList.get(0);
+            sessionUser.setLoginTime(new Date());
+            userService.saveOrUpdate(sessionUser);
+            sessionUser.setPwd("");//session不能暴露密码
             ContextHolderUtils.getSession().setAttribute(Constant.USER_SESSION_CONSTANTS, sessionUser);
+            //更新登录时间
             j.setSuccess(AjaxJson.CODE_SUCCESS);
             j.setMsg("登录成功！");
             return j;

@@ -161,26 +161,9 @@ public class PromotOrderController extends BaseController {
             j.setMsg("不能重复建立ASIN编号相同且处于开启状态的活动！");
             return j;
         }
-        promotOrderEntity.setSellerId(userEntity.getId());
-        promotOrderEntity.setAsinId(amazonPageInfoPojo.getAsin());
-        promotOrderEntity.setProductUrl(amazonPageInfoPojo.getPageUrl());
-        promotOrderEntity.setProductTitle(amazonPageInfoPojo.getProductTitle());
-        promotOrderEntity.setBrand(amazonPageInfoPojo.getBrand());
-        promotOrderEntity.setThumbnail(amazonPageInfoPojo.getLandingImage());
-        promotOrderEntity.setState(Constant.STATE_Y);
-        promotOrderEntity.setSalePrice(amazonPageInfoPojo.getPriceblockSaleprice());
-        promotOrderEntity.setAddDate(new Date());
-        promotOrderEntity.setFinishDate(promotOrderEntity.getFinishDate());
-        promotOrderEntity.setReviewPrice(new BigDecimal("0.00"));
-        promotOrderEntity.setGuaranteeFund(new BigDecimal("0.00"));
-        promotOrderEntity.setConsumption(new BigDecimal("0.00"));
-        promotOrderEntity.setNeedReviewNum(promotOrderEntity.getNeedReviewNum());
-        promotOrderEntity.setDayReviewNum(promotOrderEntity.getDayReviewNum());
-        promotOrderEntity.setBuyerNum(0);
-        promotOrderEntity.setEvaluateNum(0);
-        promotOrderEntity.setCreateTime(new Date());
-        promotOrderEntity.setUpdateTime(new Date());
-        promotOrderService.save(promotOrderEntity);
+
+        j = promotOrderService.doAddNewPromot(userEntity,amazonPageInfoPojo,promotOrderEntity);
+
         return j;
     }
 
