@@ -66,11 +66,13 @@ public class PromotOrderController extends BaseController {
     @RequestMapping(params = "dataGrid")
     public void dataGrid(DataGrid dataGrid, HttpServletRequest request, HttpServletResponse response) {
         CriteriaQuery criteriaQuery = new CriteriaQuery(PromotOrderEntity.class, dataGrid, request.getParameterMap());
+        UserEntity userEntity = (UserEntity) ContextHolderUtils.getSession().getAttribute(Constant.USER_SESSION_CONSTANTS);
         try {
             criteriaQuery.installHqlParams();
         } catch (Exception e) {
 
         }
+        criteriaQuery.getDetachedCriteria().add(Restrictions.eq("sellerId",userEntity.getId()));//加上用户
         DataGridReturn dataGridReturn = promotOrderService.getDataGridReturn(criteriaQuery);
         DatagridJsonUtils.listToObj(dataGridReturn, PromotOrderEntity.class, dataGrid.getField());
         DatagridJsonUtils.datagrid(response, dataGridReturn);

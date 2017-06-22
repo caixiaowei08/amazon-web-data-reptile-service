@@ -713,4 +713,14 @@ public class DateUtils {
         return endOfDate;
     }
 
+    /**
+     * 获取当天23点59分59秒Date
+     * @return
+     */
+    public static Long compareTo(Date date1,Date date2) {
+        return  date1.getTime() - date2.getTime();
+    }
+
+
+
 }  

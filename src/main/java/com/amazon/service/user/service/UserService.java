@@ -9,5 +9,9 @@ import org.framework.core.common.service.BaseService;
  */
 public interface UserService extends BaseService{
 
+    public UserEntity doRegister(UserEntity userEntity);
+
     public UserBaseInfoVo doGetBaseUserInfo(UserEntity userEntity);
+
+
 }

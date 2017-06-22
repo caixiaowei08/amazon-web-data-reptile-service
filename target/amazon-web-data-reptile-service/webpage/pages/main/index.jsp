@@ -165,27 +165,51 @@
                                             <li class="list-group-item">
                                                 <div class="row">
                                                     <div class="col-xs-5"><span style="color:#555;">账户名称:</span></div>
-                                                    <div class="col-xs-7"><span>1005814292@qq.com</span></div>
+                                                    <div class="col-xs-7"><span data-bind="text:account"></span></div>
                                                 </div>
                                             </li>
                                             <li class="list-group-item">
                                                 <div class="row">
-                                                    <div class="col-xs-5"><span style="color:#555;">账户余额(美元)：</span></div>
-                                                    <div class="col-xs-7"><span style="color:#0bb8e3;">$131</span></div>
+                                                    <div class="col-xs-5"><span style="color:#555;">账户余额(美元):</span></div>
+                                                    <div class="col-xs-7"><span style="color:#0bb8e3;">$<span data-bind="text:totalFund"></span></span></div>
+                                                </div>
+                                            </li>
+                                            <li class="list-group-item">
+                                                <div class="row">
+                                                    <div class="col-xs-5"><span style="color:#555;">可用余额(美元):</span></div>
+                                                    <div class="col-xs-7"><span style="color:#0bb8e3;">$<span data-bind="text:usableFund"></span></span></div>
+                                                </div>
+                                            </li>
+                                            <li class="list-group-item">
+                                                <div class="row">
+                                                    <div class="col-xs-5"><span style="color:#555;">冻结金额(美元):</span></div>
+                                                    <div class="col-xs-7"><span style="color:#0bb8e3;">$<span data-bind="text:freezeFund"></span></span></div>
                                                 </div>
                                             </li>
                                         </ul>
                                         <div class="input-group">
                                             <span class="input-group-addon" id="sizing-addon3">保证金充值(美元)</span>
                                             <input type="number" min="1" class="form-control" placeholder="充值金额" aria-describedby="sizing-addon1" value="100">
-                                            <span class="input-group-addon" id="basic-addon4">充值</span>
+                                            <span class="input-group-addon  btn btn-default" id="basic-addon4">充值</span>
                                         </div>
                                         <div class="hr hr8 hr-double"></div>
+                                        <!-- ko ifnot: beforeVip -->
                                         <div class="input-group">
-                                            <span class="input-group-addon" id="sizing-addon1">会员到期时间</span>
-                                            <input type="text" class="form-control" placeholder="会员到期时间" aria-describedby="sizing-addon1" value="2018-09-18">
-                                            <span class="input-group-addon" id="basic-addon2">续期</span>
+                                            <input type="button" class="btn btn-danger"  value="立即开通会员">
                                         </div>
+                                        <!-- /ko -->
+                                        <!-- ko if: beforeVip -->
+                                        <div class="input-group">
+                                            <span class="input-group-addon">会员到期时间</span>
+                                            <input type="text" class="form-control" placeholder="会员到期时间" data-bind="value:membershipEndTime">
+                                            <!-- ko if: vip -->
+                                            <span class="input-group-addon btn btn-default">续期</span>
+                                            <!-- /ko -->
+                                            <!-- ko ifnot: vip -->
+                                            <span class="input-group-addon btn btn-default">重新开通</span>
+                                            <!-- /ko -->
+                                        </div>
+                                        <!-- /ko -->
                                     </div><!-- /.widget-main -->
                                 </div><!-- /.widget-body -->
                             </div><!-- /.widget-box -->

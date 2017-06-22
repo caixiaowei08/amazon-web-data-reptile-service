@@ -9,13 +9,19 @@ $(function () {
     loadData();
 })
 
-var ViewModel = function (activeOrderNum, todayEvaluateNum, buyerNum, totalEvaluateNum, historyOrderNum, totalConsumption) {
+var ViewModel = function (account,totalFund,usableFund,freezeFund,vip,beforeVip,membershipEndTime,activeOrderNum, todayEvaluateNum, buyerNum, totalEvaluateNum, historyOrderNum, totalConsumption) {
+    this.account = ko.observable(account);
+    this.totalFund = ko.observable(totalFund);
+    this.usableFund = ko.observable(usableFund);
+    this.freezeFund = ko.observable(freezeFund);
+    this.vip = ko.observable(vip);
+    this.beforeVip = ko.observable(beforeVip);
+    this.membershipEndTime = ko.observable(membershipEndTime);
     this.activeOrderNum = ko.observable(activeOrderNum);
     this.todayEvaluateNum = ko.observable(todayEvaluateNum);
     this.buyerNum = ko.observable(buyerNum);
     this.totalEvaluateNum = ko.observable(totalEvaluateNum);
     this.historyOrderNum = ko.observable(historyOrderNum);
-    //this.totalConsumption = ko.observable(totalConsumption);
     this.totalConsumption = ko.observable(totalConsumption);
 };
 
@@ -23,11 +29,17 @@ function loadData() {
     $.ajax({
         url: "/userController.do?doGetBaseUserInfo",
         type: 'post',
-        data: $('#formObj').serialize(),
         success: function (data) {
             if (data.success === "success") {
                 ko.applyBindings(
                     new ViewModel(
+                        data.content.account,
+                        data.content.totalFund,
+                        data.content.usableFund,
+                        data.content.freezeFund,
+                        data.content.vip,
+                        data.content.beforeVip,
+                        data.content.membershipEndTime,
                         data.content.activeOrderNum,
                         data.content.todayEvaluateNum,
                         data.content.buyerNum,

@@ -6,7 +6,6 @@ import com.amazon.service.user.vo.UserBaseInfoVo;
 import com.amazon.service.user.vo.UserVo;
 import com.amazon.system.Constant;
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.io.IOExceptionWithCause;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.framework.core.common.controller.BaseController;
@@ -89,7 +88,6 @@ public class UserController extends BaseController {
         DetachedCriteria detachedCriteria = DetachedCriteria.forClass(UserEntity.class);
         detachedCriteria.add(Restrictions.eq("account", userEntity.getAccount()));
         List userEntityList = userService.getListByCriteriaQuery(detachedCriteria);
-
         if (CollectionUtils.isNotEmpty(userEntityList)) {
             j.setSuccess(AjaxJson.CODE_FAIL);
             j.setMsg("邮箱号码已经被注册!");
@@ -100,9 +98,8 @@ public class UserController extends BaseController {
         userEntity.setUpdateTime(new Date());
         userEntity.setCreateTime(new Date());
         try {
-            userService.save(userEntity);
+            userService.doRegister(userEntity);
         } catch (Exception e) {
-            e.printStackTrace();
             j.setSuccess(AjaxJson.CODE_FAIL);
             j.setMsg("创建账户失败！");
         }
@@ -193,12 +190,9 @@ public class UserController extends BaseController {
             j.setMsg("跳转登录页失败！");
             return j;
         }
-
         UserBaseInfoVo userBaseInfoVo = userService.doGetBaseUserInfo(userSession);
         j.setContent(userBaseInfoVo);
-
         return j;
     }
-
 
 }

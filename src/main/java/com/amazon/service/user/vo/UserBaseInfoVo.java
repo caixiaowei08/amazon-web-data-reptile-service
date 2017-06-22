@@ -1,13 +1,34 @@
 package com.amazon.service.user.vo;
 
+import com.alibaba.fastjson.annotation.JSONField;
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  *登录时 主页显示数据
  * Created by User on 2017/6/20.
  */
 public class UserBaseInfoVo implements Serializable{
+
+
+    private String account;
+
+    private BigDecimal totalFund;
+
+    private BigDecimal usableFund;
+
+    private BigDecimal freezeFund;
+
+    private Boolean vip;
+
+    private Boolean beforeVip;
+
+    @DateTimeFormat(pattern="yyyy-MM-dd")
+    @JSONField(format="yyyy-MM-dd")
+    private Date membershipEndTime;
 
     /**
      * 该账户下活动状态的推广订单个数
@@ -81,5 +102,61 @@ public class UserBaseInfoVo implements Serializable{
 
     public void setTotalConsumption(BigDecimal totalConsumption) {
         this.totalConsumption = totalConsumption;
+    }
+
+    public String getAccount() {
+        return account;
+    }
+
+    public void setAccount(String account) {
+        this.account = account;
+    }
+
+    public BigDecimal getTotalFund() {
+        return totalFund;
+    }
+
+    public void setTotalFund(BigDecimal totalFund) {
+        this.totalFund = totalFund;
+    }
+
+    public BigDecimal getUsableFund() {
+        return usableFund;
+    }
+
+    public void setUsableFund(BigDecimal usableFund) {
+        this.usableFund = usableFund;
+    }
+
+    public BigDecimal getFreezeFund() {
+        return freezeFund;
+    }
+
+    public void setFreezeFund(BigDecimal freezeFund) {
+        this.freezeFund = freezeFund;
+    }
+
+    public Boolean getVip() {
+        return vip;
+    }
+
+    public void setVip(Boolean vip) {
+        this.vip = vip;
+    }
+
+    public Boolean getBeforeVip() {
+        return beforeVip;
+    }
+
+    public void setBeforeVip(Boolean beforeVip) {
+        this.beforeVip = beforeVip;
+    }
+
+    public Date getMembershipEndTime() {
+        return membershipEndTime;
+    }
+
+    public void setMembershipEndTime(Date membershipEndTime) {
+        this.membershipEndTime = membershipEndTime;
     }
 }
