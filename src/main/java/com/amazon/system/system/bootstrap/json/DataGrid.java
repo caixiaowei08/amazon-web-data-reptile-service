@@ -1,5 +1,7 @@
 package com.amazon.system.system.bootstrap.json;
 
+import com.amazon.system.system.bootstrap.hibernate.SortDirection;
+
 import java.io.Serializable;
 
 /**
@@ -9,9 +11,9 @@ public class DataGrid implements Serializable{
 
     private Integer limit = 10;
 
-    private String order;
+    private SortDirection order;
 
-    private String sort = "createTime";
+    private String sort = "id";
 
     private Integer offset = 0;
 
@@ -27,11 +29,11 @@ public class DataGrid implements Serializable{
         this.limit = limit;
     }
 
-    public String getOrder() {
+    public SortDirection getOrder() {
         return order;
     }
 
-    public void setOrder(String order) {
+    public void setOrder(SortDirection order) {
         this.order = order;
     }
 

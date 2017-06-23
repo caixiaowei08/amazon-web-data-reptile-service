@@ -33,7 +33,7 @@ $(function () {
     });
 
     $('#promotListTable').bootstrapTable({
-        url: "/promotOrderController.do?dataGrid",
+        url: "/adminPromotController.do?dataGrid",
         sidePagination: "server",
         dataType: "json",
         search: false,
@@ -51,7 +51,6 @@ $(function () {
             {
                 title: '订单编号',
                 field: "id",
-                sortable: true,
                 width: "10%",//宽度
                 align: "center",//水平
                 valign: "middle"//垂直
@@ -59,7 +58,6 @@ $(function () {
             {
                 title: 'ASIN',
                 field: "asinId",
-                sortable: true,
                 width: "10%",//宽度
                 align: "center",//水平
                 valign: "middle",//垂直
@@ -70,7 +68,6 @@ $(function () {
             {
                 title: '店铺名称',
                 field: "brand",
-                sortable: true,
                 width: "10%",//宽度
                 align: "center",//水平
                 valign: "middle"//垂直
@@ -94,6 +91,7 @@ $(function () {
             {
                 title: '联系买家',
                 field: "buyerNum",
+                sortable: true,
                 width: "10%",//宽度
                 align: "center",//水平
                 valign: "middle"//垂直
@@ -101,6 +99,7 @@ $(function () {
             {
                 title: '获得评论',
                 field: "evaluateNum",
+                sortable: true,
                 width: "10%",//宽度
                 align: "center",//水平
                 valign: "middle"//垂直
@@ -108,6 +107,7 @@ $(function () {
             {
                 title: '费用(美元)',
                 field: "consumption",
+                sortable: true,
                 width: "10%",//宽度
                 align: "center",//水平
                 valign: "middle"//垂直
@@ -134,9 +134,10 @@ $(function () {
                 width: "10%",//宽度
                 formatter: function (value, row, index) {
                     if (row.state === 1) {//开启状态
-                        return "<a onclick='loadPromotOrder(" + value + ")' title='查看详情' data-target='#orderDetailModal' data-toggle='modal'><i class='fa fa-search'></i></a>&nbsp;&nbsp;<a onclick='clickDeleteModel("+value+");' title='关闭推广' data-target='#deleteOrderModel' data-toggle='modal'><i class='fa fa-window-close'></i></a>"
+                        return "<a onclick='loadPromotOrder(" + value + ")' title='查看详情' data-target='#orderDetailModal'style='cursor:pointer;' data-toggle='modal'><i class='fa fa-search'></i></a>&nbsp;&nbsp;&nbsp;&nbsp;" +
+                                "<a onclick='clickEvaluateModel("+value+");' title='评论管理' style='cursor:pointer;'><i class='fa fa-hand-o-right'></i></a>"
                     } else if (row.state === 2) { //关闭状态
-                        return "<a onclick='loadPromotOrder(" + value + ")'title='查看详情' data-target='#orderDetailModal' data-toggle='modal'><i class='fa fa-search'></i></a>"
+                        return "<a onclick='loadPromotOrder(" + value + ")'title='查看详情' data-target='#orderDetailModal'style='cursor:pointer;' data-toggle='modal'><i class='fa fa-search'></i></a>"
                     } else {
                         return "";
                     }
@@ -144,6 +145,7 @@ $(function () {
             }
         ]],
         queryParams: function (params) {
+            params.id = $("#amazon_id").val().trim();
             params.asinId = $("#amazon_asin").val().trim();
             params.state = $("#amazon_state").val().trim();
             params.addDate_begin = $("#addDate_begin_value").val().trim();
@@ -157,11 +159,85 @@ $(function () {
             height: tableHeight()
         })
     })
-
     function tableHeight() {
         return $(window).height() - 350;
     }
-
-
-
+    ko.applyBindings(viewModel);
 });
+
+function doPromotSearch() {
+    var addDate_begin = $("#addDate_begin_value").val().trim();
+    var addDate_end = $("#addDate_end_value").val().trim();
+    if ((addDate_end === "") ^ (addDate_begin === "")) {
+        toastr.warning("若填写查询时间，开始时间和结束时间需要同时填写！");
+        return;
+    }
+    $('#promotListTable').bootstrapTable("refresh");
+}
+
+var viewModel = {
+    id:ko.observable(),
+    asinId: ko.observable(),
+    productUrl: ko.observable(),
+    productTitle: ko.observable(),
+    brand: ko.observable(),
+    landingImage: ko.observable(),
+    salePrice: ko.observable(),
+    state: ko.observable(),
+    addDate: ko.observable(),
+    finishDate: ko.observable(),
+    guaranteeFund: ko.observable(),
+    consumption: ko.observable(),
+    needReviewNum: ko.observable(),
+    dayReviewNum: ko.observable(),
+    buyerNum: ko.observable(),
+    evaluateNum: ko.observable(),
+    reviewPrice: ko.observable()
+};
+
+
+function loadPromotOrder(promotId) {
+    $.ajax({
+        url: "/promotOrderController.do?doGet",
+        type: 'post',
+        data: {id: promotId},
+        success: function (data) {
+            if (data.success === "success") {
+                viewModel.id(data.content.id);
+                viewModel.asinId(data.content.asinId);
+                viewModel.productUrl(data.content.productUrl);
+                viewModel.productTitle(data.content.productTitle);
+                viewModel.brand(data.content.brand);
+                viewModel.landingImage(data.content.thumbnail);
+                viewModel.salePrice(data.content.salePrice);
+                viewModel.state(data.content.state);
+                viewModel.addDate(data.content.addDate);
+                viewModel.finishDate(data.content.finishDate);
+                viewModel.guaranteeFund(data.content.guaranteeFund);
+                viewModel.consumption(data.content.consumption);
+                viewModel.needReviewNum(data.content.needReviewNum);
+                viewModel.dayReviewNum(data.content.dayReviewNum);
+                viewModel.buyerNum(data.content.buyerNum);
+                viewModel.evaluateNum(data.content.evaluateNum);
+                viewModel.reviewPrice(data.content.reviewPrice);
+            } else {
+                window.location = '/loginController.do?login'
+            }
+        },
+        error: function (jqxhr, textStatus, errorThrow) {
+            toastr.success("服务器异常,请联系管理员！");
+        },
+        statusCode: {
+            404: function () {
+                console.log('not found');
+            },
+            500: function () {
+                console.log('error by server');
+            },
+        }
+    });
+}
+
+function clickEvaluateModel(promotId) {
+    window.open("/skipController.do?goToAdminMain&promotId="+promotId);
+}

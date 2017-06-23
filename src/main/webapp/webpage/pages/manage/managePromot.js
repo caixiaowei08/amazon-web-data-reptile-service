@@ -151,18 +151,14 @@ $(function () {
             return params;
         }
     });
-
     $(window).resize(function () {
         $('#promotListTable').bootstrapTable('resetView', {
             height: tableHeight()
         })
     })
-
     function tableHeight() {
         return $(window).height() - 350;
     }
-
-
 })
 
 function doPromotSearch() {
@@ -277,5 +273,4 @@ function deleteOrderById(){
             toastr.success("服务器异常,请联系管理员！");
         }
     })
-
 }

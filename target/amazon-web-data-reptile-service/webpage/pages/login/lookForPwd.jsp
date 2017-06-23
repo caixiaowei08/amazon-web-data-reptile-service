@@ -16,7 +16,6 @@
     <link rel="stylesheet" href="/webpage/plug-in/common/css/main.css"/>
     <link rel="stylesheet" href="/webpage/plug-in/validform/css/metro/style.css"/>
     <link rel="stylesheet" href="/webpage/pages/login/login.css"/>
-    <script type="text/javascript" src="/webpage/context/GlobalConstant.js"></script>
     <script type="text/javascript" src="/webpage/plug-in/jquery/jquery.min.js"></script>
     <script type="text/javascript" src="/webpage/plug-in/validform/js/Validform_v5.3.1_min_zh-cn.js"></script>
     <script type="text/javascript" src="/webpage/plug-in/toastr/toastr.min.js"></script>
