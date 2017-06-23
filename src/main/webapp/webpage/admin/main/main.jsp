@@ -14,11 +14,11 @@
     <link rel="stylesheet" href="/webpage/plug-in/bootstrap/css/bootstrap-theme.min.css"/>
     <link rel="stylesheet" href="/webpage/plug-in/font-awesome/css/font-awesome.min.css"/>
     <link rel="stylesheet" href="/webpage/plug-in/toastr/toastr.css"/>
-    <link rel="stylesheet" href="/webpage/plug-in/common/css/main.css"/>
     <link rel="stylesheet" href="/webpage/pages/main/index.css"/>
     <link rel="stylesheet" href="/webpage/admin/main/main.css"/>
     <link rel="stylesheet" href="/webpage/plug-in/bootstrapvalidator/dist/css/bootstrapValidator.min.css"/>
     <link rel="stylesheet" href="/webpage/plug-in/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css"/>
+    <link rel="stylesheet" href="/webpage/plug-in/bootstrap-table/dist/bootstrap-table.min.css"/>
     <!--[if lte IE 9]>
     <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
     <script src="https://cdn.bootcss.com/html5shiv/r29/html5.js"></script>
@@ -30,6 +30,9 @@
     <script type="text/javascript" src="/webpage/plug-in/bootstrapvalidator/dist/js/bootstrapValidator.min.js"></script>
     <script type="text/javascript" src="/webpage/plug-in/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
     <script type="text/javascript" src="/webpage/plug-in/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/webpage/plug-in/bootstrap-table/dist/bootstrap-table.min.js"></script>
+    <script type="text/javascript" src="/webpage/plug-in/bootstrap-table/dist/bootstrap-table-locale-all.min.js"></script>
+    <script type="text/javascript" src="/webpage/plug-in/bootstrap-table/dist/locale/bootstrap-table-zh-CN.js"></script>
     <script type="text/javascript" src="/webpage/admin/main/main.js"></script>
 </head>
 <body class="main-container">
@@ -68,17 +71,25 @@
             </div>
             <div class="panel-body">
                 <div class="row">
-                    <div class="col-sm-3">
+                    <div class="col-sm-4">
                         <div class="form-group">
-                            <label class="col-xs-3 control-label amazon-label" for="amazon_asin">ASIN</label>
+                            <label class="col-xs-4 control-label amazon-label" for="amazon_id">订单编号</label>
+                            <div class="col-xs-8">
+                                <input class="form-control" id="amazon_id" type="text"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label class="col-xs-4 control-label amazon-label" for="amazon_asin">ASIN</label>
                             <div class="col-xs-8">
                                 <input class="form-control" id="amazon_asin" type="text"/>
                             </div>
                         </div>
                     </div>
-                    <div class="col-sm-3">
+                    <div class="col-sm-4">
                         <div class="form-group">
-                            <label class="col-xs-3 control-label amazon-label" for="amazon_state">
+                            <label class="col-xs-4 control-label amazon-label" for="amazon_state">
                                 <nobr>状态</nobr>
                             </label>
                             <div class="col-xs-8">
@@ -90,12 +101,14 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-sm-6">
+                </div>
+                <div class="row">
+                    <div class="col-sm-8">
                         <div class="form-group">
                             <label class="col-xs-2 control-label amazon-label" for="amazon_state">
                                 <nobr>创建时间</nobr>
                             </label>
-                            <div class="col-xs-5">
+                            <div class="col-xs-4">
                                 <div class="input-group date form_date" id="addDate_begin"
                                      data-date-format="yyyy-mm-dd"
                                      data-link-field="addDate_begin_input" data-link-format="yyyy-mm-dd">
@@ -107,7 +120,10 @@
                                 </div>
                                 <input type="hidden" id="addDate_begin_input" value=""/>
                             </div>
-                            <div class="col-xs-5">
+                            <label class="col-xs-1 control-label amazon-label">
+                                <nobr>~</nobr>
+                            </label>
+                            <div class="col-xs-4">
                                 <div class="input-group date form_date" id="addDate_end"
                                      data-date-format="yyyy-mm-dd"
                                      data-link-field="addDate_end_input" data-link-format="yyyy-mm-dd">
@@ -139,6 +155,8 @@
                 </div>
             </div>
         </div>
+        <table id="promotListTable" class="table table-hover">
+        </table>
     </div>
 </div>
 <nav class="navbar navbar-default navbar-fixed-bottom">

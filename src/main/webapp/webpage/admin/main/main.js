@@ -152,6 +152,16 @@ $(function () {
         }
     });
 
+    $(window).resize(function () {
+        $('#promotListTable').bootstrapTable('resetView', {
+            height: tableHeight()
+        })
+    })
+
+    function tableHeight() {
+        return $(window).height() - 350;
+    }
+
 
 
 });
