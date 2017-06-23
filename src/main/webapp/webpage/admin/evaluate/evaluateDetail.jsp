@@ -65,11 +65,26 @@
 <div class="main-content">
     <div style="height: 20px;"></div>
     <div class="container">
+        <input type="hidden" id="promotId" value="" data-bind="value:promotId">
         <div class="panel panel-warning">
             <div class="panel-heading">
-                <h3 class="panel-title">推广活动管理</h3>
+                <h3 class="panel-title">订单评价</h3>
             </div>
             <div class="panel-body">
+                <div class="row">
+                    <div class="col-sm-4">
+                        <div class="input-group">
+                            <span class="input-group-addon">订单编号</span>
+                            <input type="text" class="form-control" data-bind="value:promotId" readonly="readonly" placeholder="订单编号">
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="input-group">
+                            <span class="input-group-addon">ASIN编号</span>
+                            <input type="text" class="form-control" data-bind="value:asinId" readonly="readonly" placeholder="ASIN编号">
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="panel-footer">
                 <div class="row">
