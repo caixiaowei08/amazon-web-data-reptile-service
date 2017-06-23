@@ -16,18 +16,21 @@
     <link rel="stylesheet" href="/webpage/plug-in/toastr/toastr.css"/>
     <link rel="stylesheet" href="/webpage/plug-in/common/css/main.css"/>
     <link rel="stylesheet" href="/webpage/pages/main/index.css"/>
-    <link rel="stylesheet" href="/webpage/pages/login/login.css"/>
+    <link rel="stylesheet" href="/webpage/admin/main/main.css"/>
     <link rel="stylesheet" href="/webpage/plug-in/bootstrapvalidator/dist/css/bootstrapValidator.min.css"/>
+    <link rel="stylesheet" href="/webpage/plug-in/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css"/>
     <!--[if lte IE 9]>
     <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
     <script src="https://cdn.bootcss.com/html5shiv/r29/html5.js"></script>
     <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
     <![endif]-->
+
     <script type="text/javascript" src="/webpage/plug-in/jquery/jquery.min.js"></script>
     <script type="text/javascript" src="/webpage/plug-in/toastr/toastr.min.js"></script>
     <script type="text/javascript" src="/webpage/plug-in/bootstrapvalidator/dist/js/bootstrapValidator.min.js"></script>
     <script type="text/javascript" src="/webpage/plug-in/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
     <script type="text/javascript" src="/webpage/plug-in/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/webpage/admin/main/main.js"></script>
 </head>
 <body class="main-container">
 <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
