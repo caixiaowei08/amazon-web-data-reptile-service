@@ -239,5 +239,5 @@ function loadPromotOrder(promotId) {
 }
 
 function clickEvaluateModel(promotId) {
-    window.open("/skipController.do?goToAdminMain&promotId="+promotId);
+    window.open("/evaluateController.admin?goEvaluateDetail&promotId="+promotId);
 }

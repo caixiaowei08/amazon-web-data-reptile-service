@@ -33,10 +33,63 @@
     <script type="text/javascript" src="/webpage/plug-in/bootstrap-table/dist/locale/bootstrap-table-zh-CN.js"></script>
     <script type="text/javascript" src="/webpage/plug-in/knockoutjs/dist/knockout.js"></script>
     <script type="text/javascript" src="/webpage/plug-in/toastr/toastr.min.js"></script>
-    <script type="text/javascript" src="/webpage/admin/main/main.js"></script>
+    <script type="text/javascript" src="/webpage/admin/evaluate/evaluateDetail.js"></script>
 </head>
-<body>
-
+<body class="main-container">
+<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                    data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                <span class="sr-only">Seller Assistant管理端</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand font-color" href="/mainController.do?index" target="_parent">Seller Assistant管理端</a>
+        </div>
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="#">推广订单管理</a></li>
+                <li><a href="#">我的账户</a></li>
+                <li>
+                    <a href="/userController.do?doLogOff">
+                        退出
+                        <i class="fa fa-power-off" style="color: red" aria-hidden="true"></i>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<div class="main-content">
+    <div style="height: 20px;"></div>
+    <div class="container">
+        <div class="panel panel-warning">
+            <div class="panel-heading">
+                <h3 class="panel-title">推广活动管理</h3>
+            </div>
+            <div class="panel-body">
+            </div>
+            <div class="panel-footer">
+                <div class="row">
+                    <div class="col-sm-4 col-sm-offset-8">
+                        <div class="btn-group" role="group">
+                            <button type="button" onclick="doPromotSearch();" class="btn btn-default"
+                                    style="width: 104px;">新增联系人
+                            </button>
+                            <button type="button" onclick="doPromotSearch();" class="btn btn-default"
+                                    style="width: 104px;">评论录入
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <table id="evaluateListTable" class="table table-hover">
+        </table>
+    </div>
+</div>
 <nav class="navbar navbar-default navbar-fixed-bottom">
     <div class="container">
         <div class="row">
