@@ -57,7 +57,7 @@
     <listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
   </listener>
   <!--判断操作是否超时-->
-<!--  <filter>
+<!--<filter>
     <filter-name>login-filter</filter-name>
     <filter-class>com.amazon.system.filter.LoginFilter</filter-class>
   </filter>
@@ -70,7 +70,8 @@
     <session-timeout>30</session-timeout>
   </session-config>
   <welcome-file-list>
-    <welcome-file>/webpage/pages/login/login.jsp</welcome-file>
+    <!--<welcome-file>/webpage/pages/login/login.jsp</welcome-file>-->
+    <welcome-file>/webpage/admin/login/login.jsp</welcome-file>
   </welcome-file-list>
 
 </web-app>

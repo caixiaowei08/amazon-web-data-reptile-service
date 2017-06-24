@@ -1,8 +1,7 @@
 package com.amazon.service.spider.service.impl;
 
-import com.amazon.service.spider.service.AmazonOrderPipeline;
-import com.amazon.service.spider.service.AmazonPageProcessor;
-import com.amazon.service.spider.service.SpiderService;
+import com.amazon.service.spider.pojo.AmazonEvaluateReviewPojo;
+import com.amazon.service.spider.service.*;
 import org.framework.core.utils.ContextHolderUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,5 +29,17 @@ public class SpiderServiceImpl implements SpiderService{
             return false;
         }
         return true;
+    }
+
+    public AmazonEvaluateReviewPojo spiderAmazonEvaluateReviewPojo(String pageUrl, int threadNum) {
+        AmazonEvaluateReviewPipeline amazonEvaluateReviewPipeline = new AmazonEvaluateReviewPipeline();
+        Spider.create(new AmazonEvaluateReviewProcessor())
+                .addUrl(pageUrl)
+                .addPipeline(amazonEvaluateReviewPipeline)
+                //开启5个线程抓取
+                .thread(threadNum)
+                //启动爬虫
+                .run();
+        return amazonEvaluateReviewPipeline.getAmazonEvaluateReviewPojo();
     }
 }

@@ -17,6 +17,7 @@ $(function () {
         locale: "zh-CN",
         showColumns: false,
         singleSelect: true,
+        idField: "id",
         columns: [[
             {
                 title: "评论编号",
@@ -30,21 +31,32 @@ $(function () {
                 field: "state",
                 width: "10%",//宽度
                 align: "center",//水平
-                valign: "middle"
+                valign: "middle",
+                formatter: function (value, row, index) {
+                    if (value == 1) {
+                        return "<span class='label label-warning'>pending</span>"
+                    } else if (value == 2) {
+                        return "<span class='label label-success'>review</span>"
+                    }
+                    return "";
+                }
             },
             {
                 title: '亚马逊订单号',
                 field: "amzOrderId",
-                width: "10%",//宽度
+                width: "20%",//宽度
                 align: "center",//水平
                 valign: "middle"//垂直
             },
             {
                 title: '评价内容',
                 field: "reviewContent",
-                width: "10%",//宽度
+                width: "30%",//宽度
                 align: "center",//水平
-                valign: "middle"//垂直
+                valign: "middle", //垂直
+                formatter: function (value, row, index) {
+                    return "<a href='" + row.reviewUrl + "' target='_blank'>" + value + "</a>";
+                }
             },
             {
                 title: '评价星级',
@@ -55,18 +67,18 @@ $(function () {
                 valign: "middle"//垂直
             },
             {
+                title: '评价时间',
+                field: "reviewDate",
+                width: "10%",//宽度
+                align: "center",//水平
+                valign: "middle"//垂直
+            },
+            {
                 title: '举报',
                 field: "id",
                 width: "10%",//宽度
                 formatter: function (value, row, index) {
-                    if (row.state === 1) {//开启状态
-                        return "<a onclick='loadPromotOrder(" + value + ")' title='查看详情' data-target='#orderDetailModal'style='cursor:pointer;' data-toggle='modal'><i class='fa fa-search'></i></a>&nbsp;&nbsp;&nbsp;&nbsp;" +
-                                "<a onclick='clickEvaluateModel("+value+");' title='评论管理' style='cursor:pointer;'><i class='fa fa-hand-o-right'></i></a>"
-                    } else if (row.state === 2) { //关闭状态
-                        return "<a onclick='loadPromotOrder(" + value + ")'title='查看详情' data-target='#orderDetailModal'style='cursor:pointer;' data-toggle='modal'><i class='fa fa-search'></i></a>"
-                    } else {
-                        return "";
-                    }
+
                 }
             }
         ]]
@@ -135,19 +147,18 @@ function SendComplete() {
 }
 
 function doSubmitEvaluate() {
-    var dayReviewNum = $("#dayReviewNum").val();
-    var needReviewNum = $("#needReviewNum").val();
-    var finishDate = $("#finishDate").val();
+    var asinId = $("#asinId").val();
+    var amzOrderId = $("#amzOrderId").val();
+    var reviewUrl = $("#reviewUrl").val();
     if (
-        dayReviewNum === null || dayReviewNum === undefined || dayReviewNum === ''||
-        needReviewNum === null || needReviewNum === undefined || needReviewNum === ''||
-        finishDate === null || finishDate === undefined || finishDate === ''
+        asinId === null || asinId === undefined || asinId === ''||
+        amzOrderId === null || amzOrderId === undefined || amzOrderId === ''
     ) {
         return;
     }
 
     $.ajax({
-        url:"/promotOrderController.admin?doAdd",
+        url:"/evaluateController.admin?doAdd",
         type:'post',
         beforeSend:beforeSend,
         data:$('#formObj').serialize(),

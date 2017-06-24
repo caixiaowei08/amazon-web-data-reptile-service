@@ -44,6 +44,7 @@ public class EvaluateController extends BaseController {
     }
 
     @RequestMapping(params = "doAdd")
+    @ResponseBody
     public AjaxJson doAdd(PromotOrderEvaluateFlowEntity promotOrderEvaluateFlowEntity,HttpServletRequest request, HttpServletResponse response) {
         AjaxJson j = new AjaxJson();
         String amzOrderId =  promotOrderEvaluateFlowEntity.getAmzOrderId();
@@ -56,9 +57,9 @@ public class EvaluateController extends BaseController {
         }
 
         if(StringUtils.hasText(reviewUrl)){
-
+            j =  evaluateService.doAddEvaluateWithReviewUrl(promotOrderEvaluateFlowEntity);
         }else{
-
+            j =  evaluateService.doAddEvaluateWithNoReviewUrl(promotOrderEvaluateFlowEntity);
         }
         return j;
     }
@@ -69,10 +70,6 @@ public class EvaluateController extends BaseController {
     public void dataGrid(DataGrid dataGrid, HttpServletRequest request, HttpServletResponse response) {
         AdminSystemEntity adminSystemSession = (AdminSystemEntity) ContextHolderUtils.getSession().getAttribute(Constants.ADMIN_SESSION_CONSTANTS);
         if (adminSystemSession == null) {
-            //@TODO 跳转登录页 response
-            return;
-        }
-        if (!StringUtils.hasText(request.getParameter("promotId"))) {
             return;
         }
 

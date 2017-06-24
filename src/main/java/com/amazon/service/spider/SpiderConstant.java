@@ -8,4 +8,7 @@ public class SpiderConstant {
      *AMAZON_PAGE_INFO_POJO
      */
     public static final String AMAZON_PAGE_INFO_POJO = "AmazonPageInfoPojo";
+
+
+    public static final String AMAZON_EVALUATE_REVIEW_POJO = "AmazonEvaluateReviewPojo";
 }

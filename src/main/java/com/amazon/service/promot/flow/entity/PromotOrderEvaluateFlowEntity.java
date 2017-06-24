@@ -29,6 +29,11 @@ public class PromotOrderEvaluateFlowEntity extends IdEntity implements Serializa
     private Integer sellerId;
 
     /**
+     *评价位置识别码 防止评价重复录入
+     */
+    private String reviewCode;
+
+    /**
      * 评价商品ID
      */
     private String asinId;
@@ -57,13 +62,11 @@ public class PromotOrderEvaluateFlowEntity extends IdEntity implements Serializa
     /**
      * 评级星级
      */
-    private Integer reviewStar;
+    private Double reviewStar;
     /**
      * 评价日期
      */
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @JSONField(format = "yyyy-MM-dd HH:mm:ss")
-    private Date reviewDate;
+    private String reviewDate;
     /**
      * 投诉 0-无投诉 1 2 3 4 5
      */
@@ -154,23 +157,28 @@ public class PromotOrderEvaluateFlowEntity extends IdEntity implements Serializa
         this.reviewContent = reviewContent;
     }
 
-    @Column(name = "reviewStar", nullable = true, length = 11)
-    public Integer getReviewStar() {
+
+
+    @Column(name = "reviewStar", nullable = true)
+    public Double getReviewStar() {
         return reviewStar;
     }
 
-    public void setReviewStar(Integer reviewStar) {
+    public void setReviewStar(Double reviewStar) {
         this.reviewStar = reviewStar;
     }
 
-    @Column(name = "reviewDate", nullable = true, length = 20)
-    public Date getReviewDate() {
+    @Column(name = "reviewDate", nullable = true, length = 50)
+    public String getReviewDate() {
         return reviewDate;
     }
 
-    public void setReviewDate(Date reviewDate) {
+    public void setReviewDate(String reviewDate) {
         this.reviewDate = reviewDate;
     }
+
+
+
 
     @Column(name = "complaint", nullable = true, length = 11)
     public Integer getComplaint() {
@@ -197,5 +205,14 @@ public class PromotOrderEvaluateFlowEntity extends IdEntity implements Serializa
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    @Column(name = "reviewCode", nullable = true, length = 100)
+    public String getReviewCode() {
+        return reviewCode;
+    }
+
+    public void setReviewCode(String reviewCode) {
+        this.reviewCode = reviewCode;
     }
 }
