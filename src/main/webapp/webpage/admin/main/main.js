@@ -39,6 +39,8 @@ $(function () {
         search: false,
         pageNumber: 1,
         pageSize: 20,
+        sortName: "updateTime",
+        sortOrder: 'desc',
         pageList: [10, 20, 30, 50, 100],
         pagination: true,
         height: tableHeight(),

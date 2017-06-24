@@ -45,18 +45,8 @@
             </div>
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle " data-toggle="dropdown" role="button" aria-haspopup="true"
-                           aria-expanded="false">我的推广活动 <span class="caret"></span></a>
-                        <ul class="dropdown-menu">
-                            <li>
-                                <a href="promotOrderController.do?goNewPromotOne" target="_parent">新建推广活动</a>
-                            </li>
-                            <li>
-                                <a href="redirectionController.do?goManagePromot" target="_parent">推广活动管理</a>
-                            </li>
-                        </ul>
-                    </li>
+                    <li><a href="/redirectionController.do?goManagePromot" target="_parent">推广活动管理</a></li>
+                    <li><a href="/promotOrderController.do?goNewPromotOne" target="_parent">新建推广活动</a>
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle " data-toggle="dropdown" role="button" aria-haspopup="true"
                            aria-expanded="false">充值<span class="caret"></span></a>
@@ -67,6 +57,12 @@
                         </ul>
                     </li>
                     <li><a href="#">我的账户</a></li>
+                    <li>
+                        <a href="/userController.do?doLogOff">
+                            退出
+                            <i class="fa fa-power-off" style="color: red" aria-hidden="true"></i>
+                        </a>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -316,6 +312,17 @@
         </div>
     </div>
 </div>
+<nav class="navbar navbar-default navbar-fixed-bottom">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-8 col-sm-offset-2">
+                <div style="text-align:center;line-height: 28px;">
+                    Copyright&copy;武汉市维斯卡尔技术服务有限公司 &reg;鄂ICP备17013383号
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
 </body>
 <script src="/webpage/pages/manage/managePromot.js"></script>
 </html>

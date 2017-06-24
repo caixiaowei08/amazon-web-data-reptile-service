@@ -92,7 +92,7 @@
             <div class="row">
                 <div class="col-sm-8 col-sm-offset-2">
                     <div style="text-align:center;line-height: 28px;">
-                        版权声明：&copy; 蔡晓伟 2017-2020
+                        Copyright&copy;武汉市维斯卡尔技术服务有限公司 &reg;鄂ICP备17013383号
                     </div>
                 </div>
             </div>

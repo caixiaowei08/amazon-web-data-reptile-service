@@ -16,12 +16,15 @@ import org.apache.commons.collections.CollectionUtils;
 import org.framework.core.common.model.json.AjaxJson;
 import org.framework.core.common.service.impl.BaseServiceImpl;
 import org.framework.core.global.service.GlobalService;
+import org.framework.core.utils.BeanUtils;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
@@ -46,16 +49,22 @@ public class EvaluateServiceImpl extends BaseServiceImpl implements EvaluateServ
     private UserFundService userFundService;
 
     public AjaxJson doAddEvaluateWithNoReviewUrl(PromotOrderEvaluateFlowEntity promotOrderEvaluateFlowEntity) {
-        //根据ASIN 查询有效订单
-        //获取账户会员信息
         AjaxJson j = new AjaxJson();
+        DetachedCriteria promotOrderEvaluateExistDetachedCriteria = DetachedCriteria.forClass(PromotOrderEvaluateFlowEntity.class);
+        promotOrderEvaluateExistDetachedCriteria.add(Restrictions.eq("amzOrderId",promotOrderEvaluateFlowEntity.getAmzOrderId()));
+        List<PromotOrderEvaluateFlowEntity> promotOrderExistFlowEntityList = promotOrderService.getListByCriteriaQuery(promotOrderEvaluateExistDetachedCriteria);
+        if(CollectionUtils.isNotEmpty(promotOrderExistFlowEntityList)){
+            j.setSuccess(AjaxJson.CODE_FAIL);
+            j.setMsg("不能重复录入亚马逊订单！");
+            return j;
+        }
         DetachedCriteria promotOrderDetachedCriteria = DetachedCriteria.forClass(PromotOrderEntity.class);
         promotOrderDetachedCriteria.add(Restrictions.eq("asinId", promotOrderEvaluateFlowEntity.getAsinId()));
         promotOrderDetachedCriteria.add(Restrictions.eq("state", Constant.STATE_Y));
         List<PromotOrderEntity> promotOrderEntityList = promotOrderService.getListByCriteriaQuery(promotOrderDetachedCriteria);
         if (CollectionUtils.isEmpty(promotOrderEntityList)) {
             j.setSuccess(AjaxJson.CODE_FAIL);
-            j.setSuccess("未能根据ASIN找到推广订单！");
+            j.setMsg("未能根据ASIN找到推广订单！");
             return j;
         }
         PromotOrderEntity promotOrderEntity = promotOrderEntityList.get(0);
@@ -65,15 +74,14 @@ public class EvaluateServiceImpl extends BaseServiceImpl implements EvaluateServ
         promotOrderEvaluateFlowEntity.setCreateTime(new Date());
         promotOrderEvaluateFlowEntity.setUpdateTime(new Date());
         promotOrderEvaluateFlowEntity.setState(Constants.EVALUATE_STATE_PENDING);
-
+        promotOrderEntity.setBuyerNum(promotOrderEntity.getBuyerNum() + 1);
+        promotOrderEntity.setUpdateTime(new Date());
+        promotOrderService.saveOrUpdate(promotOrderEntity);
         promotOrderEvaluateFlowService.save(promotOrderEvaluateFlowEntity);
-
         return j;
     }
 
-    public AjaxJson doAddEvaluateWithReviewUrl(PromotOrderEvaluateFlowEntity promotOrderEvaluateFlowEntity) {
-        //根据ASIN 查询有效订单
-        //获取账户会员信息
+    public AjaxJson doAddEvaluateWithReviewUrl(PromotOrderEvaluateFlowEntity promotOrderEvaluateFlowEntity) throws Exception{
         AjaxJson j = new AjaxJson();
         DetachedCriteria promotOrderDetachedCriteria = DetachedCriteria.forClass(PromotOrderEntity.class);
         promotOrderDetachedCriteria.add(Restrictions.eq("asinId", promotOrderEvaluateFlowEntity.getAsinId()));
@@ -81,57 +89,82 @@ public class EvaluateServiceImpl extends BaseServiceImpl implements EvaluateServ
         List<PromotOrderEntity> promotOrderEntityList = promotOrderService.getListByCriteriaQuery(promotOrderDetachedCriteria);
         if (CollectionUtils.isEmpty(promotOrderEntityList)) {
             j.setSuccess(AjaxJson.CODE_FAIL);
-            j.setSuccess("未能根据ASIN找到推广订单！");
+            j.setMsg("未能根据ASIN找到推广订单！");
             return j;
         }
         PromotOrderEntity promotOrderEntity = promotOrderEntityList.get(0);
         AmazonEvaluateReviewPojo amazonEvaluateReviewPojo = spiderService.spiderAmazonEvaluateReviewPojo(promotOrderEvaluateFlowEntity.getReviewUrl(), 2);
+
+        if (!StringUtils.hasText(amazonEvaluateReviewPojo.getReviewContent()) ||
+                !StringUtils.hasText(amazonEvaluateReviewPojo.getReviewStar()) ||
+                !StringUtils.hasText(amazonEvaluateReviewPojo.getReviewDate())) {
+            j.setSuccess(AjaxJson.CODE_FAIL);
+            j.setMsg("请确认给定的评价链接是否正确！");
+            return j;
+        }
+
         //开始校验 订单评价是否已经被使用
         DetachedCriteria promotOrderEvaluateDetachedCriteria = DetachedCriteria.forClass(PromotOrderEvaluateFlowEntity.class);
         promotOrderEvaluateDetachedCriteria.add(Restrictions.eq("reviewCode", amazonEvaluateReviewPojo.getReviewCode()));
         List<PromotOrderEvaluateFlowEntity> promotOrderEvaluateFlowEntityList = promotOrderService.getListByCriteriaQuery(promotOrderEvaluateDetachedCriteria);
         if (CollectionUtils.isNotEmpty(promotOrderEvaluateFlowEntityList)) {
             j.setSuccess(AjaxJson.CODE_FAIL);
-            j.setSuccess("该评价已经被使用，请核对！");
+            j.setMsg("该评价已经被使用，请核对！");
             return j;
         }
         //ASIN 是否正确
         if (!promotOrderEntity.getAsinId().equals(amazonEvaluateReviewPojo.getAsin())) {
             j.setSuccess(AjaxJson.CODE_FAIL);
-            j.setSuccess("评价ASIN编号和商品ASIN不匹配！");
+            j.setMsg("评价ASIN编号和商品ASIN不匹配！");
             return j;
         }
-
         //账目变动
         DetachedCriteria userFundDetachedCriteria = DetachedCriteria.forClass(UserFundEntity.class);
         userFundDetachedCriteria.add(Restrictions.eq("sellerId", promotOrderEntity.getSellerId()));
         List<UserFundEntity> userFundEntityList = promotOrderService.getListByCriteriaQuery(userFundDetachedCriteria);
         if (CollectionUtils.isEmpty(userFundEntityList)) {
             j.setSuccess(AjaxJson.CODE_FAIL);
-            j.setSuccess("无法找到资金账户，请联系管理员！");
+            j.setMsg("无法找到资金账户，请联系管理员！");
             return j;
         }
         UserFundEntity userFundEntity = userFundEntityList.get(0);
         BigDecimal reviewPrice = promotOrderEntity.getReviewPrice();
         if (userFundEntity.getFreezeFund().compareTo(reviewPrice) < 0
-                || userFundEntity.getTotalFund().compareTo(reviewPrice)< 0) {
+                || userFundEntity.getTotalFund().compareTo(reviewPrice) < 0) {
             j.setSuccess(AjaxJson.CODE_FAIL);
-            j.setSuccess("账户资金不足，请核实!");
+            j.setMsg("账户资金不足，请核实!");
             return j;
         }
 
         if (promotOrderEntity.getGuaranteeFund().compareTo(reviewPrice) < 0) {
             j.setSuccess(AjaxJson.CODE_FAIL);
-            j.setSuccess("订单保证金不足！");
+            j.setMsg("订单保证金不足！");
             return j;
         }
-
+        DetachedCriteria promotOrderEvaluateExistDetachedCriteria = DetachedCriteria.forClass(PromotOrderEvaluateFlowEntity.class);
+        promotOrderEvaluateExistDetachedCriteria.add(Restrictions.eq("promotId", promotOrderEntity.getId()));
+        promotOrderEvaluateExistDetachedCriteria.add(Restrictions.eq("sellerId", promotOrderEntity.getSellerId()));
+        promotOrderEvaluateExistDetachedCriteria.add(Restrictions.eq("asinId", amazonEvaluateReviewPojo.getAsin()));
+        promotOrderEvaluateExistDetachedCriteria.add(Restrictions.eq("state", Constants.EVALUATE_STATE_PENDING));
+        promotOrderEvaluateExistDetachedCriteria.add(Restrictions.eq("amzOrderId",promotOrderEvaluateFlowEntity.getAmzOrderId()));
+        List<PromotOrderEvaluateFlowEntity> promotOrderExistFlowEntityList = promotOrderService.getListByCriteriaQuery(promotOrderEvaluateExistDetachedCriteria);
+        PromotOrderEvaluateFlowEntity promotOrderEvaluateFlowEntityExist = null;
+        if (CollectionUtils.isNotEmpty(promotOrderExistFlowEntityList)) {
+            promotOrderEvaluateFlowEntityExist = promotOrderExistFlowEntityList.get(0);
+        }
         userFundEntity.setTotalFund(userFundEntity.getTotalFund().subtract(reviewPrice));
         userFundEntity.setFreezeFund(userFundEntity.getFreezeFund().subtract(reviewPrice));
+        if (promotOrderEvaluateFlowEntityExist == null) {
+            promotOrderEntity.setBuyerNum(promotOrderEntity.getBuyerNum() + 1);
+        }
         promotOrderEntity.setEvaluateNum(promotOrderEntity.getEvaluateNum() + 1);
         promotOrderEntity.setConsumption(promotOrderEntity.getConsumption().add(reviewPrice));
         promotOrderEntity.setGuaranteeFund(promotOrderEntity.getGuaranteeFund().subtract(reviewPrice));
+
         //新增设置 评价状态
+        if (promotOrderEvaluateFlowEntityExist != null) {
+            promotOrderEvaluateFlowEntity.setId(promotOrderEvaluateFlowEntityExist.getId());
+        }
         promotOrderEvaluateFlowEntity.setPromotId(promotOrderEntity.getId());
         promotOrderEvaluateFlowEntity.setSellerId(promotOrderEntity.getSellerId());
         promotOrderEvaluateFlowEntity.setAsinId(promotOrderEvaluateFlowEntity.getAsinId());
@@ -140,15 +173,22 @@ public class EvaluateServiceImpl extends BaseServiceImpl implements EvaluateServ
         promotOrderEvaluateFlowEntity.setReviewCode(amazonEvaluateReviewPojo.getReviewCode());
         promotOrderEvaluateFlowEntity.setReviewContent(amazonEvaluateReviewPojo.getReviewContent());
         promotOrderEvaluateFlowEntity.setReviewUrl(amazonEvaluateReviewPojo.getReviewUrl());
-        promotOrderEvaluateFlowEntity.setReviewStar(Double.parseDouble(amazonEvaluateReviewPojo.getReviewStar().trim().substring(0,2)));
+        promotOrderEvaluateFlowEntity.setReviewStar(Double.parseDouble(amazonEvaluateReviewPojo.getReviewStar().trim().substring(0, 2)));
         promotOrderEvaluateFlowEntity.setReviewDate(amazonEvaluateReviewPojo.getReviewDate());
         promotOrderEvaluateFlowEntity.setComplaint(0);
         promotOrderEvaluateFlowEntity.setBuyerId("-1");
-        promotOrderEvaluateFlowEntity.setCreateTime(new Date());
-        promotOrderEvaluateFlowEntity.setUpdateTime(new Date());
-        userFundService.saveOrUpdate(userFundEntity);
-        promotOrderService.saveOrUpdate(promotOrderEntity);
-        promotOrderEvaluateFlowService.saveOrUpdate(promotOrderEvaluateFlowEntity);
+        if (promotOrderEvaluateFlowEntityExist == null) {
+            promotOrderEvaluateFlowEntity.setCreateTime(new Date());
+        }
+
+
+            promotOrderEvaluateFlowEntity.setUpdateTime(new Date());
+            userFundService.saveOrUpdate(userFundEntity);
+            promotOrderService.saveOrUpdate(promotOrderEntity);
+            BeanUtils.copyBeanNotNull2Bean(promotOrderEvaluateFlowEntity, promotOrderEvaluateFlowEntityExist);
+            promotOrderEvaluateFlowService.saveOrUpdate(promotOrderEvaluateFlowEntityExist);
+
+
         return j;
     }
 }

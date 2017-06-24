@@ -56,10 +56,15 @@ public class EvaluateController extends BaseController {
             return j;
         }
 
-        if(StringUtils.hasText(reviewUrl)){
-            j =  evaluateService.doAddEvaluateWithReviewUrl(promotOrderEvaluateFlowEntity);
-        }else{
-            j =  evaluateService.doAddEvaluateWithNoReviewUrl(promotOrderEvaluateFlowEntity);
+        try {
+            if(StringUtils.hasText(reviewUrl)){
+                j =  evaluateService.doAddEvaluateWithReviewUrl(promotOrderEvaluateFlowEntity);
+            }else{
+                j =  evaluateService.doAddEvaluateWithNoReviewUrl(promotOrderEvaluateFlowEntity);
+            }
+        }catch (Exception e){
+            j.setSuccess(AjaxJson.CODE_FAIL);
+            j.setMsg("添加评论失败！");
         }
         return j;
     }

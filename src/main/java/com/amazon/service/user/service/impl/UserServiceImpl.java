@@ -1,5 +1,6 @@
 package com.amazon.service.user.service.impl;
 
+import com.amazon.admin.constant.Constants;
 import com.amazon.service.fund.entity.UserFundEntity;
 import com.amazon.service.fund.service.UserFundService;
 import com.amazon.service.promot.flow.entity.PromotOrderEvaluateFlowEntity;
@@ -91,6 +92,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
                 params.add(promotOrderEntity.getId());
             }
             promotOrderEvaluateFlowDetachedCriteria.add(Restrictions.in("promotId", params));
+            promotOrderEvaluateFlowDetachedCriteria.add(Restrictions.eq("state", Constants.EVALUATE_STATE_REVIEW));
             promotOrderEvaluateFlowDetachedCriteria.add(Restrictions.ge("createTime", DateUtils.getBeginOfDate()));
             userBaseInfoVo.setTodayEvaluateNum(promotOrderEvaluateFlowService.getRowCount(promotOrderEvaluateFlowDetachedCriteria));
         } else {
@@ -104,14 +106,15 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
         userBaseInfoVo.setBuyerNum(promotOrderService.getRowSum(promotOrderDetachedCriteriaBuyerNum));
         //求和总好评数
         DetachedCriteria promotOrderEvaluateFlowDetachedCriteriaAll = DetachedCriteria.forClass(PromotOrderEvaluateFlowEntity.class);
-        promotOrderEvaluateFlowDetachedCriteriaAll.add(Restrictions.in("sellerId", userEntity.getId()));
+        promotOrderEvaluateFlowDetachedCriteriaAll.add(Restrictions.eq("sellerId", userEntity.getId()));
+        promotOrderEvaluateFlowDetachedCriteriaAll.add(Restrictions.eq("state", Constants.EVALUATE_STATE_REVIEW));
         userBaseInfoVo.setTotalEvaluateNum(promotOrderEvaluateFlowService.getRowCount(promotOrderEvaluateFlowDetachedCriteriaAll));
         //完成订单数
         DetachedCriteria promotOrderDetachedCriteriaDetailClose = DetachedCriteria.forClass(PromotOrderEntity.class);
         promotOrderDetachedCriteriaDetailClose.add(Restrictions.eq("sellerId", userEntity.getId()));
         promotOrderDetachedCriteriaDetailClose.add(Restrictions.not(Restrictions.eq("state", Constant.STATE_Y)));
         userBaseInfoVo.setHistoryOrderNum(promotOrderService.getRowCount(promotOrderDetachedCriteriaDetailClose));
-        //求订单从消费记录
+        //求订单消费记录
         DetachedCriteria promotOrderDetachedCriteriaConsumption = DetachedCriteria.forClass(PromotOrderEntity.class);
         promotOrderDetachedCriteriaConsumption.add(Restrictions.eq("sellerId", userEntity.getId()));
         promotOrderDetachedCriteriaConsumption.setProjection(Projections.sum("consumption"));
@@ -131,14 +134,14 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
         List<UserMembershipEntity> userMembershipEntityList = userMembershipService.getListByCriteriaQuery(userMembershipDetachedCriteria);
         if (CollectionUtils.isNotEmpty(userMembershipEntityList)) {
             UserMembershipEntity userMembershipEntity = userMembershipEntityList.get(0);
-            if(userMembershipEntity.getMembershipEndTime() == null){
+            if (userMembershipEntity.getMembershipEndTime() == null) {
                 userBaseInfoVo.setBeforeVip(false);
-            }else{
+            } else {
                 userBaseInfoVo.setBeforeVip(true);
                 userBaseInfoVo.setMembershipEndTime(userMembershipEntity.getMembershipEndTime());
-                if(DateUtils.compareTo(userMembershipEntity.getMembershipEndTime(),new Date()) > 0){
+                if (DateUtils.compareTo(userMembershipEntity.getMembershipEndTime(), new Date()) > 0) {
                     userBaseInfoVo.setVip(true);
-                }else{
+                } else {
                     userBaseInfoVo.setVip(false);
                 }
             }

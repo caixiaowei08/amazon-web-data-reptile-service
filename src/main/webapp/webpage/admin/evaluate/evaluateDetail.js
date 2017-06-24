@@ -9,6 +9,8 @@ $(function () {
         search: false,
         pageNumber: 1,
         pageSize: 20,
+        sortName: "updateTime",
+        sortOrder: 'desc',
         pageList: [10, 20, 30, 50, 100],
         pagination: true,
         height: tableHeight(),
@@ -55,6 +57,9 @@ $(function () {
                 align: "center",//水平
                 valign: "middle", //垂直
                 formatter: function (value, row, index) {
+                    if(value === undefined){
+                        return "-"
+                    }
                     return "<a href='" + row.reviewUrl + "' target='_blank'>" + value + "</a>";
                 }
             },
@@ -72,14 +77,6 @@ $(function () {
                 width: "10%",//宽度
                 align: "center",//水平
                 valign: "middle"//垂直
-            },
-            {
-                title: '举报',
-                field: "id",
-                width: "10%",//宽度
-                formatter: function (value, row, index) {
-
-                }
             }
         ]]
     });
@@ -174,6 +171,7 @@ function doSubmitEvaluate() {
         },
         complete:function () {
             $('#addNewReview').modal('hide');
+            $('#evaluateListTable').bootstrapTable("refresh");
             SendComplete();
         },
         statusCode:{
