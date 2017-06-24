@@ -2,6 +2,7 @@ package com.amazon.admin.promot.controller;
 
 import com.amazon.admin.account.entity.AdminSystemEntity;
 import com.amazon.admin.constant.Constants;
+import com.amazon.admin.poi.service.PoiPromotService;
 import com.amazon.admin.promot.service.AdminPromotService;
 import com.amazon.service.promot.order.entity.PromotOrderEntity;
 import com.amazon.system.system.bootstrap.hibernate.CriteriaQuery;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 /**
  * Created by User on 2017/6/23.
@@ -28,6 +30,9 @@ public class AdminPromotController extends BaseController {
 
     @Autowired
     private AdminPromotService adminPromotService;
+
+    @Autowired
+    private PoiPromotService poiPromotService;
 
     @RequestMapping(params = "dataGrid")
     public void dataGrid(DataGrid dataGrid, HttpServletRequest request, HttpServletResponse response) {
@@ -45,6 +50,18 @@ public class AdminPromotController extends BaseController {
         DatagridJsonUtils.listToObj(dataGridReturn, PromotOrderEntity.class, dataGrid.getField());
         DatagridJsonUtils.datagrid(response, dataGridReturn);
     }
+
+    @RequestMapping(params = "downPromotOrderExcel")
+    public void downPromotOrderExcel(HttpServletRequest request, HttpServletResponse response) {
+        try{
+            poiPromotService.downPromotOrderExcel(null,response,"测试EXCEL");
+        }catch (Exception e){
+
+        }
+
+    }
+
+
 
 
 }
