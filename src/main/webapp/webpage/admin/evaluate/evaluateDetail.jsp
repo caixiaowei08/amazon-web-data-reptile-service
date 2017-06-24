@@ -26,10 +26,12 @@
     <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
     <![endif]-->
     <script type="text/javascript" src="/webpage/plug-in/bootstrapvalidator/dist/js/bootstrapValidator.min.js"></script>
-    <script type="text/javascript" src="/webpage/plug-in/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
+    <script type="text/javascript"
+            src="/webpage/plug-in/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
     <script type="text/javascript" src="/webpage/plug-in/bootstrap/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="/webpage/plug-in/bootstrap-table/dist/bootstrap-table.min.js"></script>
-    <script type="text/javascript" src="/webpage/plug-in/bootstrap-table/dist/bootstrap-table-locale-all.min.js"></script>
+    <script type="text/javascript"
+            src="/webpage/plug-in/bootstrap-table/dist/bootstrap-table-locale-all.min.js"></script>
     <script type="text/javascript" src="/webpage/plug-in/bootstrap-table/dist/locale/bootstrap-table-zh-CN.js"></script>
     <script type="text/javascript" src="/webpage/plug-in/knockoutjs/dist/knockout.js"></script>
     <script type="text/javascript" src="/webpage/plug-in/toastr/toastr.min.js"></script>
@@ -46,14 +48,15 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand font-color" href="/mainController.do?index" target="_parent">Seller Assistant管理端</a>
+            <a class="navbar-brand font-color" href="/skipController.admin?goToAdminMain" target="_parent">Seller Assistant管理端</a>
         </div>
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="#">推广订单管理</a></li>
+                <li><a href="/skipController.admin?goToAdminMain">推广订单管理</a></li>
+                <li><a href="/evaluateController.admin?goEvaluateDetail">订单评价管理</a></li>
                 <li><a href="#">我的账户</a></li>
                 <li>
-                    <a href="/userController.do?doLogOff">
+                    <a href="/adminSystemController.admin?doLogOff">
                         退出
                         <i class="fa fa-power-off" style="color: red" aria-hidden="true"></i>
                     </a>
@@ -65,12 +68,11 @@
 <div class="main-content">
     <div style="height: 20px;"></div>
     <div class="container">
-        <input type="hidden" id="promotId" value="" data-bind="value:promotId">
         <div class="panel panel-warning">
             <div class="panel-heading">
                 <h3 class="panel-title">订单评价</h3>
             </div>
-            <div class="panel-body">
+            <%--<div class="panel-body">
                 <div class="row">
                     <div class="col-sm-4">
                         <div class="input-group">
@@ -85,17 +87,14 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div>--%>
             <div class="panel-footer">
                 <div class="row">
                     <div class="col-sm-4 col-sm-offset-8">
                         <div class="btn-group" role="group">
-                            <button type="button" onclick="doPromotSearch();" class="btn btn-default"
-                                    style="width: 104px;">新增联系人
-                            </button>
-                            <button type="button" onclick="doPromotSearch();" class="btn btn-default"
-                                    style="width: 104px;">评论录入
-                            </button>
+                            <a type="button" data-target='#addNewReview' class="btn btn-default" data-toggle='modal'
+                               style="width: 104px;">评论录入
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -116,5 +115,53 @@
         </div>
     </div>
 </nav>
+<div class="modal fade" id="addNewReview" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="formObj" onsubmit="return doSubmitEvaluate()">
+                <div class="modal-header">
+                    <button type="button" class="close"
+                            data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel">
+                        评论录入
+                    </h4>
+                </div>
+                <div class="modal-body">
+
+                    <div class="form-group" style="height: 50px;">
+                        <div class="input-group" style="width: 100%;">
+                            <span class="input-group-addon" style="width:150px;" id="asin-addon">ASIN编号*</span>
+                            <input type="text" class="form-control" id="asinId" name="asinId" placeholder="ASIN编号"
+                                   aria-describedby="basic-addon1">
+                        </div>
+                    </div>
+                    <div class="form-group" style="height: 50px;">
+                        <div class="input-group" style="width: 100%;">
+                            <span class="input-group-addon" style="width:150px;" id="amzOrderId-addon">亚马逊订单号*</span>
+                            <input type="text" class="form-control" id="amzOrderId" name="amzOrderId" placeholder="亚马逊订单号"
+                                   aria-describedby="basic-addon1">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="input-group" style="width: 100%;">
+                            <span class="input-group-addon" style="width:150px;" id="reviewUrl-addon">亚马逊评论链接</span>
+                            <input type="text" class="form-control" id="reviewUrl" name="reviewUrl" placeholder="亚马逊评论链接"
+                                   aria-describedby="basic-addon1">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="btn_sub"  class="btn btn-primary">录入
+                    </button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 </body>
 </html>

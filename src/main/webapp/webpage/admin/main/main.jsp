@@ -47,14 +47,15 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand font-color" href="/mainController.do?index" target="_parent">Seller Assistant管理端</a>
+            <a class="navbar-brand font-color" href="/skipController.admin?goToAdminMain" target="_parent">Seller Assistant管理端</a>
         </div>
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="#">推广订单管理</a></li>
+                <li><a href="/skipController.admin?goToAdminMain">推广订单管理</a></li>
+                <li><a href="/evaluateController.admin?goEvaluateDetail">订单评价管理</a></li>
                 <li><a href="#">我的账户</a></li>
                 <li>
-                    <a href="/userController.do?doLogOff">
+                    <a href="/adminSystemController.admin?doLogOff">
                         退出
                         <i class="fa fa-power-off" style="color: red" aria-hidden="true"></i>
                     </a>
@@ -68,7 +69,7 @@
     <div class="container">
         <div class="panel panel-warning">
             <div class="panel-heading">
-                <h3 class="panel-title">推广活动管理</h3>
+                <h3 class="panel-title">推广订单管理</h3>
             </div>
             <div class="panel-body">
                 <div class="row">

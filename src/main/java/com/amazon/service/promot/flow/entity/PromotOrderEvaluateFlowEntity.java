@@ -34,6 +34,11 @@ public class PromotOrderEvaluateFlowEntity extends IdEntity implements Serializa
     private String asinId;
 
     /**
+     * 状态
+     */
+    private Integer state;
+
+    /**
      * 买家ID号
      */
     private String buyerId;
@@ -41,6 +46,10 @@ public class PromotOrderEvaluateFlowEntity extends IdEntity implements Serializa
      * 亚马逊订单号
      */
     private String amzOrderId;
+    /**
+     *评价链接
+     */
+    private String reviewUrl;
     /**
      * 评价内容
      */
@@ -114,8 +123,26 @@ public class PromotOrderEvaluateFlowEntity extends IdEntity implements Serializa
         return amzOrderId;
     }
 
+    @Column(name = "state", nullable = true, length = 11)
+    public Integer getState() {
+        return state;
+    }
+
+    public void setState(Integer state) {
+        this.state = state;
+    }
+
     public void setAmzOrderId(String amzOrderId) {
         this.amzOrderId = amzOrderId;
+    }
+
+    @Column(name = "reviewUrl", nullable = true)
+    public String getReviewUrl() {
+        return reviewUrl;
+    }
+
+    public void setReviewUrl(String reviewUrl) {
+        this.reviewUrl = reviewUrl;
     }
 
     @Column(name = "reviewContent", nullable = true)

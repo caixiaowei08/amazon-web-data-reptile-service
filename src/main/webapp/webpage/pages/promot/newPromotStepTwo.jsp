@@ -264,8 +264,7 @@
                     }
                 }
             }
-        })
-        ;
+        });
     });
 
     $("#btn_sub").click(function () {

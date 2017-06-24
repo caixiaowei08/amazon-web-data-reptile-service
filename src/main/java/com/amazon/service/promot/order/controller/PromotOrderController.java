@@ -5,6 +5,7 @@ import com.amazon.service.promot.order.service.PromotOrderService;
 import com.amazon.service.spider.SpiderConstant;
 import com.amazon.service.spider.pojo.AmazonPageInfoPojo;
 import com.amazon.service.spider.service.SpiderService;
+import com.amazon.service.user.controller.UserController;
 import com.amazon.service.user.entity.UserEntity;
 import com.amazon.system.Constant;
 import com.amazon.system.system.bootstrap.hibernate.CriteriaQuery;
@@ -12,6 +13,8 @@ import com.amazon.system.system.bootstrap.json.DataGrid;
 import com.amazon.system.system.bootstrap.json.DataGridReturn;
 import com.amazon.system.system.bootstrap.utils.DatagridJsonUtils;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.framework.core.common.controller.BaseController;
 import org.framework.core.common.model.json.AjaxJson;
 import org.framework.core.utils.BeanUtils;
@@ -29,6 +32,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
@@ -41,6 +45,8 @@ import java.util.List;
 @Controller
 @RequestMapping("/promotOrderController")
 public class PromotOrderController extends BaseController {
+
+    private static Logger logger = LogManager.getLogger(PromotOrderController.class.getName());
 
     @Autowired
     private PromotOrderService promotOrderService;
@@ -67,12 +73,21 @@ public class PromotOrderController extends BaseController {
     public void dataGrid(DataGrid dataGrid, HttpServletRequest request, HttpServletResponse response) {
         CriteriaQuery criteriaQuery = new CriteriaQuery(PromotOrderEntity.class, dataGrid, request.getParameterMap());
         UserEntity userEntity = (UserEntity) ContextHolderUtils.getSession().getAttribute(Constant.USER_SESSION_CONSTANTS);
+        if (userEntity == null) {
+            try {
+                response.sendRedirect("/loginController.do?login");
+                return;
+            } catch (IOException e) {
+                logger.info("退出登录失败！", e);
+            }
+
+        }
         try {
             criteriaQuery.installHqlParams();
         } catch (Exception e) {
-
+            logger.info("组装查询出错！", e);
         }
-        criteriaQuery.getDetachedCriteria().add(Restrictions.eq("sellerId",userEntity.getId()));//加上用户
+        criteriaQuery.getDetachedCriteria().add(Restrictions.eq("sellerId", userEntity.getId()));//加上用户
         DataGridReturn dataGridReturn = promotOrderService.getDataGridReturn(criteriaQuery);
         DatagridJsonUtils.listToObj(dataGridReturn, PromotOrderEntity.class, dataGrid.getField());
         DatagridJsonUtils.datagrid(response, dataGridReturn);
@@ -162,7 +177,7 @@ public class PromotOrderController extends BaseController {
             return j;
         }
 
-        j = promotOrderService.doAddNewPromot(userEntity,amazonPageInfoPojo,promotOrderEntity);
+        j = promotOrderService.doAddNewPromot(userEntity, amazonPageInfoPojo, promotOrderEntity);
 
         return j;
     }

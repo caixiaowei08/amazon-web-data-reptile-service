@@ -43,6 +43,28 @@ public class EvaluateController extends BaseController {
         return "admin/evaluate/evaluateDetail";
     }
 
+    @RequestMapping(params = "doAdd")
+    public AjaxJson doAdd(PromotOrderEvaluateFlowEntity promotOrderEvaluateFlowEntity,HttpServletRequest request, HttpServletResponse response) {
+        AjaxJson j = new AjaxJson();
+        String amzOrderId =  promotOrderEvaluateFlowEntity.getAmzOrderId();
+        String asinId =  promotOrderEvaluateFlowEntity.getAsinId();
+        String reviewUrl =  promotOrderEvaluateFlowEntity.getReviewUrl();
+        if((!StringUtils.hasText(amzOrderId))||(!StringUtils.hasText(asinId))){
+            j.setSuccess(AjaxJson.CODE_FAIL);
+            j.setMsg("亚马逊订单号和ASIN编号必填！");
+            return j;
+        }
+
+        if(StringUtils.hasText(reviewUrl)){
+
+        }else{
+
+        }
+        return j;
+    }
+
+
+
     @RequestMapping(params = "dataGrid")
     public void dataGrid(DataGrid dataGrid, HttpServletRequest request, HttpServletResponse response) {
         AdminSystemEntity adminSystemSession = (AdminSystemEntity) ContextHolderUtils.getSession().getAttribute(Constants.ADMIN_SESSION_CONSTANTS);

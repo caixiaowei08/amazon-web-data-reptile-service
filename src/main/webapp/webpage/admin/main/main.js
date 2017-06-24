@@ -133,14 +133,13 @@ $(function () {
                 field: "id",
                 width: "10%",//宽度
                 formatter: function (value, row, index) {
-                    if (row.state === 1) {//开启状态
-                        return "<a onclick='loadPromotOrder(" + value + ")' title='查看详情' data-target='#orderDetailModal'style='cursor:pointer;' data-toggle='modal'><i class='fa fa-search'></i></a>&nbsp;&nbsp;&nbsp;&nbsp;" +
-                                "<a onclick='clickEvaluateModel("+value+");' title='评论管理' style='cursor:pointer;'><i class='fa fa-hand-o-right'></i></a>"
-                    } else if (row.state === 2) { //关闭状态
+                    /*if (row.state === 1) {//开启状态*/
+                        return "<a onclick='loadPromotOrder(" + value + ")' title='查看详情' data-target='#orderDetailModal'style='cursor:pointer;' data-toggle='modal'><i class='fa fa-search'></i></a>";
+                    /*} else if (row.state === 2) { //关闭状态
                         return "<a onclick='loadPromotOrder(" + value + ")'title='查看详情' data-target='#orderDetailModal'style='cursor:pointer;' data-toggle='modal'><i class='fa fa-search'></i></a>"
                     } else {
                         return "";
-                    }
+                    }*/
                 }
             }
         ]],

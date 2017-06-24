@@ -7,5 +7,7 @@ public class Constants {
 
     public final static String ADMIN_SESSION_CONSTANTS = "ADMIN_SESSION_CONSTANTS";
 
+    public final static Integer EVALUATE_STATE_PENDING = 1;
 
+    public final static Integer EVALUATE_STATE_REVIEW = 2;
 }
