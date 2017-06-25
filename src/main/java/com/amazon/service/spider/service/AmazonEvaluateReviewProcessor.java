@@ -20,7 +20,7 @@ public class AmazonEvaluateReviewProcessor implements PageProcessor {
         AmazonEvaluateReviewPojo amazonEvaluateReviewPojo = new AmazonEvaluateReviewPojo();
         amazonEvaluateReviewPojo.setReviewUrl(page.getRequest().getUrl());
         amazonEvaluateReviewPojo.setProductUrl(page.getHtml().xpath("//table/tbody/tr[1]/td[@valign='top'][2]/div[1]/div[@class='cBoxInner']/div[@id='rdpItemInfo']/div[@class='crDescription']/div[1]/a/@href").toString());
-        amazonEvaluateReviewPojo.setAsin(page.getHtml().xpath("//table/tbody/tr[1]/td[@valign='top'][1]/div[@class='hReview']/span[1]/abbr[@class='asin']/text()").toString());
+        amazonEvaluateReviewPojo.setAsin(page.getHtml().xpath("//span[@class='asinReviewsSummary']/@name").toString());
         amazonEvaluateReviewPojo.setReviewCode(page.getHtml().xpath("//table/tbody/tr[1]/td[@valign='top'][1]/a/@name").toString());
         amazonEvaluateReviewPojo.setReviewContent(page.getHtml().xpath("//table/tbody/tr[1]/td[@valign='top'][1]/div[1]/div[1]/b/text()").toString());
         amazonEvaluateReviewPojo.setReviewDate(page.getHtml().xpath("//table/tbody/tr[1]/td[@valign='top'][1]/div[1]/div[1]/nobr/text()").toString());

@@ -242,3 +242,26 @@ function loadPromotOrder(promotId) {
 function clickEvaluateModel(promotId) {
     window.open("/evaluateController.admin?goEvaluateDetail&promotId="+promotId);
 }
+function downPromotOrderExcel(){
+    var params = new Object();
+    params.id = $("#amazon_id").val().trim();
+    params.asinId = $("#amazon_asin").val().trim();
+    params.state = $("#amazon_state").val().trim();
+    params.addDate_begin = $("#addDate_begin_value").val().trim();
+    params.addDate_end = $("#addDate_end_value").val().trim();
+
+    if ((params.addDate_end === "") ^ (params.addDate_begin === "")) {
+        toastr.warning("若填写查询时间，开始时间和结束时间需要同时填写！");
+        return;
+    }
+    var json = JSON.stringify(params);
+
+    window.open(
+        "adminPromotController.admin?downPromotOrderExcel&id="
+        +params.id+"&asinId=" +params.asinId
+        +"&state=" +params.state
+        +"&addDate_begin=" +params.addDate_begin
+        +"&addDate_end=" +params.addDate_end
+    )
+}
+

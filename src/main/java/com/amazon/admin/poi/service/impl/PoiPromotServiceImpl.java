@@ -2,6 +2,7 @@ package com.amazon.admin.poi.service.impl;
 
 import com.amazon.admin.poi.service.PoiPromotService;
 import com.amazon.service.promot.order.entity.PromotOrderEntity;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFDataFormat;
 import org.apache.poi.hssf.usermodel.HSSFFont;
@@ -11,6 +12,7 @@ import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.*;
+import org.framework.core.utils.DateUtils.DateUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -54,7 +56,7 @@ public class PoiPromotServiceImpl implements PoiPromotService {
         headStyle.setRightBorderColor(IndexedColors.BLACK.getIndex()); // 右边边框颜色
         headStyle.setBorderBottom(CellStyle.BORDER_THIN); // 下边框
         headStyle.setBottomBorderColor(IndexedColors.BLACK.getIndex());
-        headStyle.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
+        headStyle.setFillForegroundColor(IndexedColors.SEA_GREEN.getIndex());
         headStyle.setFillPattern(CellStyle.SOLID_FOREGROUND);
         headStyle.setWrapText(true);
         Cell cell = null;
@@ -64,6 +66,41 @@ public class PoiPromotServiceImpl implements PoiPromotService {
             cell = row.createCell(i);
             cell.setCellValue(columns[i]);
             cell.setCellStyle(headStyle);
+        }
+        //填充数据
+        if(CollectionUtils.isNotEmpty(promotOrderEntityList)){
+            for (int i = 0; i <promotOrderEntityList.size() ; i++) {
+                PromotOrderEntity promotOrderEntity = promotOrderEntityList.get(i);
+                row = sheet.createRow(i+1);
+                cell = row.createCell(0);
+                cell.setCellValue(promotOrderEntity.getId());
+                cell = row.createCell(1);
+                cell.setCellValue(promotOrderEntity.getSellerId());
+                cell = row.createCell(2);
+                cell.setCellValue(promotOrderEntity.getAsinId());
+                cell = row.createCell(3);
+                cell.setCellValue(promotOrderEntity.getProductUrl());
+                cell = row.createCell(4);
+                cell.setCellValue(promotOrderEntity.getProductTitle());
+                cell = row.createCell(5);
+                cell.setCellValue(promotOrderEntity.getBrand());
+                cell = row.createCell(6);
+                cell.setCellValue(promotOrderEntity.getSalePrice());
+                cell = row.createCell(7);
+                cell.setCellValue(promotOrderEntity.getState().equals(1)?"开启":"关闭");
+                cell = row.createCell(8);
+                cell.setCellValue(DateUtils.getDate(promotOrderEntity.getAddDate()));
+                cell = row.createCell(9);
+                cell.setCellValue(DateUtils.getDate(promotOrderEntity.getFinishDate()));
+                cell = row.createCell(10);
+                cell.setCellValue(promotOrderEntity.getNeedReviewNum());
+                cell = row.createCell(11);
+                cell.setCellValue(promotOrderEntity.getDayReviewNum());
+                cell = row.createCell(12);
+                cell.setCellValue(promotOrderEntity.getBuyerNum());
+                cell = row.createCell(13);
+                cell.setCellValue(promotOrderEntity.getEvaluateNum());
+            }
         }
 
         ByteArrayOutputStream os = new ByteArrayOutputStream();

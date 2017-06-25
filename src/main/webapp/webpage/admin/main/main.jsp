@@ -145,7 +145,7 @@
                 <div class="row">
                     <div class="col-sm-4 col-sm-offset-8">
                         <div class="btn-group" role="group">
-                            <a href="adminPromotController.admin?downPromotOrderExcel" class="btn btn-default" style="width: 104px;">导出
+                            <a  onclick="downPromotOrderExcel();" class="btn btn-default" style="width: 104px;">导出
                             </a>
                             <button type="button" onclick="doPromotSearch();" class="btn btn-default"
                                     style="width: 104px;">查询
