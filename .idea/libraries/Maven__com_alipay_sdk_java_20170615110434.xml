@@ -8,6 +8,8 @@
     </JAVADOC>
     <SOURCES>
       <root url="jar://E:/btz/maven/repository/com/alipay/sdk-java/20170615110434/sdk-java-20170615110434-sources.jar!/" />
+      <root url="jar://F:/项目资料/刘志伟的哥哥刘泽伟/alipay-sdk-JAVA-20170615110526/alipay-sdk-java20170615110434-source.jar!/com/alipay/api" />
+      <root url="jar://F:/项目资料/刘志伟的哥哥刘泽伟/alipay-sdk-JAVA-20170615110526/alipay-sdk-java20170615110434-source.jar!/com/alipay/api" />
     </SOURCES>
   </library>
 </component>
