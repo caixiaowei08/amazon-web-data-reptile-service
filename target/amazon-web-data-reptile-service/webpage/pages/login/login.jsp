@@ -6,7 +6,7 @@
     <meta charset="utf-8"/>
     <link rel="shortcut icon" type="image/x-icon" href="/webpage/plug-in/imgs/favicon.ico" media="screen"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-    <meta http-equiv="X-UA-Compatible" content="IE=9" />
+    <meta http-equiv="X-UA-Compatible" content="IE=9"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0,user-scalable=no"/>
     <!-- bootstrap & fontawesome -->
     <link rel="stylesheet" href="/webpage/plug-in/bootstrap/css/bootstrap.min.css"/>
@@ -47,18 +47,20 @@
                             <div class="form-group" style="height: 54px;">
                                 <label for="email" class="col-sm-3 control-label">电子邮箱:</label>
                                 <div class="col-sm-7">
-                                    <input type="email" name="account" id="email" datatype="e" class="form-control" placeholder="请输入邮箱账号!"
+                                    <input type="email" name="account" id="email" datatype="e" class="form-control"
+                                           placeholder="请输入邮箱账号!"
                                            sucmsg="用户名验证通过！" nullmsg="请输入用户名！" errormsg="请输入登录邮箱！">
                                 </div>
                             </div>
                             <div class="form-group" style="height: 54px;">
                                 <label for="password" class="col-sm-3 control-label">密&nbsp;&nbsp;&nbsp;&nbsp;码:</label>
                                 <div class="col-sm-7">
-                                    <input type="password" name="pwd" id="password" datatype="*" class="form-control" placeholder="请输入密码！"
+                                    <input type="password" name="pwd" id="password" datatype="*" class="form-control"
+                                           placeholder="请输入密码！"
                                            sucmsg="密码通过验证！" nullmsg="请输入密码！" errormsg="请输入密码！">
                                 </div>
                             </div>
-                            <div class="form-group" >
+                            <div class="form-group">
                                 <div class="col-sm-7  col-sm-offset-3">
                                     <input type="button" id="login_submit" value="登录" class="btn btn-primary btn-block">
                                 </div>
@@ -94,16 +96,16 @@
 </body>
 </html>
 <script>
-    $(function() {
+    $(function () {
         $("#formobj").Validform({
-            tiptype:4,
-            btnSubmit:"#login_submit",
+            tiptype: 4,
+            btnSubmit: "#login_submit",
             ajaxPost: true,
-            callback: function(data){
-                if (data.success =="success") {
+            callback: function (data) {
+                if (data.success == "success") {
                     toastr.info(data.msg);
                     setTimeout("window.location='/mainController.do?index'", 1000);
-                } else if(data.success =="fail"){
+                } else if (data.success == "fail") {
                     toastr.warning(data.msg);
                 } else {
                     toastr.error("服务器宕机或者网络问题！");

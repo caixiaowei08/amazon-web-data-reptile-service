@@ -1,13 +1,34 @@
 /**
  * Created by User on 2017/6/20.
  */
+$(function () {
+    loadData();
+    $('#chargeFundId').bootstrapValidator({
+        framework: 'bootstrap',
+        icon: {
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {
+            chargeFund: {
+                validators: {
+                    notEmpty: {
+                        message: '请输入充值金额！'
+                    },
+                    regexp: {
+                        regexp: /(^[1-9]{1}[0-9]*$)|(^[0-9]*\.[0-9]{2}$)/,
+                        message: '充值金额大于0的整数或者保留两位小数的正数！'
+                    }
+                }
+            }
+        }
+    });
+})
+
 function newPromotOrder() {
     window.location = '/promotOrderController.do?goNewPromotOne'
 }
-
-$(function () {
-    loadData();
-})
 
 var ViewModel = function (account,totalFund,usableFund,freezeFund,vip,beforeVip,membershipEndTime,activeOrderNum, todayEvaluateNum, buyerNum, totalEvaluateNum, historyOrderNum, totalConsumption) {
     this.account = ko.observable(account);
@@ -64,4 +85,12 @@ function loadData() {
             },
         }
     });
+}
+
+/**
+ * 充值按钮点击
+ */
+function goToChangeFund(){
+  console.log("goToChangeFund");
+  window.location = "/redirectionController.do?goToChangeFund";
 }

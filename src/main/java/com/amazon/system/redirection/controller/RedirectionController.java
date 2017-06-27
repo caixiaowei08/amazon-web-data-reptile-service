@@ -17,8 +17,13 @@ import javax.servlet.http.HttpServletResponse;
 public class RedirectionController extends BaseController{
 
     @RequestMapping(params = "goManagePromot")
-    public String login(HttpServletRequest request, HttpServletResponse response) {
+    public String goManagePromot(HttpServletRequest request, HttpServletResponse response) {
         return "pages/manage/managePromot";
+    }
+
+    @RequestMapping(params = "goToChangeFund")
+    public String goToChangeFund(HttpServletRequest request, HttpServletResponse response) {
+        return "pages/fund/changeFund";
     }
 
 }

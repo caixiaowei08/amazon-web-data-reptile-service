@@ -130,7 +130,6 @@
                     </h4>
                 </div>
                 <div class="modal-body">
-
                     <div class="form-group" style="height: 50px;">
                         <div class="input-group" style="width: 100%;">
                             <span class="input-group-addon" style="width:150px;" id="asin-addon">ASIN编号*</span>

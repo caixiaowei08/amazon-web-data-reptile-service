@@ -90,7 +90,6 @@ $(function () {
     }
 
     $("#btn_sub").click(function () {
-        console.log("btn_sub");
         $('#formObj').submit();
     });
 

@@ -1,5 +1,6 @@
 package com.amazon.system.controller;
 
+import org.framework.core.common.controller.BaseController;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,7 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 @Scope("prototype")
 @Controller
 @RequestMapping("/loginController")
-public class LoginController {
+public class LoginController extends BaseController{
 
     @RequestMapping(params = "login")
     public String login(HttpServletRequest request, HttpServletResponse response) {

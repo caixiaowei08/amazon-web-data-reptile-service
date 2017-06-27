@@ -10,10 +10,17 @@
     <link rel="stylesheet" href="/webpage/plug-in/bootstrap/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="/webpage/plug-in/bootstrap/css/bootstrap-theme.min.css"/>
     <link rel="stylesheet" href="/webpage/plug-in/font-awesome/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="/webpage/plug-in/bootstrapvalidator/dist/css/bootstrapValidator.min.css"/>
     <link rel="stylesheet" href="/webpage/plug-in/toastr/toastr.css"/>
     <link rel="stylesheet" href="/webpage/plug-in/ace/css/ace.css"/>
     <link rel="stylesheet" href="/webpage/pages/main/index.css"/>
+    <!--[if lte IE 9]>
+    <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <script src="https://cdn.bootcss.com/html5shiv/r29/html5.js"></script>
+    <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+    <![endif]-->
     <script type="text/javascript" src="/webpage/plug-in/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="/webpage/plug-in/bootstrapvalidator/dist/js/bootstrapValidator.min.js"></script>
     <script type="text/javascript" src="/webpage/plug-in/bootstrap/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="/webpage/pages/main/index.js"></script>
     <script type="text/javascript" src="/webpage/plug-in/toastr/toastr.min.js"></script>
@@ -74,7 +81,8 @@
                                 </div>
                                 <div class="infobox-data">
                                     <span class="infobox-data-number" data-bind="text:activeOrderNum">0</span>
-                                    <a href="/redirectionController.do?goManagePromot" target="_parent" class="infobox-content">我的活动订单</a>
+                                    <a href="/redirectionController.do?goManagePromot" target="_parent"
+                                       class="infobox-content">我的活动订单</a>
                                 </div>
                                 <%--<div class="stat stat-important">4%</div>--%>
                             </div>
@@ -133,7 +141,8 @@
                             <div class="space-6"></div>
                             <div class="space-6"></div>
                             <div class="space-6"></div>
-                            <button type="button" onclick="newPromotOrder();" class="btn btn-sm btn-primary btn-white btn-round">
+                            <button type="button" onclick="newPromotOrder();"
+                                    class="btn btn-sm btn-primary btn-white btn-round">
                                 <i class="ace-icon fa fa-rss bigger-150 middle orange2"></i>
                                 <span class="bigger-110">新建推广活动</span>
                                 <i class="icon-on-right ace-icon fa fa-arrow-right"></i>
@@ -159,44 +168,56 @@
                                             </li>
                                             <li class="list-group-item">
                                                 <div class="row">
-                                                    <div class="col-xs-5"><span style="color:#555;">账户余额(美元):</span></div>
-                                                    <div class="col-xs-7"><span style="color:#0bb8e3;">$<span data-bind="text:totalFund"></span></span></div>
+                                                    <div class="col-xs-5"><span style="color:#555;">账户余额(美元):</span>
+                                                    </div>
+                                                    <div class="col-xs-7"><span style="color:#0bb8e3;">$<span
+                                                            data-bind="text:totalFund"></span></span></div>
                                                 </div>
                                             </li>
                                             <li class="list-group-item">
                                                 <div class="row">
-                                                    <div class="col-xs-5"><span style="color:#555;">可用余额(美元):</span></div>
-                                                    <div class="col-xs-7"><span style="color:#0bb8e3;">$<span data-bind="text:usableFund"></span></span></div>
+                                                    <div class="col-xs-5"><span style="color:#555;">可用余额(美元):</span>
+                                                    </div>
+                                                    <div class="col-xs-7"><span style="color:#0bb8e3;">$<span
+                                                            data-bind="text:usableFund"></span></span></div>
                                                 </div>
                                             </li>
                                             <li class="list-group-item">
                                                 <div class="row">
-                                                    <div class="col-xs-5"><span style="color:#555;">冻结金额(美元):</span></div>
-                                                    <div class="col-xs-7"><span style="color:#0bb8e3;">$<span data-bind="text:freezeFund"></span></span></div>
+                                                    <div class="col-xs-5"><span style="color:#555;">冻结金额(美元):</span>
+                                                    </div>
+                                                    <div class="col-xs-7"><span style="color:#0bb8e3;">$<span
+                                                            data-bind="text:freezeFund"></span></span></div>
                                                 </div>
                                             </li>
                                         </ul>
-                                        <div class="input-group">
-                                            <span class="input-group-addon" id="sizing-addon3">保证金充值(美元)</span>
-                                            <input type="number" min="1" class="form-control" placeholder="充值金额" aria-describedby="sizing-addon1" value="100">
-                                            <span class="input-group-addon  btn btn-default" id="basic-addon4">充值</span>
-                                        </div>
                                         <div class="hr hr8 hr-double"></div>
-                                        <!-- ko ifnot: beforeVip -->
-                                        <div class="input-group">
-                                            <input type="button" class="btn btn-danger"  value="立即开通会员">
-                                        </div>
-                                        <!-- /ko -->
                                         <!-- ko if: beforeVip -->
                                         <div class="input-group">
                                             <span class="input-group-addon">会员到期时间</span>
-                                            <input type="text" class="form-control" placeholder="会员到期时间" data-bind="value:membershipEndTime">
-                                            <!-- ko if: vip -->
-                                            <span class="input-group-addon btn btn-default">续期</span>
-                                            <!-- /ko -->
-                                            <!-- ko ifnot: vip -->
-                                            <span class="input-group-addon btn btn-default">重新开通</span>
-                                            <!-- /ko -->
+                                            <input type="text" class="form-control" placeholder="会员到期时间"
+                                                   data-bind="value:membershipEndTime">
+                                        </div>
+                                        <div style="height: 10px;"></div>
+                                        <!-- /ko -->
+                                        <!-- ko ifnot: vip -->
+                                        <div class="btn-group btn-group-justified" role="group" aria-label="...">
+                                            <div class="btn-group" role="group">
+                                                <button type="button" class="btn btn-danger">立即开通会员</button>
+                                            </div>
+                                            <div class="btn-group" role="group">
+                                                <button type="button" onclick="goToChangeFund();" class="btn btn-default">余额充值</button>
+                                            </div>
+                                        </div>
+                                        <!-- /ko -->
+                                        <!-- ko if: vip -->
+                                        <div class="btn-group btn-group-justified" role="group" aria-label="...">
+                                            <div class="btn-group" role="group">
+                                                <button type="button" class="btn btn-default">会员续期</button>
+                                            </div>
+                                            <div class="btn-group" role="group">
+                                                <button type="button" onclick="goToChangeFund();" class="btn btn-default">余额充值</button>
+                                            </div>
                                         </div>
                                         <!-- /ko -->
                                     </div><!-- /.widget-main -->

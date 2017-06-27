@@ -1,13 +1,18 @@
 package com.amazon.service.fund.controller;
 
+import com.alipay.api.AlipayApiException;
 import com.alipay.api.domain.AlipayTradePayModel;
+import com.alipay.api.internal.util.AlipaySignature;
 import com.amazon.service.fund.entity.UserFundEntity;
 import com.amazon.service.fund.service.UserFundService;
+import com.amazon.system.alipay.AlipayConfig;
+import com.amazon.system.alipay.ChargeFundConfig;
 import com.amazon.system.alipay.service.AlipayService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.framework.core.common.controller.BaseController;
 import org.framework.core.common.model.json.AjaxJson;
+import org.framework.core.global.service.GlobalService;
 import org.framework.core.utils.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -20,7 +25,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Date;
+import java.io.UnsupportedEncodingException;
+import java.util.*;
 
 /**
  * Created by User on 2017/6/10.
@@ -35,27 +41,79 @@ public class UserFundController extends BaseController {
     @Autowired
     private UserFundService userFundService;
 
-    @Autowired
-    private AlipayService alipayService;
-
-
-    @RequestMapping(params = "doAlipayTradePagePay")
-    public void doAlipayTradePagePay(HttpServletRequest request, HttpServletResponse response) {
-        AlipayTradePayModel alipayTradePayModel = new AlipayTradePayModel();
-        alipayTradePayModel.setOutTradeNo("20170626010101001");
-        alipayTradePayModel.setTotalAmount("0.01");
-        alipayTradePayModel.setSubject("蔡晓伟测试01");
-        alipayTradePayModel.setBody("蔡晓伟测试01 支付0.01元");
-        alipayTradePayModel.setProductCode("FAST_INSTANT_TRADE_PAY");
-        try {
-             alipayService.doAlipayTradePayRequestPost(alipayTradePayModel, request, response);
-        } catch (IOException ie) {
-            logger.error(ie);
-        }catch (ServletException se){
-            logger.error(se);
-        }
+    @RequestMapping(params = "getUserFundInfo")
+    @ResponseBody
+    public AjaxJson getUserFundInfo(HttpServletRequest request,HttpServletResponse response) {
+        return userFundService.getUserFundInfo();
     }
 
+    @RequestMapping("/doAlipayTradePagePay")
+    public void doAlipayTradePagePay(HttpServletRequest request, HttpServletResponse response) {
+        userFundService.goChargeFund(request,response);
+    }
+
+    /**
+     * 支付宝回调交易验证
+     * @param request
+     * @param response
+     */
+    @RequestMapping("/doAlipayTradePageNotify")
+    public void doAlipayTradePageNotify(HttpServletRequest request, HttpServletResponse response) {
+        Map<String,String> params = new HashMap<String,String>();
+        Map<String,String[]> requestParams = request.getParameterMap();
+        for (Iterator<String> iter = requestParams.keySet().iterator(); iter.hasNext();) {
+            String name = (String) iter.next();
+            String[] values = (String[]) requestParams.get(name);
+            String valueStr = "";
+            for (int i = 0; i < values.length; i++) {
+                valueStr = (i == values.length - 1) ? valueStr + values[i]
+                        : valueStr + values[i] + ",";
+            }
+            //乱码解决，这段代码在出现乱码时使用
+            try {
+                valueStr = new String(valueStr.getBytes("ISO-8859-1"), "utf-8");
+            }catch (UnsupportedEncodingException e){
+                logger.error(valueStr,e);
+            }
+            params.put(name, valueStr);
+        }
+        boolean signVerified = false;
+        try {
+            signVerified = AlipaySignature.rsaCheckV2(
+                    params,
+                    AlipayConfig.ALIPAY_PUBLIC_KEY,
+                    AlipayConfig.CHARSET,
+                    AlipayConfig.SIGN_TYPE); //调用SDK验证签名
+        }catch (AlipayApiException e){
+            logger.error(e);
+        }
+        try {
+            if(signVerified) {
+                //商户订单号
+                String out_trade_no = new String(request.getParameter("out_trade_no").getBytes("ISO-8859-1"),"UTF-8");
+                //支付宝交易号
+                String trade_no = new String(request.getParameter("trade_no").getBytes("ISO-8859-1"),"UTF-8");
+                //交易状态
+                String trade_status = new String(request.getParameter("trade_status").getBytes("ISO-8859-1"),"UTF-8");
+                if(trade_status.equals("TRADE_FINISHED")){
+                    //判断该笔订单是否在商户网站中已经做过处理
+                    //如果没有做过处理，根据订单号（out_trade_no）在商户网站的订单系统中查到该笔订单的详细，并执行商户的业务程序
+                    //如果有做过处理，不执行商户的业务程序
+                    //注意：
+                    //退款日期超过可退款期限后（如三个月可退款），支付宝系统发送该交易状态通知
+                }else if (trade_status.equals("TRADE_SUCCESS")){
+                    //判断该笔订单是否在商户网站中已经做过处理
+                    //如果没有做过处理，根据订单号（out_trade_no）在商户网站的订单系统中查到该笔订单的详细，并执行商户的业务程序
+                    //如果有做过处理，不执行商户的业务程序
+
+                    //注意：
+                    //付款完成后，支付宝系统发送该交易状态通知
+                }
+            }
+        }catch (UnsupportedEncodingException e){
+            logger.error("调用SDK验证签名:",e);
+        }
+    }
 
     @RequestMapping(params = "doAdd")
     @ResponseBody

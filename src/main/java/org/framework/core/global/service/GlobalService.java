@@ -1,5 +1,6 @@
 package org.framework.core.global.service;
 
+import com.amazon.service.user.entity.UserEntity;
 import org.framework.core.common.pojo.EmailCodePojo;
 import org.framework.core.common.service.BaseService;
 
@@ -21,8 +22,9 @@ public interface GlobalService extends BaseService{
     public boolean sendEmailEmailCodePojo(EmailCodePojo emailCodePojo);
 
 
+    public UserEntity getUserEntityFromSession();
 
-
+    public String generateOrderNumber();
 
 
 }

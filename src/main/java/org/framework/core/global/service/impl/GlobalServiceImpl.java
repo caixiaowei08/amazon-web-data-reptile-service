@@ -1,9 +1,13 @@
 package org.framework.core.global.service.impl;
 
+import com.amazon.service.user.entity.UserEntity;
+import com.amazon.system.Constant;
 import org.framework.core.common.pojo.EmailCodePojo;
 import org.framework.core.common.service.impl.BaseServiceImpl;
 import org.framework.core.global.service.GlobalService;
+import org.framework.core.utils.ContextHolderUtils;
 import org.framework.core.utils.MailUtils;
+import org.framework.core.utils.OrderNumberUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,5 +32,16 @@ public class GlobalServiceImpl extends BaseServiceImpl implements GlobalService 
             return false;
         }
         return true;
+    }
+
+    public UserEntity getUserEntityFromSession() {
+        ContextHolderUtils.getSession().getAttribute(Constant.USER_SESSION_CONSTANTS);
+        UserEntity userSession = (UserEntity) ContextHolderUtils.getSession().getAttribute(Constant.USER_SESSION_CONSTANTS);
+        return userSession;
+    }
+
+
+    public String generateOrderNumber() {
+        return OrderNumberUtils.generateOrderNumber();
     }
 }

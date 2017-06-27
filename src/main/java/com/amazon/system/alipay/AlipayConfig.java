@@ -52,8 +52,10 @@ public class AlipayConfig {
     //编码集，支持GBK/UTF-8
     public static String SIGN_TYPE = "RSA2";
 
+    // 页面跳转同步通知页面路径 需http://格式的完整路径，不能加?id=123这类自定义参数，必须外网可以正常访问
+    public static String RETURN_URL = "http://59.78.194.248:8888/mainController.do?index";
 
-
-
+    // 服务器异步通知页面路径  需http://格式的完整路径，不能加?id=123这类自定义参数，必须外网可以正常访问
+    public static String NOTIFY_URL = "http://59.78.194.248:8888/userFundController/doAlipayTradePageNotify.do";
 
 }

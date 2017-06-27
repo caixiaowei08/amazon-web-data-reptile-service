@@ -2,14 +2,8 @@ package com.amazon.system.alipay.service.impl;
 
 import com.alipay.api.AlipayApiException;
 import com.alipay.api.AlipayClient;
-import com.alipay.api.AlipayObject;
 import com.alipay.api.domain.AlipayTradePayModel;
 import com.alipay.api.request.AlipayTradePagePayRequest;
-import com.alipay.api.request.AlipayTradePayRequest;
-import com.alipay.api.request.AlipayTradeWapPayRequest;
-import com.alipay.api.response.AlipayTradePagePayResponse;
-import com.alipay.api.response.AlipayTradePayResponse;
-import com.amazon.service.fund.controller.UserFundController;
 import com.amazon.system.alipay.AlipayClientSingleton;
 import com.amazon.system.alipay.AlipayConfig;
 import com.amazon.system.alipay.service.AlipayService;
@@ -35,6 +29,8 @@ public class AlipayServiceImpl implements AlipayService {
     public void doAlipayTradePayRequestPost(AlipayTradePayModel alipayTradePayModel, HttpServletRequest httpRequest, HttpServletResponse httpResponse) throws ServletException, IOException{
         AlipayClient alipayClient = AlipayClientSingleton.getInstance();
         AlipayTradePagePayRequest alipayRequest = new AlipayTradePagePayRequest();
+        alipayRequest.setReturnUrl(AlipayConfig.RETURN_URL);
+        alipayRequest.setNotifyUrl(AlipayConfig.NOTIFY_URL);
         alipayRequest.setBizModel(alipayTradePayModel);
         String form ="";
         try {

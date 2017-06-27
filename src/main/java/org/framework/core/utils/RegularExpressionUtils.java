@@ -14,5 +14,13 @@ public class RegularExpressionUtils {
         return matcher.matches();
     }
 
+    public static boolean isMoney(String money){
+        Pattern pattern = Pattern .compile("^(?!0+(?:\\.0+)?$)(?:[1-9]\\d*|0)(?:\\.\\d{1,2})?$");
+        Matcher matcher = pattern.matcher(money);
+        return matcher.matches();
+    }
+
+
+
 
 }
