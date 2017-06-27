@@ -121,7 +121,7 @@ public class EvaluateServiceImpl extends BaseServiceImpl implements EvaluateServ
         //账目变动
         DetachedCriteria userFundDetachedCriteria = DetachedCriteria.forClass(UserFundEntity.class);
         userFundDetachedCriteria.add(Restrictions.eq("sellerId", promotOrderEntity.getSellerId()));
-        List<UserFundEntity> userFundEntityList = promotOrderService.getListByCriteriaQuery(userFundDetachedCriteria);
+        List<UserFundEntity> userFundEntityList = userFundService.getListByCriteriaQuery(userFundDetachedCriteria);
         if (CollectionUtils.isEmpty(userFundEntityList)) {
             j.setSuccess(AjaxJson.CODE_FAIL);
             j.setMsg("无法找到资金账户，请联系管理员！");

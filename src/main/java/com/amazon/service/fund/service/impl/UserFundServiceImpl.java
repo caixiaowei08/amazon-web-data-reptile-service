@@ -56,6 +56,9 @@ public class UserFundServiceImpl extends BaseServiceImpl implements UserFundServ
     private AlipayService alipayService;
 
     @Autowired
+    private UserFundService userFundService;
+
+    @Autowired
     private UserRechargeFundService rechargeFundService;
 
     public AjaxJson getUserFundInfo() {
@@ -177,10 +180,36 @@ public class UserFundServiceImpl extends BaseServiceImpl implements UserFundServ
 
         UserRechargeFundEntity userRechargeFundEntity = userRechargeFundEntityList.get(0);
         if(userRechargeFundEntity.getChargeType().equals(ConstantChargeType.BALANCE_FUND)){//余额充值
-
+            DetachedCriteria userFundDetachedCriteria = DetachedCriteria.forClass(UserFundEntity.class);
+            userFundDetachedCriteria.add(Restrictions.eq("sellerId", userRechargeFundEntity.getSellerId()));
+            List<UserFundEntity> userFundEntityList = userFundService.getListByCriteriaQuery(userFundDetachedCriteria);
+            if (CollectionUtils.isEmpty(userFundEntityList)) {
+                j.setSuccess(AjaxJson.CODE_FAIL);
+                j.setMsg("无法找到资金账户，请联系管理员！");
+                return j;
+            }
+            //资金变动
+            UserFundEntity userFundEntity = userFundEntityList.get(0);
+            userFundEntity.setTotalFund(userFundEntity.getTotalFund().add(userRechargeFundEntity.getChargeFund()));
+            userFundEntity.setUsableFund(userFundEntity.getUsableFund().add(userRechargeFundEntity.getChargeFund()));
+            userFundEntity.setUpdateTime(new Date());
+            //充值流水变动
+            userRechargeFundEntity.setZfbOrderNum(alipayNotifyPojo.getTrade_no());
+            userRechargeFundEntity.setNotifyInfo(alipayNotifyPojo.getTrade_status());
+            userRechargeFundEntity.setConfirmTime(new Date());
+            userRechargeFundEntity.setState(ConstantFund.SUCCESS);
+            userFundService.saveOrUpdate(userFundEntity);
+            rechargeFundService.saveOrUpdate(userRechargeFundEntity);
         }else if(userRechargeFundEntity.getChargeType().equals(ConstantChargeType.BALANCE_FUND)){//会员充值
 
         }
         return j;
     }
+
+    private void dealBalanceFund(UserRechargeFundEntity userRechargeFundEntity){
+
+
+
+    }
+
 }
