@@ -1,10 +1,12 @@
 package com.amazon.service.fund.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.alipay.api.AlipayApiException;
 import com.alipay.api.domain.AlipayTradePayModel;
 import com.alipay.api.internal.util.AlipaySignature;
 import com.amazon.service.fund.entity.UserFundEntity;
 import com.amazon.service.fund.service.UserFundService;
+import com.amazon.service.fund.vo.AlipayNotifyPojo;
 import com.amazon.system.alipay.AlipayConfig;
 import com.amazon.system.alipay.ChargeFundConfig;
 import com.amazon.system.alipay.service.AlipayService;
@@ -102,6 +104,10 @@ public class UserFundController extends BaseController {
                 logger.info("out_trade_no:"+out_trade_no);
                 logger.info("trade_no:"+trade_no);
                 logger.info("trade_status:"+trade_status);
+                AlipayNotifyPojo alipayNotifyPojo = new AlipayNotifyPojo();
+                alipayNotifyPojo.setOut_trade_no(out_trade_no);
+                alipayNotifyPojo.setTrade_no(trade_no);
+                alipayNotifyPojo.setTrade_status(trade_no);
 
                 if(trade_status.equals("TRADE_FINISHED")){
                     logger.info("out_trade_no:"+out_trade_no);
@@ -113,6 +119,8 @@ public class UserFundController extends BaseController {
                     //如果有做过处理，不执行商户的业务程序
                     //注意：
                     //退款日期超过可退款期限后（如三个月可退款），支付宝系统发送该交易状态通知
+                  AjaxJson j =  userFundService.notifyChargeFund(alipayNotifyPojo);
+                  logger.info("处理TRADE_FINISHED完毕！"+JSON.toJSONString(j));
                 }else if (trade_status.equals("TRADE_SUCCESS")){
                     logger.info("out_trade_no:"+out_trade_no);
                     logger.info("trade_no:"+trade_no);
@@ -123,6 +131,8 @@ public class UserFundController extends BaseController {
                     //如果有做过处理，不执行商户的业务程序
                     //注意：
                     //付款完成后，支付宝系统发送该交易状态通知
+                    AjaxJson j =  userFundService.notifyChargeFund(alipayNotifyPojo);
+                    logger.info("处理TRADE_SUCCESS完毕！"+JSON.toJSONString(j));
                 }
                 logger.error("回调成功！");
                 out.write("success".getBytes());
