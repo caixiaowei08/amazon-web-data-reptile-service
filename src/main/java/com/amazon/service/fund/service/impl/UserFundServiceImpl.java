@@ -7,6 +7,7 @@ import com.amazon.service.fund.ConstantSource;
 import com.amazon.service.fund.controller.UserFundController;
 import com.amazon.service.fund.entity.UserFundEntity;
 import com.amazon.service.fund.service.UserFundService;
+import com.amazon.service.fund.vo.AlipayNotifyPojo;
 import com.amazon.service.fund.vo.UserFundVo;
 import com.amazon.service.promot.price.entity.PromotPriceEntity;
 import com.amazon.service.recharge.controller.UserRechargeFundController;
@@ -29,6 +30,7 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -58,7 +60,7 @@ public class UserFundServiceImpl extends BaseServiceImpl implements UserFundServ
 
     public AjaxJson getUserFundInfo() {
         AjaxJson j = new AjaxJson();
-        UserEntity  userSession = globalService.getUserEntityFromSession();
+        UserEntity userSession = globalService.getUserEntityFromSession();
         if (userSession == null) {
             ContextHolderUtils.getSession().invalidate();
             j.setSuccess(AjaxJson.CODE_FAIL);
@@ -72,7 +74,7 @@ public class UserFundServiceImpl extends BaseServiceImpl implements UserFundServ
         DetachedCriteria userFundDetachedCriteria = DetachedCriteria.forClass(UserFundEntity.class);
         userFundDetachedCriteria.add(Restrictions.eq("sellerId", userSession.getId()));
         List<UserFundEntity> userFundEntityList = globalService.getListByCriteriaQuery(userFundDetachedCriteria);
-        if(CollectionUtils.isNotEmpty(userFundEntityList)) {
+        if (CollectionUtils.isNotEmpty(userFundEntityList)) {
             UserFundEntity userFundEntity = userFundEntityList.get(0);
             userFundVo.setTotalFund(userFundEntity.getTotalFund());
             userFundVo.setUsableFund(userFundEntity.getUsableFund());
@@ -80,8 +82,8 @@ public class UserFundServiceImpl extends BaseServiceImpl implements UserFundServ
         }
         DetachedCriteria promotPriceDetachedCriteria = DetachedCriteria.forClass(PromotPriceEntity.class);
         List<PromotPriceEntity> promotPriceEntityList = globalService.getListByCriteriaQuery(promotPriceDetachedCriteria);
-        if(CollectionUtils.isNotEmpty(promotPriceEntityList)){
-            PromotPriceEntity promotPriceEntity =  promotPriceEntityList.get(0);
+        if (CollectionUtils.isNotEmpty(promotPriceEntityList)) {
+            PromotPriceEntity promotPriceEntity = promotPriceEntityList.get(0);
             userFundVo.setExchangeRate(promotPriceEntity.getExchangeRate());
         }
         j.setContent(userFundVo);
@@ -90,17 +92,17 @@ public class UserFundServiceImpl extends BaseServiceImpl implements UserFundServ
 
     public AjaxJson goChargeFund(HttpServletRequest request, HttpServletResponse response) {
         AjaxJson j = new AjaxJson();
-        String chargefund =  request.getParameter("chargeFund").trim();
-        String chargeSource =  request.getParameter("chargeSource");
-        if(!RegularExpressionUtils.isMoney(chargefund)){
+        String chargefund = request.getParameter("chargeFund").trim();
+        String chargeSource = request.getParameter("chargeSource");
+        if (!RegularExpressionUtils.isMoney(chargefund)) {
             j.setSuccess(AjaxJson.CODE_FAIL);
             j.setMsg("充值金额有误，请重新输入！");
-           return j;
+            return j;
         }
 
-       UserEntity userEntity = globalService.getUserEntityFromSession();
+        UserEntity userEntity = globalService.getUserEntityFromSession();
 
-        if(userEntity == null){
+        if (userEntity == null) {
             j.setSuccess(AjaxJson.CODE_FAIL);
             j.setMsg("请重新登录！");
             return j;
@@ -110,15 +112,15 @@ public class UserFundServiceImpl extends BaseServiceImpl implements UserFundServ
         DetachedCriteria promotPriceDetachedCriteria = DetachedCriteria.forClass(PromotPriceEntity.class);
         List<PromotPriceEntity> promotPriceEntityList = globalService.getListByCriteriaQuery(promotPriceDetachedCriteria);
         BigDecimal exchangeRate = null;
-        if(CollectionUtils.isNotEmpty(promotPriceEntityList)&& promotPriceEntityList.get(0).getExchangeRate()!=null){
+        if (CollectionUtils.isNotEmpty(promotPriceEntityList) && promotPriceEntityList.get(0).getExchangeRate() != null) {
             exchangeRate = promotPriceEntityList.get(0).getExchangeRate();
-        }else{
+        } else {
             logger.error("请在数据库中设置人民币/美元换算汇率！");
         }
 
         BigDecimal chargefundDollar = new BigDecimal(chargefund);
         BigDecimal chargefundRMB = chargefundDollar.multiply(exchangeRate);
-        chargefundRMB = chargefundRMB.setScale(2,BigDecimal.ROUND_UP);//向上转型
+        chargefundRMB = chargefundRMB.setScale(2, BigDecimal.ROUND_UP);//向上转型
         AlipayTradePayModel alipayTradePayModel = new AlipayTradePayModel();
         alipayTradePayModel.setOutTradeNo(globalService.generateOrderNumber());
         alipayTradePayModel.setSubject(ChargeFundConfig.SUBJECT);
@@ -143,8 +145,41 @@ public class UserFundServiceImpl extends BaseServiceImpl implements UserFundServ
             alipayService.doAlipayTradePayRequestPost(alipayTradePayModel, request, response);
         } catch (IOException ie) {
             logger.error(ie);
-        }catch (ServletException se){
+        } catch (ServletException se) {
             logger.error(se);
+        }
+        return j;
+    }
+
+    public AjaxJson notifyChargeFund(AlipayNotifyPojo alipayNotifyPojo) {
+        AjaxJson j = new AjaxJson();
+        //根据platformOrderNum查询交易信息
+        if (alipayNotifyPojo == null) {
+            j.setSuccess(AjaxJson.CODE_FAIL);
+            j.setMsg("支付宝异步信息不能为空！");
+            return j;
+        }
+        if(!StringUtils.hasText(alipayNotifyPojo.getOut_trade_no())){
+            j.setSuccess(AjaxJson.CODE_FAIL);
+            j.setMsg("平台订单号为空！");
+            return j;
+        }
+
+        DetachedCriteria userRechargeFundDetachedCriteria = DetachedCriteria.forClass(UserRechargeFundEntity.class);
+        userRechargeFundDetachedCriteria.add(Restrictions.eq("platformOrderNum",alipayNotifyPojo.getOut_trade_no()));
+        userRechargeFundDetachedCriteria.add(Restrictions.eq("state",ConstantFund.TO_BE_COMFIRM));//待确认状态
+        List<UserRechargeFundEntity> userRechargeFundEntityList = rechargeFundService.getListByCriteriaQuery(userRechargeFundDetachedCriteria);
+        if(!CollectionUtils.isNotEmpty(userRechargeFundEntityList)){
+            j.setSuccess(AjaxJson.CODE_FAIL);
+            j.setMsg("未能找到初始充值订单！");
+            return j;
+        }
+
+        UserRechargeFundEntity userRechargeFundEntity = userRechargeFundEntityList.get(0);
+        if(userRechargeFundEntity.getChargeType().equals(ConstantChargeType.BALANCE_FUND)){//余额充值
+
+        }else if(userRechargeFundEntity.getChargeType().equals(ConstantChargeType.BALANCE_FUND)){//会员充值
+
         }
         return j;
     }

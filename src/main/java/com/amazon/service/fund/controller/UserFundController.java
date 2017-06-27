@@ -25,6 +25,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.*;
 
@@ -49,7 +50,7 @@ public class UserFundController extends BaseController {
 
     @RequestMapping("/doAlipayTradePagePay")
     public void doAlipayTradePagePay(HttpServletRequest request, HttpServletResponse response) {
-        userFundService.goChargeFund(request,response);
+       AjaxJson j = userFundService.goChargeFund(request,response);
     }
 
     /**
@@ -75,6 +76,7 @@ public class UserFundController extends BaseController {
             }catch (UnsupportedEncodingException e){
                 logger.error(valueStr,e);
             }
+            logger.info(name+":"+valueStr);
             params.put(name, valueStr);
         }
         boolean signVerified = false;
@@ -87,7 +89,9 @@ public class UserFundController extends BaseController {
         }catch (AlipayApiException e){
             logger.error(e);
         }
+
         try {
+            OutputStream out = response.getOutputStream();
             if(signVerified) {
                 //商户订单号
                 String out_trade_no = new String(request.getParameter("out_trade_no").getBytes("ISO-8859-1"),"UTF-8");
@@ -95,23 +99,41 @@ public class UserFundController extends BaseController {
                 String trade_no = new String(request.getParameter("trade_no").getBytes("ISO-8859-1"),"UTF-8");
                 //交易状态
                 String trade_status = new String(request.getParameter("trade_status").getBytes("ISO-8859-1"),"UTF-8");
+                logger.info("out_trade_no:"+out_trade_no);
+                logger.info("trade_no:"+trade_no);
+                logger.info("trade_status:"+trade_status);
+
                 if(trade_status.equals("TRADE_FINISHED")){
+                    logger.info("out_trade_no:"+out_trade_no);
+                    logger.info("trade_no:"+trade_no);
+                    logger.info("trade_status:"+trade_status);
+                    logger.info("------------TRADE_FINISHED--------------");
                     //判断该笔订单是否在商户网站中已经做过处理
                     //如果没有做过处理，根据订单号（out_trade_no）在商户网站的订单系统中查到该笔订单的详细，并执行商户的业务程序
                     //如果有做过处理，不执行商户的业务程序
                     //注意：
                     //退款日期超过可退款期限后（如三个月可退款），支付宝系统发送该交易状态通知
                 }else if (trade_status.equals("TRADE_SUCCESS")){
+                    logger.info("out_trade_no:"+out_trade_no);
+                    logger.info("trade_no:"+trade_no);
+                    logger.info("trade_status:"+trade_status);
+                    logger.info("------------TRADE_SUCCESS--------------");
                     //判断该笔订单是否在商户网站中已经做过处理
                     //如果没有做过处理，根据订单号（out_trade_no）在商户网站的订单系统中查到该笔订单的详细，并执行商户的业务程序
                     //如果有做过处理，不执行商户的业务程序
-
                     //注意：
                     //付款完成后，支付宝系统发送该交易状态通知
                 }
+                logger.error("回调成功！");
+                out.write("success".getBytes());
+            }else{
+                logger.error("回调验证失败！");
+                out.write("fail".getBytes());
             }
         }catch (UnsupportedEncodingException e){
-            logger.error("调用SDK验证签名:",e);
+            logger.error("调用SDK验证签名",e);
+        }catch (IOException ie){
+            logger.error("IO异常",ie);
         }
     }
 
