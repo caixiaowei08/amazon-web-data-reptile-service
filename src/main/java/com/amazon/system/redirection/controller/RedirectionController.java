@@ -21,9 +21,14 @@ public class RedirectionController extends BaseController{
         return "pages/manage/managePromot";
     }
 
-    @RequestMapping(params = "goToChangeFund")
+    @RequestMapping(params = "goToChargeFund")
     public String goToChangeFund(HttpServletRequest request, HttpServletResponse response) {
-        return "pages/fund/changeFund";
+        return "pages/fund/chargeFund";
+    }
+
+    @RequestMapping(params = "goToChargeMemberShip")
+    public String goToChargeMemberShip(HttpServletRequest request, HttpServletResponse response) {
+        return "pages/fund/memberShip";
     }
 
 }

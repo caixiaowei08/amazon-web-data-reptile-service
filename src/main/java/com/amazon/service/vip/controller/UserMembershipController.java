@@ -4,6 +4,7 @@ import com.amazon.service.recharge.entity.UserRechargeFundEntity;
 import com.amazon.service.recharge.service.UserRechargeFundService;
 import com.amazon.service.vip.entity.UserMembershipEntity;
 import com.amazon.service.vip.service.UserMembershipService;
+import com.amazon.service.vip.vo.UserMembershipVo;
 import org.framework.core.common.controller.BaseController;
 import org.framework.core.common.model.json.AjaxJson;
 import org.framework.core.utils.BeanUtils;
@@ -28,6 +29,21 @@ public class UserMembershipController extends BaseController {
 
     @Autowired
     private UserMembershipService userMembershipService;
+
+
+    @RequestMapping(params = "getUserMembershipInfo")
+    @ResponseBody
+    public AjaxJson getUserMembershipVo(HttpServletRequest request, HttpServletResponse response) {
+        AjaxJson  j = userMembershipService.getUserMembershipVo();
+        return j;
+    }
+
+    @RequestMapping("goToMemberShipCharge")
+    public void goToMemberShipCharge(UserMembershipVo userMembershipVo, HttpServletRequest request, HttpServletResponse response) {
+        AjaxJson j = new AjaxJson();
+        Integer memberShipMonth = userMembershipVo.getMemberShipMonth();
+        System.out.println(memberShipMonth);
+    }
 
     @RequestMapping(params = "doAdd")
     @ResponseBody

@@ -7,7 +7,7 @@ $(function () {
     loadData();
     $('#formObj').bootstrapValidator({
         framework: 'bootstrap',
-        icon: {
+       icon: {
             valid: 'glyphicon glyphicon-ok',
             invalid: 'glyphicon glyphicon-remove',
             validating: 'glyphicon glyphicon-refresh'
@@ -25,11 +25,6 @@ $(function () {
                 }
             }
         }
-    });
-
-    $("#btn_sub").click(function () {
-        console.log("btn_sub");
-        $('#formObj').submit();
     });
 
 });
@@ -80,60 +75,8 @@ function loadData() {
             }
         },
         error: function (jqxhr, textStatus, errorThrow) {
-            toastr.success("服务器异常,请联系管理员！");
+            toastr.warning("服务器异常,请联系管理员！");
             console.log(errorThrow);
-        },
-        statusCode: {
-            404: function () {
-                console.log('not found');
-            },
-            500: function () {
-                console.log('error by server');
-            },
-        }
-    });
-}
-
-function beforeSend() {
-    $("#btn_sub").addClass("disabled"); // Disables visually
-    $("#btn_sub").prop("disabled", true); // Disables visually + functionally
-}
-
-function SendComplete() {
-    $("#btn_sub").removeClass("disabled"); // Disables visually
-    $("#btn_sub").prop("disabled", false); // Disables visually + functionally
-}
-
-function doSubmitChargeFund() {
-
-    var chargeFund = $("#chargeFund").val();
-    console.log(chargeFund);
-    if (chargeFund === null || chargeFund === undefined || chargeFund === ''){
-        return;
-    }
-    var re = new RegExp(/^[0-9]+([.]{1}[0-9]{1,2})?$/);
-    if(!re.test(chargeFund)) {
-        console.log(re.test(chargeFund));
-        return;
-    }
-
-    $.ajax({
-        url: "/userFundController.do?doAlipayTradePagePay",
-        type: 'post',
-        beforeSend: beforeSend,
-        data: $('#formObj').serialize(),
-        success: function (data) {
-            if (data.success === "success") {
-                window.location = '/redirectionController.do?goManagePromot'
-            } else {
-                toastr.error(data.msg);
-            }
-        },
-        error: function (jqxhr, textStatus, errorThrow) {
-            toastr.success("服务器异常,请联系管理员！");
-        },
-        complete: function () {
-            SendComplete();
         },
         statusCode: {
             404: function () {

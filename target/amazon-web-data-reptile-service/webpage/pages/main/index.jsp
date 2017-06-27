@@ -213,10 +213,10 @@
                                         <!-- ko if: vip -->
                                         <div class="btn-group btn-group-justified" role="group" aria-label="...">
                                             <div class="btn-group" role="group">
-                                                <button type="button" class="btn btn-default">会员续期</button>
+                                                <button type="button" onclick="goToChargeMemberShip();"  class="btn btn-default">会员续期</button>
                                             </div>
                                             <div class="btn-group" role="group">
-                                                <button type="button" onclick="goToChangeFund();" class="btn btn-default">余额充值</button>
+                                                <button type="button" onclick="goToChargeFund();" class="btn btn-default">余额充值</button>
                                             </div>
                                         </div>
                                         <!-- /ko -->

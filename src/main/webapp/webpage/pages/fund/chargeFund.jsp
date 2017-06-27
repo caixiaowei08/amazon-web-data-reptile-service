@@ -25,7 +25,7 @@
     <script type="text/javascript" src="/webpage/plug-in/bootstrap/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="/webpage/plug-in/toastr/toastr.min.js"></script>
     <script type="text/javascript" src="/webpage/plug-in/knockoutjs/dist/knockout.js"></script>
-    <script type="text/javascript" src="/webpage/pages/fund/changeFund.js"></script>
+    <script type="text/javascript" src="/webpage/pages/fund/chargeFund.js"></script>
 </head>
 <body>
 <div class="main-container">
@@ -139,15 +139,15 @@
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <form action="/userFundController/doAlipayTradePagePay.do" id="formObj" <%--onsubmit="return doSubmitChargeFund();"--%>>
+                                <form action="/userFundController/doAlipayTradePagePay.do" id="formObj">
                                     <div class="form-group">
                                         <div class="input-group">
                                             <span class="input-group-addon">
                                                <div class="text-right" style="width: 100px;">充值金额(美元)*</div>
                                             </span>
-                                            <input type="text"  data-bind="value:chargeFund" class="form-control" id="chargeFund"
+                                            <input type="number" step="100" data-bind="value:chargeFund" class="form-control" id="chargeFund"
                                                    name="chargeFund" placeholder="请填写充值金额(美元)"
-                                                   aria-describedby="asin-addon" value="100.00">
+                                                   aria-describedby="asin-addon" value="100">
                                         </div>
                                     </div>
                                     <div class="form-group">
@@ -183,13 +183,6 @@
                             </div>
                         </div>
                 </div>
-                <%--<div class="panel-footer">--%>
-                    <%--<div class="row">--%>
-                        <%--<div class="col-md-2 col-md-offset-8">--%>
-                            <%--<input type="button" class="btn btn-primary" id="btn_sub" value="立即充值">--%>
-                        <%--</div>--%>
-                    <%--</div>--%>
-                <%--</div>--%>
             </div>
         </div>
     </div>

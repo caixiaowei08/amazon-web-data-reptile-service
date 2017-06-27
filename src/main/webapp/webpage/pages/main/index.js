@@ -90,7 +90,13 @@ function loadData() {
 /**
  * 充值按钮点击
  */
-function goToChangeFund(){
-  console.log("goToChangeFund");
-  window.location = "/redirectionController.do?goToChangeFund";
+function goToChargeFund(){
+  window.location = "/redirectionController.do?goToChargeFund";
+}
+
+/**
+ * 充值按钮点击
+ */
+function goToChargeMemberShip(){
+    window.location = "/redirectionController.do?goToChargeMemberShip";
 }

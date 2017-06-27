@@ -13,7 +13,6 @@ import java.util.Date;
  */
 public class UserBaseInfoVo implements Serializable{
 
-
     private String account;
 
     private BigDecimal totalFund;
