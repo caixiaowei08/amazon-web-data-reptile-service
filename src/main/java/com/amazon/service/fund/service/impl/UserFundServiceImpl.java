@@ -1,11 +1,17 @@
 package com.amazon.service.fund.service.impl;
 
 import com.alipay.api.domain.AlipayTradePayModel;
+import com.amazon.service.fund.ConstantChargeType;
+import com.amazon.service.fund.ConstantFund;
+import com.amazon.service.fund.ConstantSource;
 import com.amazon.service.fund.controller.UserFundController;
 import com.amazon.service.fund.entity.UserFundEntity;
 import com.amazon.service.fund.service.UserFundService;
 import com.amazon.service.fund.vo.UserFundVo;
 import com.amazon.service.promot.price.entity.PromotPriceEntity;
+import com.amazon.service.recharge.controller.UserRechargeFundController;
+import com.amazon.service.recharge.entity.UserRechargeFundEntity;
+import com.amazon.service.recharge.service.UserRechargeFundService;
 import com.amazon.service.user.entity.UserEntity;
 import com.amazon.system.Constant;
 import com.amazon.system.alipay.ChargeFundConfig;
@@ -29,6 +35,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -45,6 +52,9 @@ public class UserFundServiceImpl extends BaseServiceImpl implements UserFundServ
 
     @Autowired
     private AlipayService alipayService;
+
+    @Autowired
+    private UserRechargeFundService rechargeFundService;
 
     public AjaxJson getUserFundInfo() {
         AjaxJson j = new AjaxJson();
@@ -78,12 +88,24 @@ public class UserFundServiceImpl extends BaseServiceImpl implements UserFundServ
         return j;
     }
 
-    public void goChargeFund(HttpServletRequest request, HttpServletResponse response) {
+    public AjaxJson goChargeFund(HttpServletRequest request, HttpServletResponse response) {
+        AjaxJson j = new AjaxJson();
         String chargefund =  request.getParameter("chargeFund").trim();
         String chargeSource =  request.getParameter("chargeSource");
         if(!RegularExpressionUtils.isMoney(chargefund)){
-           return;
+            j.setSuccess(AjaxJson.CODE_FAIL);
+            j.setMsg("充值金额有误，请重新输入！");
+           return j;
         }
+
+       UserEntity userEntity = globalService.getUserEntityFromSession();
+
+        if(userEntity == null){
+            j.setSuccess(AjaxJson.CODE_FAIL);
+            j.setMsg("请重新登录！");
+            return j;
+        }
+
         //获取当前汇率
         DetachedCriteria promotPriceDetachedCriteria = DetachedCriteria.forClass(PromotPriceEntity.class);
         List<PromotPriceEntity> promotPriceEntityList = globalService.getListByCriteriaQuery(promotPriceDetachedCriteria);
@@ -103,6 +125,20 @@ public class UserFundServiceImpl extends BaseServiceImpl implements UserFundServ
         alipayTradePayModel.setBody(ChargeFundConfig.BODY);
         alipayTradePayModel.setTotalAmount(chargefundRMB.toString());
         alipayTradePayModel.setProductCode(ChargeFundConfig.PROJECTCODE);
+
+        UserRechargeFundEntity userRechargeFundEntity = new UserRechargeFundEntity();
+        userRechargeFundEntity.setSellerId(userEntity.getId());
+        userRechargeFundEntity.setPlatformOrderNum(alipayTradePayModel.getOutTradeNo());
+        userRechargeFundEntity.setChargeFund(chargefundDollar);
+        userRechargeFundEntity.setChargeFundRmb(chargefundRMB);
+        userRechargeFundEntity.setExchangeRate(exchangeRate);
+        userRechargeFundEntity.setState(ConstantFund.TO_BE_COMFIRM);//待确认
+        userRechargeFundEntity.setChargeSource(ConstantSource.ZFB);//支付宝
+        userRechargeFundEntity.setChargeType(ConstantChargeType.BALANCE_FUND);//余额充值
+        userRechargeFundEntity.setStartTime(new Date());
+        userRechargeFundEntity.setCreateTime(new Date());
+        userRechargeFundEntity.setUpdateTime(new Date());
+        rechargeFundService.save(userRechargeFundEntity);
         try {
             alipayService.doAlipayTradePayRequestPost(alipayTradePayModel, request, response);
         } catch (IOException ie) {
@@ -110,5 +146,6 @@ public class UserFundServiceImpl extends BaseServiceImpl implements UserFundServ
         }catch (ServletException se){
             logger.error(se);
         }
+        return j;
     }
 }

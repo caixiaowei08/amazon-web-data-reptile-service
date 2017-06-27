@@ -24,9 +24,14 @@ public class UserRechargeFundEntity extends IdEntity implements Serializable {
     private Integer sellerId;
 
     /**
-     * 充值交易号
+     * 平台充值流水
      */
-    private String dealNo;
+    private String platformOrderNum;
+
+    /**
+     * 支付宝充值交易流水
+     */
+    private String zfbOrderNum;
 
     /**
      * 充值来源 1- 支付宝 2-微信
@@ -44,19 +49,43 @@ public class UserRechargeFundEntity extends IdEntity implements Serializable {
     private BigDecimal chargeFund;
 
     /**
-     * 充值状态  0-待核实 1-成功  2-失败
+     * 充值状态  1-待核实 2-成功  3-失败
      */
     private Integer state;
 
     /**
-     * 交易返回码
+     *支付宝回调信息
      */
-    private String  returnCode;
+    private String notifyInfo;
 
     /**
      * 充值类型 1- 会员月租 2-充值保证金
      */
     private Integer chargeType;
+
+    /**
+     * 支付人民币
+     */
+    private BigDecimal chargeFundRmb;
+
+    /**
+     * 支付汇率
+     */
+    private BigDecimal  exchangeRate;
+
+    /**
+     * 支付发起时间
+     */
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JSONField(format = "yyyy-MM-dd HH:mm:ss")
+    private Date startTime;
+
+    /**
+     *支付确认时间
+     */
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JSONField(format = "yyyy-MM-dd HH:mm:ss")
+    private Date confirmTime;
 
     /**
      * 创建时间
@@ -80,14 +109,6 @@ public class UserRechargeFundEntity extends IdEntity implements Serializable {
         this.sellerId = sellerId;
     }
 
-    @Column(name = "dealNo", nullable = true, length = 100)
-    public String getDealNo() {
-        return dealNo;
-    }
-
-    public void setDealNo(String dealNo) {
-        this.dealNo = dealNo;
-    }
 
     @Column(name = "chargeSource", nullable = true, length = 11)
     public Integer getChargeSource() {
@@ -125,15 +146,6 @@ public class UserRechargeFundEntity extends IdEntity implements Serializable {
         this.state = state;
     }
 
-    @Column(name = "returnCode", nullable = true)
-    public String getReturnCode() {
-        return returnCode;
-    }
-
-    public void setReturnCode(String returnCode) {
-        this.returnCode = returnCode;
-    }
-
     @Column(name = "chargeType", nullable = true, length = 11)
     public Integer getChargeType() {
         return chargeType;
@@ -159,5 +171,69 @@ public class UserRechargeFundEntity extends IdEntity implements Serializable {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    @Column(name ="platformOrderNum",nullable=true,length = 100)
+    public String getPlatformOrderNum() {
+        return platformOrderNum;
+    }
+
+    public void setPlatformOrderNum(String platformOrderNum) {
+        this.platformOrderNum = platformOrderNum;
+    }
+
+
+    @Column(name ="notifyInfo",nullable=true)
+    public String getNotifyInfo() {
+        return notifyInfo;
+    }
+
+    public void setNotifyInfo(String notifyInfo) {
+        this.notifyInfo = notifyInfo;
+    }
+
+    @Column(name ="startTime",nullable=true,length=20)
+    public Date getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(Date startTime) {
+        this.startTime = startTime;
+    }
+
+    @Column(name ="confirmTime",nullable=true,length=20)
+    public Date getConfirmTime() {
+        return confirmTime;
+    }
+
+    public void setConfirmTime(Date confirmTime) {
+        this.confirmTime = confirmTime;
+    }
+
+    @Column(name ="zfbOrderNum",nullable=true,length = 100)
+    public String getZfbOrderNum() {
+        return zfbOrderNum;
+    }
+
+    public void setZfbOrderNum(String zfbOrderNum) {
+        this.zfbOrderNum = zfbOrderNum;
+    }
+
+    @Column(name = "chargeFundRmb", nullable = false,precision = 50, scale = 4)
+    public BigDecimal getChargeFundRmb() {
+        return chargeFundRmb;
+    }
+
+    public void setChargeFundRmb(BigDecimal chargeFundRmb) {
+        this.chargeFundRmb = chargeFundRmb;
+    }
+
+    @Column(name = "exchangeRate", nullable = false,precision = 50, scale = 4)
+    public BigDecimal getExchangeRate() {
+        return exchangeRate;
+    }
+
+    public void setExchangeRate(BigDecimal exchangeRate) {
+        this.exchangeRate = exchangeRate;
     }
 }

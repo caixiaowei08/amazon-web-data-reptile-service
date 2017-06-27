@@ -13,7 +13,7 @@ public interface UserFundService extends BaseService {
 
     public AjaxJson getUserFundInfo();
 
-    public void goChargeFund(HttpServletRequest request, HttpServletResponse response);
+    public AjaxJson goChargeFund(HttpServletRequest request, HttpServletResponse response);
 
 
 }
