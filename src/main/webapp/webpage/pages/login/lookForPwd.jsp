@@ -14,16 +14,18 @@
     <link rel="stylesheet" href="/webpage/plug-in/font-awesome/css/font-awesome.min.css"/>
     <link rel="stylesheet" href="/webpage/plug-in/toastr/toastr.css"/>
     <link rel="stylesheet" href="/webpage/plug-in/common/css/main.css"/>
-    <link rel="stylesheet" href="/webpage/plug-in/validform/css/metro/style.css"/>
+    <link rel="stylesheet" href="/webpage/plug-in/bootstrapvalidator/dist/css/bootstrapValidator.min.css"/>
     <link rel="stylesheet" href="/webpage/pages/login/login.css"/>
-    <script type="text/javascript" src="/webpage/plug-in/jquery/jquery.min.js"></script>
-    <script type="text/javascript" src="/webpage/plug-in/validform/js/Validform_v5.3.1_min_zh-cn.js"></script>
-    <script type="text/javascript" src="/webpage/plug-in/toastr/toastr.min.js"></script>
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!--[if lt IE 9]>
-    <script src="http://apps.bdimg.com/libs/html5shiv/3.7/html5shiv.min.js"></script>
-    <script src="http://apps.bdimg.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <!--[if lte IE 9]>
+    <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <script src="https://cdn.bootcss.com/html5shiv/r29/html5.js"></script>
+    <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
     <![endif]-->
+    <script type="text/javascript" src="/webpage/plug-in/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="/webpage/plug-in/toastr/toastr.min.js"></script>
+    <script type="text/javascript" src="/webpage/plug-in/bootstrapvalidator/dist/js/bootstrapValidator.min.js"></script>
+    <script type="text/javascript" src="/webpage/plug-in/bootstrapvalidator/dist/js/language/zh_CN.js"></script>
+    <script type="text/javascript" src="/webpage/pages/login/lookForPwd.js"></script>
 </head>
 <body class="container-fluid">
 <div class="row">
@@ -42,13 +44,12 @@
                             <h3>找回密码Seller Assistant</h3>
                         </div>
                         <p>&nbsp;</p>
-                        <form id="formobj" class="form-horizontal" action="userController.do?doLookForPwd">
+                        <form id="formobj" class="form-horizontal" action="userController.do?doLookForPwd" onsubmit="return false;">
                             <div class="form-group" style="height: 54px;">
                                 <label for="email" class="col-sm-3 control-label">电子邮箱:</label>
                                 <div class="col-sm-6">
-                                    <input type="email" name="account" id="email" datatype="e" class="form-control"
-                                           placeholder="请输入邮箱账号!"
-                                           sucmsg="用户名验证通过！" nullmsg="请输入邮箱用户名！" errormsg="请输入登录邮箱！">
+                                    <input type="email" name="account" id="email" class="form-control"
+                                           placeholder="请输入邮箱账号!">
                                 </div>
                                 <div class="col-sm-3">
                                     <input type="button" id="getEmailCode"  value="获取验证码" class="btn btn-info btn-block">
@@ -58,30 +59,27 @@
                                 <label for="email" class="col-sm-3 control-label">邮件验证码:</label>
                                 <div class="col-sm-6">
                                     <input type="text" name="emailCode" id="emailCode" datatype="/^\d{4}$/" class="form-control"
-                                           placeholder="请输入邮箱所收到的验证码"
-                                           sucmsg="已输入验证码" nullmsg="请输入验证码！" errormsg="请输入数字验证码">
+                                           placeholder="请输入邮箱所收到的验证码">
                                 </div>
                             </div>
                             <div class="form-group" style="height: 54px;">
                                 <label for="password" class="col-sm-3 control-label">新密码:</label>
                                 <div class="col-sm-6">
-                                    <input type="password" name="pwd" id="password" datatype="*6-18"
-                                           class="form-control" placeholder="请输入新密码！"
-                                           sucmsg="密码通过验证！" nullmsg="请输入6-18位密码！" errormsg="请输入6-18位密码！">
+                                    <input type="password" name="pwd" id="password"
+                                           class="form-control" placeholder="请输入新密码！">
                                 </div>
                             </div>
                             <div class="form-group" style="height: 54px;">
-                                <label for="repassword"
-                                       class="col-sm-3 control-label">确认新密码:</label>
-                                <div class="col-sm-6">
-                                    <input type="password" recheck="pwd" id="repassword" datatype="*"
-                                           class="form-control" placeholder="请再次输入密码！"
-                                           sucmsg="密码通过验证！" nullmsg="请再次输入密码！" errormsg="您两次输入的账号密码不一致！">
+                                <label for="reRwd"
+                                       class="col-sm-3 control-label">再次输入密码:</label>
+                                <div class="col-sm-7">
+                                    <input type="password" id="reRwd" name="reRwd"
+                                           class="form-control" placeholder="请再次输入密码！">
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-sm-6  col-sm-offset-3">
-                                    <input type="button" id="login_register" value="修改密码"
+                                    <input type="submit" id="lookForPwd" onclick="lookForPwdSubmit()" value="修改密码"
                                            class="btn btn-primary btn-block">
                                 </div>
                             </div>
@@ -112,78 +110,4 @@
 </div>
 </body>
 </html>
-<script>
-    $(function () {
-        $("#getEmailCode").click(function () {
-            var email = $("#email").val();
 
-            if(!isEmail(email)){
-                toastr.warning("请输入正确的邮箱！");
-                return;
-            }
-
-            $.ajax({
-                type:"post",
-                url:"userController.do?sendEmailCode",
-                async:true,
-                timeout:10000,
-                data:{account:email},
-                success: function(res){
-                    if(res.success === "success"){
-                        toastr.success("发送邮箱验证码成功！");
-                    }else{
-                        toastr.warning(res.msg);
-                    }
-                },
-                error:function () {
-                    toastr.warning("服务器异常，请联系维护人员！");
-                },
-                complete:function (XMLHttpRequest, textStatus) {
-                    if(status=='timeout'){//超时,status还有success,error等值的情况
-                        toastr.warning("获取数据超时,请检查网络问题！");
-                    }
-                }
-            },'json');
-
-            var i = 60;
-            $("#getEmailCode").addClass('disabled');
-            var flag = setInterval(function(){
-                $("#getEmailCode").val(i+"s");
-                i--;
-                if(i < 0){
-                    $("#getEmailCode").removeClass('disabled');
-                    $("#getEmailCode").val("获取验证码");
-                    clearInterval(flag);
-                }
-            },1000);
-        });
-
-        $("#formobj").Validform({
-            tiptype: 4,
-            btnSubmit: "#login_register",
-            postonce: true,
-            ajaxPost: true,
-            callback: function (data) {
-                if (data.success == "success") {
-                    toastr.info(data.msg);
-                    setTimeout("window.location='/loginController.do?login'", 2000);
-                } else if (data.success == "fail") {
-                    toastr.info(data.msg);
-                } else {
-                    toastr.warning("服务器宕机或者网络问题！");
-                    return false;
-                }
-            }
-        });
-    });
-
-    /**
-     * 邮箱正则表达式
-     * @param str
-     * @returns {boolean}
-     */
-    function isEmail(str){
-        var reg = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/;
-        return reg.test(str);
-    }
-</script>

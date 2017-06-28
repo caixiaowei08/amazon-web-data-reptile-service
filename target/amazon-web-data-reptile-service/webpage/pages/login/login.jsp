@@ -12,19 +12,22 @@
     <link rel="stylesheet" href="/webpage/plug-in/bootstrap/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="/webpage/plug-in/bootstrap/css/bootstrap-theme.min.css"/>
     <link rel="stylesheet" href="/webpage/plug-in/font-awesome/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="/webpage/plug-in/bootstrapvalidator/dist/css/bootstrapValidator.min.css"/>
     <link rel="stylesheet" href="/webpage/plug-in/toastr/toastr.css"/>
     <link rel="stylesheet" href="/webpage/plug-in/common/css/main.css"/>
-    <link rel="stylesheet" href="/webpage/plug-in/validform/css/metro/style.css"/>
+    <%--<link rel="stylesheet" href="/webpage/plug-in/validform/css/metro/style.css"/>--%>
     <link rel="stylesheet" href="/webpage/pages/login/login.css"/>
-    <script type="text/javascript" src="/webpage/plug-in/jquery/jquery.min.js"></script>
-    <script type="text/javascript" src="/webpage/plug-in/validform/js/Validform_v5.3.1_min_zh-cn.js"></script>
-    <script type="text/javascript" src="/webpage/plug-in/toastr/toastr.min.js"></script>
-
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!--[if lt IE 9]>
-    <script src="http://apps.bdimg.com/libs/html5shiv/3.7/html5shiv.min.js"></script>
-    <script src="http://apps.bdimg.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <!--[if lte IE 9]>
+    <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <script src="https://cdn.bootcss.com/html5shiv/r29/html5.js"></script>
+    <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
     <![endif]-->
+    <script type="text/javascript" src="/webpage/plug-in/jquery/jquery.min.js"></script>
+    <%--<script type="text/javascript" src="/webpage/plug-in/validform/js/Validform_v5.3.1_min_zh-cn.js"></script>--%>
+    <script type="text/javascript" src="/webpage/plug-in/toastr/toastr.min.js"></script>
+    <script type="text/javascript" src="/webpage/plug-in/bootstrapvalidator/dist/js/bootstrapValidator.min.js"></script>
+    <script type="text/javascript" src="/webpage/plug-in/bootstrapvalidator/dist/js/language/zh_CN.js"></script>
+    <script type="text/javascript" src="/webpage/pages/login/login.js"></script>
 </head>
 <body class="container-fluid">
 <div class="row">
@@ -43,26 +46,24 @@
                             <h3>欢迎登录Seller Assistant</h3>
                         </div>
                         <p>&nbsp;</p>
-                        <form id="formobj" class="form-horizontal" action="userController.do?doLogin">
+                        <form id="formobj" class="form-horizontal" action="/userController.do?doLogin" onsubmit="return false;">
                             <div class="form-group" style="height: 54px;">
                                 <label for="email" class="col-sm-3 control-label">电子邮箱:</label>
                                 <div class="col-sm-7">
-                                    <input type="email" name="account" id="email" datatype="e" class="form-control"
-                                           placeholder="请输入邮箱账号!"
-                                           sucmsg="用户名验证通过！" nullmsg="请输入用户名！" errormsg="请输入登录邮箱！">
+                                    <input type="email" name="account" id="email"  class="form-control"
+                                           placeholder="请输入邮箱账号!">
                                 </div>
                             </div>
                             <div class="form-group" style="height: 54px;">
                                 <label for="password" class="col-sm-3 control-label">密&nbsp;&nbsp;&nbsp;&nbsp;码:</label>
                                 <div class="col-sm-7">
-                                    <input type="password" name="pwd" id="password" datatype="*" class="form-control"
-                                           placeholder="请输入密码！"
-                                           sucmsg="密码通过验证！" nullmsg="请输入密码！" errormsg="请输入密码！">
+                                    <input type="password" name="pwd" id="password" class="form-control"
+                                           placeholder="请输入密码！">
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-sm-7  col-sm-offset-3">
-                                    <input type="button" id="login_submit" value="登录" class="btn btn-primary btn-block">
+                                    <input type="submit" id="login_submit" onclick="loginSubmit();"  value="登录" class="btn btn-primary btn-block">
                                 </div>
                             </div>
                         </form>
@@ -95,7 +96,7 @@
 </div>
 </body>
 </html>
-<script>
+<%--<script>
     $(function () {
         $("#formobj").Validform({
             tiptype: 4,
@@ -114,4 +115,4 @@
             }
         })
     })
-</script>
+</script>--%>

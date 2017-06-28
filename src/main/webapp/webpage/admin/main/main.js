@@ -239,9 +239,9 @@ function loadPromotOrder(promotId) {
     });
 }
 
-function clickEvaluateModel(promotId) {
+/*function clickEvaluateModel(promotId) {
     window.open("/evaluateController.admin?goEvaluateDetail&promotId="+promotId);
-}
+}*/
 function downPromotOrderExcel(){
     var params = new Object();
     params.id = $("#amazon_id").val().trim();
