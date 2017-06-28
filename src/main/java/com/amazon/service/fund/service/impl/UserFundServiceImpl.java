@@ -14,6 +14,8 @@ import com.amazon.service.recharge.controller.UserRechargeFundController;
 import com.amazon.service.recharge.entity.UserRechargeFundEntity;
 import com.amazon.service.recharge.service.UserRechargeFundService;
 import com.amazon.service.user.entity.UserEntity;
+import com.amazon.service.vip.entity.UserMembershipEntity;
+import com.amazon.service.vip.service.UserMembershipService;
 import com.amazon.system.Constant;
 import com.amazon.system.alipay.ChargeFundConfig;
 import com.amazon.system.alipay.service.AlipayService;
@@ -24,6 +26,7 @@ import org.framework.core.common.model.json.AjaxJson;
 import org.framework.core.common.service.impl.BaseServiceImpl;
 import org.framework.core.global.service.GlobalService;
 import org.framework.core.utils.ContextHolderUtils;
+import org.framework.core.utils.DateUtils.DateUtils;
 import org.framework.core.utils.RegularExpressionUtils;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
@@ -57,6 +60,9 @@ public class UserFundServiceImpl extends BaseServiceImpl implements UserFundServ
 
     @Autowired
     private UserFundService userFundService;
+
+    @Autowired
+    private UserMembershipService userMembershipService;
 
     @Autowired
     private UserRechargeFundService rechargeFundService;
@@ -162,24 +168,24 @@ public class UserFundServiceImpl extends BaseServiceImpl implements UserFundServ
             j.setMsg("支付宝异步信息不能为空！");
             return j;
         }
-        if(!StringUtils.hasText(alipayNotifyPojo.getOut_trade_no())){
+        if (!StringUtils.hasText(alipayNotifyPojo.getOut_trade_no())) {
             j.setSuccess(AjaxJson.CODE_FAIL);
             j.setMsg("平台订单号为空！");
             return j;
         }
 
         DetachedCriteria userRechargeFundDetachedCriteria = DetachedCriteria.forClass(UserRechargeFundEntity.class);
-        userRechargeFundDetachedCriteria.add(Restrictions.eq("platformOrderNum",alipayNotifyPojo.getOut_trade_no()));
-        userRechargeFundDetachedCriteria.add(Restrictions.eq("state",ConstantFund.TO_BE_COMFIRM));//待确认状态
+        userRechargeFundDetachedCriteria.add(Restrictions.eq("platformOrderNum", alipayNotifyPojo.getOut_trade_no()));
+        userRechargeFundDetachedCriteria.add(Restrictions.eq("state", ConstantFund.TO_BE_COMFIRM));//待确认状态
         List<UserRechargeFundEntity> userRechargeFundEntityList = rechargeFundService.getListByCriteriaQuery(userRechargeFundDetachedCriteria);
-        if(!CollectionUtils.isNotEmpty(userRechargeFundEntityList)){
+        if (!CollectionUtils.isNotEmpty(userRechargeFundEntityList)) {
             j.setSuccess(AjaxJson.CODE_FAIL);
             j.setMsg("未能找到初始充值订单！");
             return j;
         }
 
         UserRechargeFundEntity userRechargeFundEntity = userRechargeFundEntityList.get(0);
-        if(userRechargeFundEntity.getChargeType().equals(ConstantChargeType.BALANCE_FUND)){//余额充值
+        if (userRechargeFundEntity.getChargeType().equals(ConstantChargeType.BALANCE_FUND)) {//余额充值
             DetachedCriteria userFundDetachedCriteria = DetachedCriteria.forClass(UserFundEntity.class);
             userFundDetachedCriteria.add(Restrictions.eq("sellerId", userRechargeFundEntity.getSellerId()));
             List<UserFundEntity> userFundEntityList = userFundService.getListByCriteriaQuery(userFundDetachedCriteria);
@@ -200,16 +206,51 @@ public class UserFundServiceImpl extends BaseServiceImpl implements UserFundServ
             userRechargeFundEntity.setState(ConstantFund.SUCCESS);
             userFundService.saveOrUpdate(userFundEntity);
             rechargeFundService.saveOrUpdate(userRechargeFundEntity);
-        }else if(userRechargeFundEntity.getChargeType().equals(ConstantChargeType.BALANCE_FUND)){//会员充值
+        } else if (userRechargeFundEntity.getChargeType().equals(ConstantChargeType.BALANCE_FUND)) {//会员充值
+            DetachedCriteria userMembershipDetachedCriteria = DetachedCriteria.forClass(UserMembershipEntity.class);
+            userMembershipDetachedCriteria.add(Restrictions.eq("sellerId", userRechargeFundEntity.getSellerId()));
+            List<UserMembershipEntity> userMembershipEntityList = userFundService.getListByCriteriaQuery(userMembershipDetachedCriteria);
+            if (CollectionUtils.isEmpty(userMembershipEntityList)) {
+                j.setSuccess(AjaxJson.CODE_FAIL);
+                j.setMsg("无法找到资金账户，请联系管理员！");
+                return j;
+            }
 
+            UserMembershipEntity userMembershipEntity = userMembershipEntityList.get(0);
+            //处理会员逻辑
+            if (userMembershipEntity.getMembershipEndTime() == null) {
+                Date beginOfDate = DateUtils.getBeginOfDate();
+                userMembershipEntity.setMembershipStartTime(beginOfDate);
+                DateUtils.addMonth(beginOfDate, userRechargeFundEntity.getMemberShipMonth());
+                userMembershipEntity.setMembershipEndTime(beginOfDate);
+                userMembershipEntity.setChargeFund(userRechargeFundEntity.getChargeFundRmb());
+                userMembershipEntity.setTotalMembershipCost(userRechargeFundEntity.getChargeFundRmb());
+            } else {
+                //判断是否到期
+                Date membershipEndTime = userMembershipEntity.getMembershipEndTime();
+                if (DateUtils.compareTo(membershipEndTime, new Date()) > 0){//未到期处理
+                    userMembershipEntity.setLastMembershipEndTime(membershipEndTime);
+                    DateUtils.addMonth(membershipEndTime,userRechargeFundEntity.getMemberShipMonth());
+                    userMembershipEntity.setMembershipEndTime(membershipEndTime);
+                }else{//到期处理
+                    Date beginOfDate = DateUtils.getBeginOfDate();
+                    userMembershipEntity.setMembershipStartTime(beginOfDate);
+                    DateUtils.addMonth(beginOfDate, userRechargeFundEntity.getMemberShipMonth());
+                    userMembershipEntity.setMembershipEndTime(beginOfDate);
+                    userMembershipEntity.setLastMembershipEndTime(membershipEndTime);
+                }
+                userMembershipEntity.setChargeFund(userRechargeFundEntity.getChargeFundRmb());
+                userMembershipEntity.setTotalMembershipCost(userMembershipEntity.getTotalMembershipCost().add(userRechargeFundEntity.getChargeFundRmb()));
+            }
+            userMembershipEntity.setChargeTime(new Date());
+            //充值流水变动
+            userRechargeFundEntity.setZfbOrderNum(alipayNotifyPojo.getTrade_no());
+            userRechargeFundEntity.setNotifyInfo(alipayNotifyPojo.getTrade_status());
+            userRechargeFundEntity.setConfirmTime(new Date());
+            userRechargeFundEntity.setState(ConstantFund.SUCCESS);//交易成功
+            userMembershipService.saveOrUpdate(userMembershipEntity);
+            rechargeFundService.saveOrUpdate(userRechargeFundEntity);
         }
         return j;
     }
-
-    private void dealBalanceFund(UserRechargeFundEntity userRechargeFundEntity){
-
-
-
-    }
-
 }

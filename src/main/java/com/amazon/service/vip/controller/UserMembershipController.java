@@ -40,9 +40,7 @@ public class UserMembershipController extends BaseController {
 
     @RequestMapping("goToMemberShipCharge")
     public void goToMemberShipCharge(UserMembershipVo userMembershipVo, HttpServletRequest request, HttpServletResponse response) {
-        AjaxJson j = new AjaxJson();
-        Integer memberShipMonth = userMembershipVo.getMemberShipMonth();
-        System.out.println(memberShipMonth);
+        AjaxJson j = userMembershipService.goToChargeVipMouth(userMembershipVo,request,response);
     }
 
     @RequestMapping(params = "doAdd")

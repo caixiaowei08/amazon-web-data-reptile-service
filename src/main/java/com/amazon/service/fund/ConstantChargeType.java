@@ -12,7 +12,7 @@ public class ConstantChargeType {
     /**
      * 会员购买
      */
-    public final static Integer MEMBERSHIP_FUND = 1;
+    public final static Integer MEMBERSHIP_FUND = 2;
 
 
 

@@ -49,6 +49,10 @@ public class UserRechargeFundEntity extends IdEntity implements Serializable {
     private BigDecimal chargeFund;
 
     /**
+     *
+     */
+    private Integer memberShipMonth;
+    /**
      * 充值状态  1-待核实 2-成功  3-失败
      */
     private Integer state;
@@ -235,5 +239,14 @@ public class UserRechargeFundEntity extends IdEntity implements Serializable {
 
     public void setExchangeRate(BigDecimal exchangeRate) {
         this.exchangeRate = exchangeRate;
+    }
+
+    @Column(name ="memberShipMonth",nullable=true,length=11)
+    public Integer getMemberShipMonth() {
+        return memberShipMonth;
+    }
+
+    public void setMemberShipMonth(Integer memberShipMonth) {
+        this.memberShipMonth = memberShipMonth;
     }
 }

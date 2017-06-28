@@ -42,13 +42,13 @@
             </div>
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">
+                    <li><a href="/promotOrderController.do?goNewPromotOne" target="_parent">新建推广活动</a></li>
                     <li><a href="/redirectionController.do?goManagePromot" target="_parent">推广活动管理</a></li>
-                    <li><a href="/promotOrderController.do?goNewPromotOne" target="_parent">新建推广活动</a>
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle " data-toggle="dropdown" role="button" aria-haspopup="true"
-                           aria-expanded="false">充值<span class="caret"></span></a>
+                           aria-expanded="false">账户充值<span class="caret"></span></a>
                         <ul class="dropdown-menu">
-                            <li><a href="promotOrderController.do?goNewPromotOne">保证金充值</a></li>
+                            <li><a href="promotOrderController.do?goNewPromotOne">余额充值</a></li>
                             <li><a href="promotOrderController.do?goNewPromotOne">购买会员</a></li>
                             <li><a href="redirectionController.do?goManagePromot">充值记录</a></li>
                         </ul>
@@ -120,7 +120,7 @@
                                 </div>
                                 <div class="infobox-data">
                                     <span class="infobox-data-number" data-bind="text:historyOrderNum">0</span>
-                                    <a href="" class="infobox-content">完成的推广</a>
+                                    <a href="" class="infobox-content">完成推广</a>
                                 </div>
                             </div>
                             <div class="infobox infobox-blue2">
@@ -195,7 +195,7 @@
                                         <!-- ko if: beforeVip -->
                                         <div class="input-group">
                                             <span class="input-group-addon">会员到期时间</span>
-                                            <input type="text" class="form-control" placeholder="会员到期时间"
+                                            <input type="text" readonly="readonly" class="form-control" placeholder="会员到期时间"
                                                    data-bind="value:membershipEndTime">
                                         </div>
                                         <div style="height: 10px;"></div>
