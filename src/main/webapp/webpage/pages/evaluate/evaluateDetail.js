@@ -23,7 +23,7 @@ $(function () {
             {
                 title: '评论编号',
                 field: "id",
-                width: "10%",//宽度
+                width: "5%",//宽度
                 align: "center",//水平
                 valign: "middle"//垂直
             },
@@ -37,7 +37,7 @@ $(function () {
             {
                 title: '状态',
                 field: "state",
-                width: "10%",//宽度
+                width: "5%",//宽度
                 align: "center",//水平
                 valign: "middle",//垂直
                 formatter: function (value, row, index) {
@@ -59,7 +59,7 @@ $(function () {
             {
                 title: '评价内容',
                 field: "reviewContent",
-                width: "10%",//宽度
+                width: "25%",//宽度
                 align: "center",//水平
                 valign: "middle",//垂直
                 formatter: function (value, row, index) {
@@ -79,7 +79,7 @@ $(function () {
             {
                 title: '投诉',
                 field: "id",
-                width: "10%",//宽度
+                width: "5%",//宽度
                 align: "center",//水平
                 valign: "middle",//垂直
                 formatter: function (value, row, index) {

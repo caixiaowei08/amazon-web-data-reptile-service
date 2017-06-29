@@ -199,7 +199,7 @@ var viewModel = {
 
 function loadPromotOrder(promotId) {
     $.ajax({
-        url: "/promotOrderController.do?doGet",
+        url: "/promotOrderController.admin?doGet",
         type: 'post',
         data: {id: promotId},
         success: function (data) {
