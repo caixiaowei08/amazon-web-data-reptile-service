@@ -2,19 +2,15 @@ package com.amazon.service.fund.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.alipay.api.AlipayApiException;
-import com.alipay.api.domain.AlipayTradePayModel;
 import com.alipay.api.internal.util.AlipaySignature;
 import com.amazon.service.fund.entity.UserFundEntity;
 import com.amazon.service.fund.service.UserFundService;
 import com.amazon.service.fund.vo.AlipayNotifyPojo;
 import com.amazon.system.alipay.AlipayConfig;
-import com.amazon.system.alipay.ChargeFundConfig;
-import com.amazon.system.alipay.service.AlipayService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.framework.core.common.controller.BaseController;
 import org.framework.core.common.model.json.AjaxJson;
-import org.framework.core.global.service.GlobalService;
 import org.framework.core.utils.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -22,8 +18,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;

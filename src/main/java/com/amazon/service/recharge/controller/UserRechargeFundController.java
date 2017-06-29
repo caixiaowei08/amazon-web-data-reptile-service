@@ -1,12 +1,24 @@
 package com.amazon.service.recharge.controller;
 
+import com.amazon.service.fund.controller.UserFundController;
+import com.amazon.service.promot.order.entity.PromotOrderEntity;
 import com.amazon.service.promot.price.entity.PromotPriceEntity;
 import com.amazon.service.promot.price.service.PromotPriceService;
 import com.amazon.service.recharge.entity.UserRechargeFundEntity;
 import com.amazon.service.recharge.service.UserRechargeFundService;
+import com.amazon.service.user.entity.UserEntity;
+import com.amazon.system.Constant;
+import com.amazon.system.system.bootstrap.hibernate.CriteriaQuery;
+import com.amazon.system.system.bootstrap.json.DataGrid;
+import com.amazon.system.system.bootstrap.json.DataGridReturn;
+import com.amazon.system.system.bootstrap.utils.DatagridJsonUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.framework.core.common.controller.BaseController;
 import org.framework.core.common.model.json.AjaxJson;
 import org.framework.core.utils.BeanUtils;
+import org.framework.core.utils.ContextHolderUtils;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -16,6 +28,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.Date;
 
 /**
@@ -26,8 +39,36 @@ import java.util.Date;
 @RequestMapping("/userRechargeFundController")
 public class UserRechargeFundController extends BaseController {
 
+    private static Logger logger = LogManager.getLogger(UserRechargeFundController.class.getName());
+
     @Autowired
     private UserRechargeFundService userRechargeFundService;
+
+    @RequestMapping(params = "dataGrid")
+    public void dataGrid(DataGrid dataGrid, HttpServletRequest request, HttpServletResponse response) {
+        CriteriaQuery criteriaQuery = new CriteriaQuery(UserRechargeFundEntity.class, dataGrid, request.getParameterMap());
+        UserEntity userEntity = (UserEntity) ContextHolderUtils.getSession().getAttribute(Constant.USER_SESSION_CONSTANTS);
+        if (userEntity == null) {
+            try {
+                response.sendRedirect("/loginController.do?login");
+                return;
+            } catch (IOException e) {
+                logger.info("退出登录失败！", e);
+            }
+
+        }
+        try {
+            criteriaQuery.installHqlParams();
+        } catch (Exception e) {
+            logger.info("组装查询出错！", e);
+        }
+        criteriaQuery.getDetachedCriteria().add(Restrictions.eq("sellerId", userEntity.getId()));//加上用户
+        DataGridReturn dataGridReturn = userRechargeFundService.getDataGridReturn(criteriaQuery);
+        DatagridJsonUtils.listToObj(dataGridReturn, PromotOrderEntity.class, dataGrid.getField());
+        DatagridJsonUtils.datagrid(response, dataGridReturn);
+    }
+
+
 
     @RequestMapping(params = "doAdd")
     @ResponseBody

@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="/webpage/plug-in/bootstrap/css/bootstrap-theme.min.css"/>
     <link rel="stylesheet" href="/webpage/plug-in/font-awesome/css/font-awesome.min.css"/>
     <link rel="stylesheet" href="/webpage/plug-in/bootstrapvalidator/dist/css/bootstrapValidator.min.css"/>
+    <link rel="stylesheet" href="/webpage/plug-in/bootstrap-table/dist/bootstrap-table.min.css"/>
     <link rel="stylesheet" href="/webpage/plug-in/toastr/toastr.css"/>
     <link rel="stylesheet" href="/webpage/plug-in/ace/css/ace.css"/>
     <link rel="stylesheet" href="/webpage/pages/main/index.css"/>
@@ -25,6 +26,9 @@
     <script type="text/javascript" src="/webpage/plug-in/bootstrap/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="/webpage/plug-in/toastr/toastr.min.js"></script>
     <script type="text/javascript" src="/webpage/plug-in/knockoutjs/dist/knockout.js"></script>
+    <script type="text/javascript" src="/webpage/plug-in/bootstrap-table/dist/bootstrap-table.min.js"></script>
+    <script type="text/javascript" src="/webpage/plug-in/bootstrap-table/dist/bootstrap-table-locale-all.min.js"></script>
+    <script type="text/javascript" src="/webpage/plug-in/bootstrap-table/dist/locale/bootstrap-table-zh-CN.js"></script>
     <script type="text/javascript" src="/webpage/pages/fund/chargeFundFlow.js"></script>
 </head>
 <body>
@@ -80,6 +84,8 @@
                     <h3 class="panel-title">充值流水信息</h3>
                 </div>
             </div>
+            <table id="chargeFundFlowListTable" class="table table-hover">
+            </table>
         </div>
     </div>
     <nav class="navbar navbar-default navbar-fixed-bottom">
