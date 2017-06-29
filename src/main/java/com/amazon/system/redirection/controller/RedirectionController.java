@@ -31,4 +31,14 @@ public class RedirectionController extends BaseController{
         return "pages/fund/memberShip";
     }
 
+    @RequestMapping(params = "goUserDetailInfo")
+    public String goUserDetailInfo(HttpServletRequest request, HttpServletResponse response) {
+        return "pages/user/userDetail";
+    }
+
+    @RequestMapping(params = "goUserChangePwd")
+    public String goUserChangePwd(HttpServletRequest request, HttpServletResponse response) {
+        return "pages/user/changePwd";
+    }
+
 }

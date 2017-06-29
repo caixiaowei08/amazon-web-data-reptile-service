@@ -48,12 +48,19 @@
                         <a href="#" class="dropdown-toggle " data-toggle="dropdown" role="button" aria-haspopup="true"
                            aria-expanded="false">账户充值<span class="caret"></span></a>
                         <ul class="dropdown-menu">
-                            <li><a href="promotOrderController.do?goNewPromotOne">余额充值</a></li>
-                            <li><a href="promotOrderController.do?goNewPromotOne">购买会员</a></li>
+                            <li><a href="/redirectionController.do?goToChargeFund">余额充值</a></li>
+                            <li><a href="/redirectionController.do?goToChargeMemberShip">购买会员</a></li>
                             <li><a href="redirectionController.do?goManagePromot">充值记录</a></li>
                         </ul>
                     </li>
-                    <li><a href="#">我的账户</a></li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle " data-toggle="dropdown" role="button" aria-haspopup="true"
+                           aria-expanded="false">我的账户<span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="redirectionController.do?goUserDetailInfo">账户详情</a></li>
+                            <li><a href="redirectionController.do?goUserChangePwd">修改密码</a></li>
+                        </ul>
+                    </li>
                     <li>
                         <a href="/userController.do?doLogOff">
                             退出
@@ -84,7 +91,6 @@
                                     <a href="/redirectionController.do?goManagePromot" target="_parent"
                                        class="infobox-content">我的活动订单</a>
                                 </div>
-                                <%--<div class="stat stat-important">4%</div>--%>
                             </div>
                             <div class="infobox infobox-pink">
                                 <div class="infobox-icon">
@@ -94,7 +100,6 @@
                                     <span class="infobox-data-number" data-bind="text:todayEvaluateNum">0</span>
                                     <a href="" class="infobox-content">今日评论</a>
                                 </div>
-                                <%--<div class="stat stat-success">8%</div>--%>
                             </div>
                             <div class="infobox infobox-blue">
                                 <div class="infobox-icon">
@@ -203,10 +208,10 @@
                                         <!-- ko ifnot: vip -->
                                         <div class="btn-group btn-group-justified" role="group" aria-label="...">
                                             <div class="btn-group" role="group">
-                                                <button type="button" class="btn btn-danger">立即开通会员</button>
+                                                <button type="button" onclick="goToChargeMemberShip();"  class="btn btn-danger">立即开通会员</button>
                                             </div>
                                             <div class="btn-group" role="group">
-                                                <button type="button" onclick="goToChangeFund();" class="btn btn-default">余额充值</button>
+                                                <button type="button" onclick="goToChargeFund();" class="btn btn-default">余额充值</button>
                                             </div>
                                         </div>
                                         <!-- /ko -->

@@ -84,7 +84,6 @@ public class UserController extends BaseController {
         }
     }
 
-
     @RequestMapping(params = "doRegister")
     @ResponseBody
     public AjaxJson doRegister(UserEntity userEntity, HttpServletRequest request) {
@@ -151,14 +150,12 @@ public class UserController extends BaseController {
     @ResponseBody
     public AjaxJson doLookForPwd(UserVo userVo, HttpServletRequest request) {
         AjaxJson j = new AjaxJson();
-
         String email = userVo.getAccount();
         if (!MailUtils.isEmail(email)) {
             j.setSuccess(AjaxJson.CODE_FAIL);
             j.setMsg("请输入正确的邮箱！");
             return j;
         }
-
         DetachedCriteria detachedCriteria = DetachedCriteria.forClass(UserEntity.class);
         detachedCriteria.add(Restrictions.eq("account", email));
         List<UserEntity> userEntityList = userService.getListByCriteriaQuery(detachedCriteria);
@@ -168,7 +165,6 @@ public class UserController extends BaseController {
             return j;
         }
         EmailCodePojo emailCodePojo = (EmailCodePojo) ContextHolderUtils.getSession().getAttribute(Constant.EMAIL_CODE);
-
         if ((emailCodePojo != null) && (userVo.getAccount().equals(emailCodePojo.getEmail())) &&
                 userVo.getEmailCode().equals(emailCodePojo.getCode())) {
             if (StringUtils.hasText(userVo.getPwd())) {
@@ -196,6 +192,48 @@ public class UserController extends BaseController {
         }
         UserBaseInfoVo userBaseInfoVo = userService.doGetBaseUserInfo(userSession);
         j.setContent(userBaseInfoVo);
+        return j;
+    }
+
+    @RequestMapping(params = "doChangeUserPwdByPwd")
+    @ResponseBody
+    public AjaxJson doChangeUserPassword(HttpServletRequest request, HttpServletResponse response) {
+        AjaxJson j = new AjaxJson();
+        UserEntity userEntity = globalService.getUserEntityFromSession();
+        if (userEntity == null) {
+            j.setSuccess(AjaxJson.RELOGIN);
+            j.setMsg("修改失败，用户登录超时！");
+            return j;
+        }
+        String oldPwd = request.getParameter("oldPwd");
+        String pwd = request.getParameter("pwd");
+
+        if(!StringUtils.hasText(oldPwd)&&!StringUtils.hasText(pwd)){
+            j.setSuccess(AjaxJson.CODE_FAIL);
+            j.setMsg("请输入原始密码和新密码！");
+            return j;
+        }
+
+        DetachedCriteria detachedCriteria = DetachedCriteria.forClass(UserEntity.class);
+        detachedCriteria.add(Restrictions.eq("account", userEntity.getAccount()));
+        detachedCriteria.add(Restrictions.eq("pwd",PasswordUtil.getMD5Encryp(oldPwd)));
+        List<UserEntity> userEntityList = userService.getListByCriteriaQuery(detachedCriteria);
+        if (CollectionUtils.isEmpty(userEntityList)) {
+            j.setSuccess(AjaxJson.CODE_FAIL);
+            j.setMsg("原始密码输入错误！");
+            return j;
+        }
+        UserEntity userEntityDb = userEntityList.get(0);
+        userEntityDb.setPwd(PasswordUtil.getMD5Encryp(pwd));
+        userEntityDb.setUpdateTime(new Date());
+        try {
+            userService.saveOrUpdate(userEntityDb);
+        }catch (Exception e){
+            j.setSuccess(AjaxJson.CODE_FAIL);
+            j.setMsg("密码修改失败！");
+            return j;
+        }
+        j.setMsg("密码修改成功！");
         return j;
     }
 
