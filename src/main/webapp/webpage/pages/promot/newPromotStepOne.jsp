@@ -111,6 +111,17 @@
         </div>
     </div>
 </div>
+<nav class="navbar navbar-default navbar-fixed-bottom">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-8 col-sm-offset-2">
+                <div style="text-align:center;line-height: 28px;">
+                    Copyright&copy;武汉市维斯卡尔技术服务有限公司 &reg;鄂ICP备17013383号
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
 </body>
 </html>
 <script>
@@ -165,12 +176,14 @@
             success:function(data){
                 if(data.success === "success"){
                     window.location='/promotOrderController.do?goNewPromotTwo'
-                }else{
+                }else if (data.success === "fail") {
                     toastr.error(data.msg);
+                } else if (data.success === "RELOGIN") {
+                    window.location = '/loginController.do?login';
                 }
             },
             error:function(jqxhr,textStatus,errorThrow){
-                toastr.success("服务器异常,请联系管理员！");
+                toastr.error("服务器异常,请联系管理员！");
             },
             complete:function () {
                 SendComplete();

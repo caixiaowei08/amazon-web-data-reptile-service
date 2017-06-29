@@ -30,7 +30,7 @@ function newPromotOrder() {
     window.location = '/promotOrderController.do?goNewPromotOne'
 }
 
-var ViewModel = function (account,totalFund,usableFund,freezeFund,vip,beforeVip,membershipEndTime,activeOrderNum, todayEvaluateNum, buyerNum, totalEvaluateNum, historyOrderNum, totalConsumption) {
+var ViewModel = function (account, totalFund, usableFund, freezeFund, vip, beforeVip, membershipEndTime, activeOrderNum, todayEvaluateNum, buyerNum, totalEvaluateNum, historyOrderNum, totalConsumption) {
     this.account = ko.observable(account);
     this.totalFund = ko.observable(totalFund);
     this.usableFund = ko.observable(usableFund);
@@ -69,34 +69,28 @@ function loadData() {
                         data.content.totalConsumption
                     )
                 );
-            } else {
-                window.location = '/loginController.do?login'
+            } else if (data.success === "fail") {
+                toastr.error(data.msg);
+            } else if (data.success === "RELOGIN") {
+                window.location = '/loginController.do?login';
             }
         },
         error: function (jqxhr, textStatus, errorThrow) {
-            toastr.success("服务器异常,请联系管理员！");
-        },
-        statusCode: {
-            404: function () {
-                console.log('not found');
-            },
-            500: function () {
-                console.log('error by server');
-            },
+            toastr.error("服务器异常,请联系管理员！");
         }
     });
 }
 
 /**
- * 充值按钮点击
+ * 资金充值按钮点击
  */
-function goToChargeFund(){
-  window.location = "/redirectionController.do?goToChargeFund";
+function goToChargeFund() {
+    window.location = "/redirectionController.do?goToChargeFund";
 }
 
 /**
- * 充值按钮点击
+ * 会员充值按钮点击
  */
-function goToChargeMemberShip(){
+function goToChargeMemberShip() {
     window.location = "/redirectionController.do?goToChargeMemberShip";
 }

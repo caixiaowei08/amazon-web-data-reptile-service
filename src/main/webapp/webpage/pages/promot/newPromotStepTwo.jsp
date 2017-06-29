@@ -15,6 +15,11 @@
     <link rel="stylesheet" href="/webpage/plug-in/bootstrapvalidator/dist/css/bootstrapValidator.min.css"/>
     <link href="/webpage/plug-in/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet"
           media="screen">
+    <!--[if lte IE 9]>
+    <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <script src="https://cdn.bootcss.com/html5shiv/r29/html5.js"></script>
+    <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+    <![endif]-->
     <script type="text/javascript" src="/webpage/plug-in/jquery/jquery.min.js"></script>
     <script type="text/javascript" src="/webpage/plug-in/bootstrap/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="/webpage/plug-in/bootstrapvalidator/dist/js/bootstrapValidator.min.js"></script>
@@ -217,6 +222,17 @@
         </div>
     </div>
 </div>
+<nav class="navbar navbar-default navbar-fixed-bottom">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-8 col-sm-offset-2">
+                <div style="text-align:center;line-height: 28px;">
+                    Copyright&copy;武汉市维斯卡尔技术服务有限公司 &reg;鄂ICP备17013383号
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
 </body>
 </html>
 <script>
@@ -324,13 +340,14 @@
                             10
                         )
                     );
-                } else {
+                } else if (data.success === "fail") {
                     toastr.error(data.msg);
+                } else if (data.success === "RELOGIN") {
+                    window.location = '/loginController.do?login';
                 }
             },
             error: function (jqxhr, textStatus, errorThrow) {
-                toastr.success("服务器异常,请联系管理员！");
-                console.log(errorThrow);
+                toastr.error("服务器异常,请联系管理员！");
             },
             statusCode: {
                 404: function () {

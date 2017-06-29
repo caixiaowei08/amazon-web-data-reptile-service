@@ -89,7 +89,7 @@
                                 <div class="infobox-data">
                                     <span class="infobox-data-number" data-bind="text:activeOrderNum">0</span>
                                     <a href="/redirectionController.do?goManagePromot" target="_parent"
-                                       class="infobox-content">我的活动订单</a>
+                                       class="infobox-content">活动订单</a>
                                 </div>
                             </div>
                             <div class="infobox infobox-pink">
@@ -98,7 +98,8 @@
                                 </div>
                                 <div class="infobox-data">
                                     <span class="infobox-data-number" data-bind="text:todayEvaluateNum">0</span>
-                                    <a href="" class="infobox-content">今日评论</a>
+                                    <%--<a href="" class="infobox-content">今日评论</a>--%>
+                                    <lable href="" class="infobox-content">今日评论</lable>
                                 </div>
                             </div>
                             <div class="infobox infobox-blue">
@@ -107,7 +108,8 @@
                                 </div>
                                 <div class="infobox-data">
                                     <span class="infobox-data-number" data-bind="text:buyerNum">0</span>
-                                    <a href="" class="infobox-content">联系买家</a>
+                                    <%--<a class="infobox-content">联系买家</a>--%>
+                                    <lable class="infobox-content">联系买家</lable>
                                 </div>
                             </div>
                             <div class="infobox infobox-red">
@@ -116,7 +118,8 @@
                                 </div>
                                 <div class="infobox-data">
                                     <span class="infobox-data-number" data-bind="text:totalEvaluateNum">0</span>
-                                    <a href="" class="infobox-content">总好评数</a>
+                                    <%--<a class="infobox-content">总好评数</a>--%>
+                                    <lable class="infobox-content">总好评数</lable>
                                 </div>
                             </div>
                             <div class="infobox infobox-orange2">
@@ -125,7 +128,8 @@
                                 </div>
                                 <div class="infobox-data">
                                     <span class="infobox-data-number" data-bind="text:historyOrderNum">0</span>
-                                    <a href="" class="infobox-content">完成推广</a>
+                                    <%--<a class="infobox-content">完成推广</a>--%>
+                                    <lable class="infobox-content">完成推广</lable>
                                 </div>
                             </div>
                             <div class="infobox infobox-blue2">
@@ -134,7 +138,7 @@
                                 </div>
                                 <div class="infobox-data">
                                     <span class="infobox-data-number" data-bind="text:totalConsumption">$0.00</span>
-                                    <a href="" class="infobox-content">消费明细(美元)</a>
+                                    <lable class="infobox-content">全部消费(美元)</lable>
                                 </div>
                             </div>
                             <div class="space-6"></div>

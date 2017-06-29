@@ -15,6 +15,11 @@
     <link rel="stylesheet" href="/webpage/pages/manage/managePromot.css"/>
     <link rel="stylesheet" href="/webpage/pages/main/index.css"/>
     <link rel="stylesheet" href="/webpage/plug-in/toastr/toastr.css"/>
+    <!--[if lte IE 9]>
+    <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <script src="https://cdn.bootcss.com/html5shiv/r29/html5.js"></script>
+    <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+    <![endif]-->
     <script type="text/javascript" src="/webpage/plug-in/jquery/jquery.min.js"></script>
     <script type="text/javascript" src="/webpage/plug-in/bootstrap/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="/webpage/plug-in/bootstrap-table/dist/bootstrap-table.min.js"></script>
