@@ -1,8 +1,6 @@
 /**
  * Created by User on 2017/6/26.
  */
-
-
 $(function () {
     loadData();
     $('#formObj').bootstrapValidator({

@@ -51,9 +51,9 @@ public class EvaluateServiceImpl extends BaseServiceImpl implements EvaluateServ
     public AjaxJson doAddEvaluateWithNoReviewUrl(PromotOrderEvaluateFlowEntity promotOrderEvaluateFlowEntity) {
         AjaxJson j = new AjaxJson();
         DetachedCriteria promotOrderEvaluateExistDetachedCriteria = DetachedCriteria.forClass(PromotOrderEvaluateFlowEntity.class);
-        promotOrderEvaluateExistDetachedCriteria.add(Restrictions.eq("amzOrderId",promotOrderEvaluateFlowEntity.getAmzOrderId()));
+        promotOrderEvaluateExistDetachedCriteria.add(Restrictions.eq("amzOrderId", promotOrderEvaluateFlowEntity.getAmzOrderId()));
         List<PromotOrderEvaluateFlowEntity> promotOrderExistFlowEntityList = promotOrderService.getListByCriteriaQuery(promotOrderEvaluateExistDetachedCriteria);
-        if(CollectionUtils.isNotEmpty(promotOrderExistFlowEntityList)){
+        if (CollectionUtils.isNotEmpty(promotOrderExistFlowEntityList)) {
             j.setSuccess(AjaxJson.CODE_FAIL);
             j.setMsg("不能重复录入亚马逊订单！");
             return j;
@@ -81,7 +81,7 @@ public class EvaluateServiceImpl extends BaseServiceImpl implements EvaluateServ
         return j;
     }
 
-    public AjaxJson doAddEvaluateWithReviewUrl(PromotOrderEvaluateFlowEntity promotOrderEvaluateFlowEntity) throws Exception{
+    public AjaxJson doAddEvaluateWithReviewUrl(PromotOrderEvaluateFlowEntity promotOrderEvaluateFlowEntity) throws Exception {
         AjaxJson j = new AjaxJson();
         DetachedCriteria promotOrderDetachedCriteria = DetachedCriteria.forClass(PromotOrderEntity.class);
         promotOrderDetachedCriteria.add(Restrictions.eq("asinId", promotOrderEvaluateFlowEntity.getAsinId()));
@@ -146,7 +146,7 @@ public class EvaluateServiceImpl extends BaseServiceImpl implements EvaluateServ
         promotOrderEvaluateExistDetachedCriteria.add(Restrictions.eq("sellerId", promotOrderEntity.getSellerId()));
         promotOrderEvaluateExistDetachedCriteria.add(Restrictions.eq("asinId", amazonEvaluateReviewPojo.getAsin()));
         promotOrderEvaluateExistDetachedCriteria.add(Restrictions.eq("state", Constants.EVALUATE_STATE_PENDING));
-        promotOrderEvaluateExistDetachedCriteria.add(Restrictions.eq("amzOrderId",promotOrderEvaluateFlowEntity.getAmzOrderId()));
+        promotOrderEvaluateExistDetachedCriteria.add(Restrictions.eq("amzOrderId", promotOrderEvaluateFlowEntity.getAmzOrderId()));
         List<PromotOrderEvaluateFlowEntity> promotOrderExistFlowEntityList = promotOrderService.getListByCriteriaQuery(promotOrderEvaluateExistDetachedCriteria);
         PromotOrderEvaluateFlowEntity promotOrderEvaluateFlowEntityExist = null;
         if (CollectionUtils.isNotEmpty(promotOrderExistFlowEntityList)) {
@@ -182,13 +182,15 @@ public class EvaluateServiceImpl extends BaseServiceImpl implements EvaluateServ
         }
 
 
-            promotOrderEvaluateFlowEntity.setUpdateTime(new Date());
-            userFundService.saveOrUpdate(userFundEntity);
-            promotOrderService.saveOrUpdate(promotOrderEntity);
+        promotOrderEvaluateFlowEntity.setUpdateTime(new Date());
+        userFundService.saveOrUpdate(userFundEntity);
+        promotOrderService.saveOrUpdate(promotOrderEntity);
+        if (promotOrderEvaluateFlowEntityExist == null) {
+            promotOrderEvaluateFlowService.save(promotOrderEvaluateFlowEntity);
+        } else {
             BeanUtils.copyBeanNotNull2Bean(promotOrderEvaluateFlowEntity, promotOrderEvaluateFlowEntityExist);
             promotOrderEvaluateFlowService.saveOrUpdate(promotOrderEvaluateFlowEntityExist);
-
-
+        }
         return j;
     }
 }

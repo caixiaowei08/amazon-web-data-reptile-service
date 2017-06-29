@@ -74,7 +74,7 @@ $(function () {
             {
                 title: '评价时间',
                 field: "reviewDate",
-                width: "10%",//宽度
+                width: "20%",//宽度
                 align: "center",//水平
                 valign: "middle"//垂直
             }

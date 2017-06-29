@@ -124,5 +124,101 @@
         </div>
     </nav>
 </div>
+<div class="modal fade" id="complaintId" tabindex="-1" role="dialog" aria-labelledby="complaintId" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close"
+                        data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title" id="myModalLabel">
+                    评价投诉
+                </h4>
+            </div>
+            <div class="modal-body">
+                <form action="/promotOrderEvaluateFlowController.do?doComplaint" id="formobj" onsubmit="return false;">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-2 col-md-offset-2">
+                                <span style="color:#555;" >评论编号:</span>
+                            </div>
+                            <div class="col-md-4">
+                                <span data-bind="text:id"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <input type="hidden" value="0" name="id" data-bind="value:id">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-1 col-md-offset-3">
+                                <input type="radio" value="0" name="complaint">
+                            </div>
+                            <div class="col-md-4">
+                                无投诉
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-1 col-md-offset-3">
+                                <input type="radio" value="1" name="complaint">
+                            </div>
+                            <div class="col-md-4">
+                                review被删除了
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-1 col-md-offset-3">
+                                <input type="radio" value="2" name="complaint">
+                            </div>
+                            <div class="col-md-4">
+                                review长度太短
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-1 col-md-offset-3">
+                                <input type="radio" value="3" name="complaint">
+                            </div>
+                            <div class="col-md-4">
+                                review是差评
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-1 col-md-offset-3">
+                                <input type="radio" value="4" name="complaint">
+                            </div>
+                            <div class="col-md-4">
+                                买家领取商品次数太多
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-2 col-md-offset-2">
+                                <span style="color:#555;" >详情描述:</span>
+                            </div>
+                            <div class="col-md-4">
+                                <input type="text"  name="remark" data-bind="value:remark">
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭
+                </button>
+                <button type="button" class="btn btn-primary" onclick="submitComplaint();" >提交
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
 </html>

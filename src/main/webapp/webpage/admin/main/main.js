@@ -33,7 +33,7 @@ $(function () {
     });
 
     $('#promotListTable').bootstrapTable({
-        url: "/adminPromotController.do?dataGrid",
+        url: "/adminPromotController.admin?dataGrid",
         sidePagination: "server",
         dataType: "json",
         search: false,

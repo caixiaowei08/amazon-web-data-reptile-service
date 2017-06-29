@@ -3,6 +3,7 @@ package com.amazon.service.promot.flow.controller;
 import com.amazon.service.promot.flow.entity.PromotOrderEvaluateFlowEntity;
 import com.amazon.service.promot.flow.service.PromotOrderEvaluateFlowService;
 import com.amazon.service.promot.order.entity.PromotOrderEntity;
+import com.amazon.service.promot.price.entity.PromotPriceEntity;
 import com.amazon.service.recharge.controller.UserRechargeFundController;
 import com.amazon.service.recharge.entity.UserRechargeFundEntity;
 import com.amazon.service.user.entity.UserEntity;
@@ -11,12 +12,15 @@ import com.amazon.system.system.bootstrap.hibernate.CriteriaQuery;
 import com.amazon.system.system.bootstrap.json.DataGrid;
 import com.amazon.system.system.bootstrap.json.DataGridReturn;
 import com.amazon.system.system.bootstrap.utils.DatagridJsonUtils;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.framework.core.common.controller.BaseController;
 import org.framework.core.common.model.json.AjaxJson;
+import org.framework.core.global.service.GlobalService;
 import org.framework.core.utils.BeanUtils;
 import org.framework.core.utils.ContextHolderUtils;
+import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -29,6 +33,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by User on 2017/6/10.
@@ -43,6 +48,9 @@ public class PromotOrderEvaluateFlowController extends BaseController {
     @Autowired
     private PromotOrderEvaluateFlowService promotOrderEvaluateFlowService;
 
+    @Autowired
+    private GlobalService globalService;
+
     @RequestMapping(params = "dataGrid")
     public void dataGrid(DataGrid dataGrid, HttpServletRequest request, HttpServletResponse response) {
         CriteriaQuery criteriaQuery = new CriteriaQuery(PromotOrderEvaluateFlowEntity.class, dataGrid, request.getParameterMap());
@@ -54,7 +62,6 @@ public class PromotOrderEvaluateFlowController extends BaseController {
             } catch (IOException e) {
                 logger.info("退出登录失败！", e);
             }
-
         }
         try {
             criteriaQuery.installHqlParams();
@@ -84,19 +91,19 @@ public class PromotOrderEvaluateFlowController extends BaseController {
         return j;
     }
 
-    @RequestMapping(params = "doDel")
-    @ResponseBody
+    //@RequestMapping(params = "doDel")
+    //@ResponseBody
     public AjaxJson doDel(PromotOrderEvaluateFlowEntity promotOrderEvaluateFlowEntity, HttpServletRequest request) {
         AjaxJson j = new AjaxJson();
         String ids = request.getParameter("ids");
         try {
             if (StringUtils.hasText(ids)) {
-                String [] id_array = ids.split(",");
-                for (int i = 0; i < id_array.length ; i++) {
-                    promotOrderEvaluateFlowEntity = promotOrderEvaluateFlowService.find(PromotOrderEvaluateFlowEntity.class,Integer.parseInt(id_array[i]));
+                String[] id_array = ids.split(",");
+                for (int i = 0; i < id_array.length; i++) {
+                    promotOrderEvaluateFlowEntity = promotOrderEvaluateFlowService.find(PromotOrderEvaluateFlowEntity.class, Integer.parseInt(id_array[i]));
                     promotOrderEvaluateFlowService.delete(promotOrderEvaluateFlowEntity);
                 }
-            }else{
+            } else {
                 j.setSuccess(AjaxJson.CODE_FAIL);
                 j.setMsg("请选择需要删除的数据！");
                 return j;
@@ -109,18 +116,18 @@ public class PromotOrderEvaluateFlowController extends BaseController {
         return j;
     }
 
-    @RequestMapping(params = "doGet")
-    @ResponseBody
+    //@RequestMapping(params = "doGet")
+    //@ResponseBody
     public AjaxJson doGet(PromotOrderEvaluateFlowEntity promotOrderEvaluateFlowEntity, HttpServletRequest request, HttpServletResponse response) {
         AjaxJson j = new AjaxJson();
         Integer id = promotOrderEvaluateFlowEntity.getId();
-        if(id == null){
+        if (id == null) {
             j.setSuccess(AjaxJson.CODE_FAIL);
             j.setMsg("请选择你需要查看详情的数据！");
             return j;
         }
         PromotOrderEvaluateFlowEntity promotOrderEvaluateFlowDb = promotOrderEvaluateFlowService.find(PromotOrderEvaluateFlowEntity.class, id);
-        if(promotOrderEvaluateFlowDb == null){
+        if (promotOrderEvaluateFlowDb == null) {
             j.setSuccess(AjaxJson.CODE_FAIL);
             j.setMsg("数据不存在！");
             return j;
@@ -129,20 +136,47 @@ public class PromotOrderEvaluateFlowController extends BaseController {
         return j;
     }
 
-    @RequestMapping(params = "doUpdate")
+    @RequestMapping(params = "doComplaint")
     @ResponseBody
     public AjaxJson doUpdate(PromotOrderEvaluateFlowEntity promotOrderEvaluateFlowEntity, HttpServletRequest request) {
         AjaxJson j = new AjaxJson();
-        PromotOrderEvaluateFlowEntity t = promotOrderEvaluateFlowService.find(PromotOrderEvaluateFlowEntity.class, promotOrderEvaluateFlowEntity.getId());
+        if (promotOrderEvaluateFlowEntity.getId() == null
+                || promotOrderEvaluateFlowEntity.getComplaint() == null
+                || promotOrderEvaluateFlowEntity.getComplaint() < 0
+                || promotOrderEvaluateFlowEntity.getComplaint() > 5
+                ) {
+            j.setSuccess(AjaxJson.CODE_FAIL);
+            j.setContent("投诉信息有误，请确认后重试!");
+            return j;
+        }
+        UserEntity userEntity = globalService.getUserEntityFromSession();
+        if (userEntity == null) {
+            j.setSuccess(AjaxJson.RELOGIN);
+            j.setMsg("请重新登录！");
+            return j;
+        }
+        DetachedCriteria promotOrderEvaluateFlowDetachedCriteria = DetachedCriteria.forClass(PromotOrderEvaluateFlowEntity.class);
+        promotOrderEvaluateFlowDetachedCriteria.add(Restrictions.eq("id", promotOrderEvaluateFlowEntity.getId()));
+        promotOrderEvaluateFlowDetachedCriteria.add(Restrictions.eq("sellerId", userEntity.getId()));
+
+        List<PromotOrderEvaluateFlowEntity> promotOrderEvaluateFlowEntityList = promotOrderEvaluateFlowService.getListByCriteriaQuery(promotOrderEvaluateFlowDetachedCriteria);
+        if (CollectionUtils.isEmpty(promotOrderEvaluateFlowEntityList)) {
+            j.setSuccess(AjaxJson.CODE_FAIL);
+            j.setMsg("未找到投诉的评价！");
+            return j;
+        }
+        PromotOrderEvaluateFlowEntity t = promotOrderEvaluateFlowEntityList.get(0);
         try {
-            promotOrderEvaluateFlowEntity.setUpdateTime(new Date());
-            BeanUtils.copyBeanNotNull2Bean(promotOrderEvaluateFlowEntity, t);
+            t.setUpdateTime(new Date());
+            t.setComplaint(promotOrderEvaluateFlowEntity.getComplaint());
+            t.setRemark(promotOrderEvaluateFlowEntity.getRemark());
             promotOrderEvaluateFlowService.saveOrUpdate(t);
         } catch (Exception e) {
             e.printStackTrace();
             j.setSuccess(AjaxJson.CODE_FAIL);
-            j.setMsg("更新失败！");
+            j.setMsg("投诉失败");
         }
+        j.setContent("投诉成功！");
         return j;
     }
 }

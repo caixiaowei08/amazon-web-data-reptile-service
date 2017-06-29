@@ -7,6 +7,8 @@ $(function () {
         sidePagination: "server",
         dataType: "json",
         search: false,
+        sortName: "updateTime",
+        sortOrder: 'desc',
         pageNumber: 1,
         pageSize: 20,
         pageList: [10, 20, 30, 50, 100],
@@ -76,13 +78,17 @@ $(function () {
             },
             {
                 title: '投诉',
-                field: "complaint",
+                field: "id",
                 width: "10%",//宽度
                 align: "center",//水平
-                valign: "middle"//垂直
+                valign: "middle",//垂直
+                formatter: function (value, row, index) {
+                    return "<a onclick='loadEvaluateDetailInfo(" + value + ")'title='投诉' data-target='#complaintId' data-toggle='modal'><i class='fa fa-pencil-square'></i></a>";
+                }
             }
         ]],
         queryParams: function (params) {
+            params.promotId = getQueryString("promotId").trim();
             return params;
         }
     });
@@ -94,5 +100,67 @@ $(function () {
     function tableHeight() {
         return $(window).height() - 350;
     }
+    loadData();
 
+    ko.applyBindings(viewModel);
 });
+
+var viewModel = {
+    promotId:ko.observable(),
+    asinId:ko.observable(),
+    id:ko.observable(),
+    remark:ko.observable()
+}
+
+function loadData() {
+    var promotId = getQueryString("promotId").trim();
+    $.ajax({
+        url: "/promotOrderController.do?doGet",
+        type: 'post',
+        data:{id:promotId},
+        success: function (data) {
+            if (data.success === "success") {
+                viewModel.promotId(data.content.id);
+                viewModel.asinId(data.content.asinId);
+            } else if(data.success === "RELOGIN"){
+                toastr.warning(result.msg);
+                setTimeout("window.location='/loginController.do?login'", 200);
+            }else if (result.success == "fail") {
+                toastr.warning(result.msg);
+                form.bootstrapValidator('disableSubmitButtons', false);
+            }
+        },
+        error: function (jqxhr, textStatus, errorThrow) {
+            toastr.warning("服务器异常,请联系管理员！");
+        }
+    });
+
+}
+
+function getQueryString(name) {
+    var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+    var r = window.location.search.substr(1).match(reg);
+    if (r != null) return unescape(r[2]); return null;
+}
+
+
+function loadEvaluateDetailInfo(id) {
+    viewModel.id(id);
+    viewModel.remark("");
+}
+
+function submitComplaint() {
+    var form = $('#formobj');
+    $.post(form.attr('action'), form.serialize(), function (result) {
+        if (result.success == "success") {
+            toastr.success(result.msg);
+            setTimeout("window.location='/mainController.do?index'", 500);
+        } else if (result.success == "fail") {
+            toastr.warning(result.msg);
+            form.bootstrapValidator('disableSubmitButtons', false);
+        }else if(result.success == "RELOGIN"){
+            toastr.warning(result.msg);
+            setTimeout("window.location='/loginController.do?login'", 200);
+        }
+    }, 'json');
+}

@@ -29,7 +29,6 @@ $(function () {
 })
 
 function loginAdmin() {
-    toastr.success("loginAdmin");
     $('#formObj').submit();
 }
 
@@ -44,13 +43,13 @@ function doAdminLogin() {
     }
 
     $.ajax({
-        url:"/adminSystemController.do?doLogin",
+        url:"/adminSystemController.admin?doLogin",
         type:'post',
         beforeSend:beforeSend,
         data:$('#formObj').serialize(),
         success:function(data){
             if(data.success === "success"){
-                window.location='/skipController.do?goToAdminMain'
+                window.location='/skipController.admin?goToAdminMain'
             }else{
                 toastr.error(data.msg);
             }

@@ -71,6 +71,8 @@ public class PromotOrderEvaluateFlowEntity extends IdEntity implements Serializa
      * 投诉 0-无投诉 1 2 3 4 5
      */
     private Integer complaint;
+
+    private String remark;
     /**
      * 创建时间
      */
@@ -177,9 +179,6 @@ public class PromotOrderEvaluateFlowEntity extends IdEntity implements Serializa
         this.reviewDate = reviewDate;
     }
 
-
-
-
     @Column(name = "complaint", nullable = true, length = 11)
     public Integer getComplaint() {
         return complaint;
@@ -214,5 +213,14 @@ public class PromotOrderEvaluateFlowEntity extends IdEntity implements Serializa
 
     public void setReviewCode(String reviewCode) {
         this.reviewCode = reviewCode;
+    }
+
+    @Column(name = "remark", nullable = true)
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
     }
 }
