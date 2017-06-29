@@ -1,9 +1,6 @@
 package com.amazon.service.recharge.controller;
 
-import com.amazon.service.fund.controller.UserFundController;
 import com.amazon.service.promot.order.entity.PromotOrderEntity;
-import com.amazon.service.promot.price.entity.PromotPriceEntity;
-import com.amazon.service.promot.price.service.PromotPriceService;
 import com.amazon.service.recharge.entity.UserRechargeFundEntity;
 import com.amazon.service.recharge.service.UserRechargeFundService;
 import com.amazon.service.user.entity.UserEntity;

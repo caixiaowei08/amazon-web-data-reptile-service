@@ -103,7 +103,10 @@ $(function () {
                 field: "evaluateNum",
                 width: "10%",//宽度
                 align: "center",//水平
-                valign: "middle"//垂直
+                valign: "middle",//垂直
+                formatter: function (value, row, index) {
+                    return "<a href='/redirectionController.do?goToEvaluateDetail&promotId=" + row.id + "' target='_blank' title='查看评价详情'>"+value+"</a>";
+                }
             },
             {
                 title: '费用(美元)',
@@ -134,9 +137,9 @@ $(function () {
                 width: "10%",//宽度
                 formatter: function (value, row, index) {
                     if (row.state === 1) {//开启状态
-                        return "<a onclick='loadPromotOrder(" + value + ")' title='查看详情' data-target='#orderDetailModal' data-toggle='modal'><i class='fa fa-search'></i></a>&nbsp;&nbsp;<a onclick='clickDeleteModel("+value+");' title='关闭推广' data-target='#deleteOrderModel' data-toggle='modal'><i class='fa fa-window-close'></i></a>"
+                        return "<a onclick='loadPromotOrder(" + value + ")' title='查看详情' data-target='#orderDetailModal' data-toggle='modal'><i class='fa fa-search'></i></a>&nbsp;&nbsp;<a onclick='clickDeleteModel("+value+");' title='关闭推广' data-target='#deleteOrderModel' data-toggle='modal'><i class='fa fa-window-close'></i></a>";
                     } else if (row.state === 2) { //关闭状态
-                        return "<a onclick='loadPromotOrder(" + value + ")'title='查看详情' data-target='#orderDetailModal' data-toggle='modal'><i class='fa fa-search'></i></a>"
+                        return "<a onclick='loadPromotOrder(" + value + ")'title='查看详情' data-target='#orderDetailModal' data-toggle='modal'><i class='fa fa-search'></i></a>";
                     } else {
                         return "";
                     }

@@ -46,4 +46,9 @@ public class RedirectionController extends BaseController{
         return "pages/fund/chargeFundFlow";
     }
 
+    @RequestMapping(params = "goToEvaluateDetail")
+    public String goToEvaluateDetail(HttpServletRequest request, HttpServletResponse response) {
+        return "pages/evaluate/evaluateDetail";
+    }
+
 }
