@@ -105,7 +105,7 @@ $(function () {
                 align: "center",//水平
                 valign: "middle",//垂直
                 formatter: function (value, row, index) {
-                    return "<a href='/redirectionController.do?goToEvaluateDetail&promotId=" + row.id + "' target='_blank' title='查看评价详情'>"+value+"</a>";
+                    return "<a href='/redirectionController.do?goToEvaluateDetail&promotId=" + row.id + "' target='_parent' title='查看评价详情'>"+value+"</a>";
                 }
             },
             {

@@ -45,20 +45,27 @@
             </div>
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">
+                    <li><a href="/promotOrderController.do?goNewPromotOne" target="_parent">新建推广活动</a></li>
                     <li><a href="/redirectionController.do?goManagePromot" target="_parent">推广活动管理</a></li>
-                    <li><a href="/promotOrderController.do?goNewPromotOne" target="_parent">新建推广活动</a>
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle " data-toggle="dropdown" role="button" aria-haspopup="true"
-                           aria-expanded="false">充值<span class="caret"></span></a>
+                           aria-expanded="false">账户充值<span class="caret"></span></a>
                         <ul class="dropdown-menu">
-                            <li><a href="promotOrderController.do?goNewPromotOne">保证金充值</a></li>
-                            <li><a href="promotOrderController.do?goNewPromotOne">购买会员</a></li>
-                            <li><a href="redirectionController.do?goManagePromot">充值记录</a></li>
+                            <li><a href="/redirectionController.do?goToChargeFund" target="_parent">余额充值</a></li>
+                            <li><a href="/redirectionController.do?goToChargeMemberShip" target="_parent">购买会员</a></li>
+                            <li><a href="/redirectionController.do?chargeFundFlow" target="_parent">充值记录</a></li>
                         </ul>
                     </li>
-                    <li><a href="#">我的账户</a></li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle " data-toggle="dropdown" role="button" aria-haspopup="true"
+                           aria-expanded="false">我的账户<span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="redirectionController.do?goUserDetailInfo" target="_parent">账户详情</a></li>
+                            <li><a href="redirectionController.do?goUserChangePwd" target="_parent">修改密码</a></li>
+                        </ul>
+                    </li>
                     <li>
-                        <a href="/userController.do?doLogOff">
+                        <a href="/userController.do?doLogOff" target="_parent">
                             退出
                             <i class="fa fa-power-off" style="color: red" aria-hidden="true"></i>
                         </a>
