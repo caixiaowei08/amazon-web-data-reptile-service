@@ -1,7 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/webpage/context/baseTags.jsp" %>
-<html>
+<!DOCTYPE html>
 <head>
     <title>Seller Assistant</title>
     <meta charset="utf-8"/>

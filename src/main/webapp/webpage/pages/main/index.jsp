@@ -50,7 +50,7 @@
                         <ul class="dropdown-menu">
                             <li><a href="/redirectionController.do?goToChargeFund">余额充值</a></li>
                             <li><a href="/redirectionController.do?goToChargeMemberShip">购买会员</a></li>
-                            <li><a href="redirectionController.do?goManagePromot">充值记录</a></li>
+                            <li><a href="/redirectionController.do?chargeFundFlow">充值记录</a></li>
                         </ul>
                     </li>
                     <li class="dropdown">

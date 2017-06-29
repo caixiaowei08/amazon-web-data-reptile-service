@@ -61,6 +61,7 @@
 	<filter-mapping>
 		<filter-name>login-filter</filter-name>
 		<url-pattern>*.do</url-pattern>
+		<url-pattern>*.admin</url-pattern>
 	</filter-mapping>
 	<!--session超时30分钟-->
 	<session-config>

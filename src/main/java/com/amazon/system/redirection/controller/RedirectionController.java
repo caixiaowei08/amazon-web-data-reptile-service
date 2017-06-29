@@ -41,4 +41,9 @@ public class RedirectionController extends BaseController{
         return "pages/user/changePwd";
     }
 
+    @RequestMapping(params = "chargeFundFlow")
+    public String goChargeFundFlow(HttpServletRequest request, HttpServletResponse response) {
+        return "pages/fund/chargeFundFlow";
+    }
+
 }
