@@ -72,22 +72,6 @@
             <div class="panel-heading">
                 <h3 class="panel-title">订单评价</h3>
             </div>
-            <%--<div class="panel-body">
-                <div class="row">
-                    <div class="col-sm-4">
-                        <div class="input-group">
-                            <span class="input-group-addon">订单编号</span>
-                            <input type="text" class="form-control" data-bind="value:promotId" readonly="readonly" placeholder="订单编号">
-                        </div>
-                    </div>
-                    <div class="col-sm-4">
-                        <div class="input-group">
-                            <span class="input-group-addon">ASIN编号</span>
-                            <input type="text" class="form-control" data-bind="value:asinId" readonly="readonly" placeholder="ASIN编号">
-                        </div>
-                    </div>
-                </div>
-            </div>--%>
             <div class="panel-footer">
                 <div class="row">
                     <div class="col-sm-4 col-sm-offset-8">

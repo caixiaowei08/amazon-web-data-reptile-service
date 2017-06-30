@@ -3,6 +3,7 @@ package com.amazon.admin.evaluate.controller;
 import com.amazon.admin.account.entity.AdminSystemEntity;
 import com.amazon.admin.constant.Constants;
 import com.amazon.admin.evaluate.service.EvaluateService;
+import com.amazon.admin.promot.controller.AdminPromotController;
 import com.amazon.service.promot.flow.entity.PromotOrderEvaluateFlowEntity;
 import com.amazon.service.promot.order.entity.PromotOrderEntity;
 import com.amazon.service.promot.order.service.PromotOrderService;
@@ -10,8 +11,11 @@ import com.amazon.system.system.bootstrap.hibernate.CriteriaQuery;
 import com.amazon.system.system.bootstrap.json.DataGrid;
 import com.amazon.system.system.bootstrap.json.DataGridReturn;
 import com.amazon.system.system.bootstrap.utils.DatagridJsonUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.framework.core.common.controller.BaseController;
 import org.framework.core.common.model.json.AjaxJson;
+import org.framework.core.global.service.GlobalService;
 import org.framework.core.utils.ContextHolderUtils;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +25,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.GenericServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -32,11 +37,16 @@ import javax.servlet.http.HttpServletResponse;
 @RequestMapping("/evaluateController")
 public class EvaluateController extends BaseController {
 
+    private static Logger logger = LogManager.getLogger(EvaluateController.class.getName());
+
     @Autowired
     private EvaluateService evaluateService;
 
     @Autowired
     private PromotOrderService promotOrderService;
+
+    @Autowired
+    private GlobalService globalService;
 
     @RequestMapping(params = "goEvaluateDetail")
     public String goAdminPageIndex(HttpServletRequest request, HttpServletResponse response) {
@@ -65,6 +75,7 @@ public class EvaluateController extends BaseController {
         }catch (Exception e){
             j.setSuccess(AjaxJson.CODE_FAIL);
             j.setMsg("添加评论失败！");
+            return j;
         }
         return j;
     }
@@ -73,16 +84,14 @@ public class EvaluateController extends BaseController {
 
     @RequestMapping(params = "dataGrid")
     public void dataGrid(DataGrid dataGrid, HttpServletRequest request, HttpServletResponse response) {
-        AdminSystemEntity adminSystemSession = (AdminSystemEntity) ContextHolderUtils.getSession().getAttribute(Constants.ADMIN_SESSION_CONSTANTS);
-        if (adminSystemSession == null) {
-            return;
+        if (globalService.isNotAdminLogin()) {
+          return;
         }
-
         CriteriaQuery criteriaQuery = new CriteriaQuery(PromotOrderEvaluateFlowEntity.class, dataGrid, request.getParameterMap());
         try {
             criteriaQuery.installHqlParams();
         } catch (Exception e) {
-
+            logger.error(e);
         }
         DataGridReturn dataGridReturn = evaluateService.getDataGridReturn(criteriaQuery);
         DatagridJsonUtils.listToObj(dataGridReturn, PromotOrderEntity.class, dataGrid.getField());
@@ -93,8 +102,8 @@ public class EvaluateController extends BaseController {
     @ResponseBody
     public AjaxJson doGet(PromotOrderEntity promotOrderEntity, HttpServletRequest request, HttpServletResponse response) {
         AjaxJson j = new AjaxJson();
-        AdminSystemEntity adminSystemSession = (AdminSystemEntity) ContextHolderUtils.getSession().getAttribute(Constants.ADMIN_SESSION_CONSTANTS);
-        if (adminSystemSession == null) {
+
+        if (globalService.isNotAdminLogin()) {
             j.setSuccess(AjaxJson.CODE_FAIL);
             j.setMsg("请先登录管理账号！");
             return j;
@@ -114,8 +123,4 @@ public class EvaluateController extends BaseController {
         j.setContent(promotOrderEntityDb);
         return j;
     }
-
-
-
-
 }

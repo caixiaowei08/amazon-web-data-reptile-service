@@ -21,7 +21,9 @@ public class SkipController extends BaseController{
         return "admin/main/main";
     }
 
-
-
+    @RequestMapping(params = "goToEvaluateDetail")
+    public String goToEvaluateDetail(HttpServletRequest request, HttpServletResponse response) {
+        return "admin/evaluate/promotEvaluteDetail";
+    }
 
 }
