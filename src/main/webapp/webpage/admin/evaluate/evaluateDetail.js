@@ -161,7 +161,7 @@ function doSubmitEvaluate() {
         success: function (data) {
             if (data.success === "success") {
                 toastr.success(data.msg);
-            } else if (data.success == "fail") {
+            } else if (data.success ===  "fail") {
                 toastr.warning(data.msg);
             } else {
                 window.location = '/adminSystemController.admin?goAdminLogin'

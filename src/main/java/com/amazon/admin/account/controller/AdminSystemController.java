@@ -2,6 +2,7 @@ package com.amazon.admin.account.controller;
 
 import com.amazon.admin.account.entity.AdminSystemEntity;
 import com.amazon.admin.account.service.AdminSystemService;
+import com.amazon.admin.account.vo.AdminSystemVo;
 import com.amazon.admin.constant.Constants;
 import com.amazon.service.user.controller.UserController;
 import com.amazon.service.user.entity.UserEntity;
@@ -17,6 +18,7 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -56,6 +58,39 @@ public class AdminSystemController extends BaseController {
         }
     }
 
+    @RequestMapping(params = "doChangePwd")
+    @ResponseBody
+    public AjaxJson doChangePwd(AdminSystemVo adminSystemVo, HttpServletRequest request, HttpServletResponse response) {
+        AjaxJson j = new AjaxJson();
+        if(!StringUtils.hasText(adminSystemVo.getAccount())||
+                !StringUtils.hasText(adminSystemVo.getNewPwd())||
+                !StringUtils.hasText(adminSystemVo.getOldPwd())
+                ){
+            j.setSuccess(AjaxJson.CODE_FAIL);
+            j.setMsg("请输入完整数据！");
+            return j;
+        }
+        DetachedCriteria detachedCriteria = DetachedCriteria.forClass(AdminSystemEntity.class);
+        detachedCriteria.add(Restrictions.eq("account", adminSystemVo.getAccount()));
+        detachedCriteria.add(Restrictions.eq("pwd", PasswordUtil.getMD5Encryp(adminSystemVo.getOldPwd())));
+        List<AdminSystemEntity> adminSystemEntityList = adminSystemService.getListByCriteriaQuery(detachedCriteria);
+        if(CollectionUtils.isEmpty(adminSystemEntityList)){
+            j.setSuccess(AjaxJson.CODE_FAIL);
+            j.setMsg("账号或者密码错误！");
+            return j;
+        }
+        AdminSystemEntity t = adminSystemEntityList.get(0);
+        t.setUpdateTime(new Date());
+        t.setPwd(PasswordUtil.getMD5Encryp(adminSystemVo.getNewPwd()));
+        try {
+            adminSystemService.saveOrUpdate(t);
+        }catch (Exception e){
+            j.setSuccess(AjaxJson.CODE_FAIL);
+            j.setMsg("修改密码失败！");
+            return j;
+        }
+        return j;
+    }
 
     @RequestMapping(params = "doLogin")
     @ResponseBody
