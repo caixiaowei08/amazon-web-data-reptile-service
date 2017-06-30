@@ -1,5 +1,6 @@
 package org.framework.core.global.service;
 
+import com.amazon.admin.account.entity.AdminSystemEntity;
 import com.amazon.service.user.entity.UserEntity;
 import org.framework.core.common.pojo.EmailCodePojo;
 import org.framework.core.common.service.BaseService;
@@ -23,6 +24,10 @@ public interface GlobalService extends BaseService{
 
 
     public UserEntity getUserEntityFromSession();
+
+    public AdminSystemEntity getAdminEntityFromSession();
+
+    public Boolean isNotAdminLogin();
 
     public String generateOrderNumber();
 

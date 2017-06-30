@@ -37,6 +37,8 @@ $(function () {
         sidePagination: "server",
         dataType: "json",
         search: false,
+        sortName: "updateTime",
+        sortOrder: 'desc',
         pageNumber: 1,
         pageSize: 20,
         pageList: [10, 20, 30, 50, 100],

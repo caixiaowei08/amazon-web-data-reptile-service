@@ -135,13 +135,7 @@ $(function () {
                 field: "id",
                 width: "10%",//宽度
                 formatter: function (value, row, index) {
-                    /*if (row.state === 1) {//开启状态*/
                         return "<a onclick='loadPromotOrder(" + value + ")' title='查看详情' data-target='#orderDetailModal'style='cursor:pointer;' data-toggle='modal'><i class='fa fa-search'></i></a>";
-                    /*} else if (row.state === 2) { //关闭状态
-                        return "<a onclick='loadPromotOrder(" + value + ")'title='查看详情' data-target='#orderDetailModal'style='cursor:pointer;' data-toggle='modal'><i class='fa fa-search'></i></a>"
-                    } else {
-                        return "";
-                    }*/
                 }
             }
         ]],
@@ -199,7 +193,7 @@ var viewModel = {
 
 function loadPromotOrder(promotId) {
     $.ajax({
-        url: "/promotOrderController.admin?doGet",
+        url: "/adminPromotController.admin?doGet",
         type: 'post',
         data: {id: promotId},
         success: function (data) {
