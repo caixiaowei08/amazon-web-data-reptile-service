@@ -23,9 +23,6 @@ public class SkipController extends BaseController{
 
     @RequestMapping(params = "goToAdminMain")
     public String goToAdminMain(HttpServletRequest request, HttpServletResponse response) {
-        if (globalService.isNotAdminLogin()) {
-            return "/adminSystemController.admin?goAdminLogin";
-        }
         return "admin/main/main";
     }
 
@@ -35,6 +32,14 @@ public class SkipController extends BaseController{
             return "/adminSystemController.admin?goAdminLogin";
         }
         return "admin/evaluate/promotEvaluteDetail";
+    }
+
+    @RequestMapping(params = "goAdminChangePwd")
+    public String goAdminChangePwd(HttpServletRequest request, HttpServletResponse response) {
+        if (globalService.isNotAdminLogin()) {
+            return "/adminSystemController.admin?goAdminLogin";
+        }
+        return "admin/admin/changePwd";
     }
 
 }

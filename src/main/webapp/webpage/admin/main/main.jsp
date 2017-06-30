@@ -53,7 +53,13 @@
             <ul class="nav navbar-nav navbar-right">
                 <li><a href="/skipController.admin?goToAdminMain">推广订单管理</a></li>
                 <li><a href="/evaluateController.admin?goEvaluateDetail">订单评价管理</a></li>
-                <li><a href="#">我的账户</a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle " data-toggle="dropdown" role="button" aria-haspopup="true"
+                       aria-expanded="false">我的账号<span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="/skipController.admin?goAdminChangePwd" target="_parent">修改密码</a></li>
+                    </ul>
+                </li>
                 <li>
                     <a href="/adminSystemController.admin?doLogOff">
                         退出

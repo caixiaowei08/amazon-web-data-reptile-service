@@ -40,13 +40,13 @@
                 <div class="form-group" style="height: 54px;">
                     <label for="account" class="col-sm-3 control-label">账号:</label>
                     <div class="col-sm-7">
-                        <input type="text" name="account" id="account" class="form-control" placeholder="请输入登录账号">
+                        <input type="text" name="account" onkeydown="if(event.keyCode==13){event.keyCode=0;event.returnValue=false;}" id="account" class="form-control" placeholder="请输入登录账号">
                     </div>
                 </div>
                 <div class="form-group" style="height: 54px;">
                     <label for="pwd" class="col-sm-3 control-label">密码:</label>
                     <div class="col-sm-7">
-                        <input type="password" name="pwd" id="pwd"  class="form-control" placeholder="请输入登录密码">
+                        <input type="password" name="pwd" id="pwd"  onkeydown="if(event.keyCode==13){event.keyCode=0;event.returnValue=false;}" class="form-control" placeholder="请输入登录密码">
                     </div>
                 </div>
                 <div class="form-group" >

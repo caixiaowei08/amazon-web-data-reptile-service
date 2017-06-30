@@ -59,10 +59,6 @@ function doAdminLogin() {
         },
         complete:function () {
             SendComplete();
-        },
-        statusCode:{
-            404:function(){console.log('not found');},
-            500:function(){console.log('error by server');},
         }
     });
 
