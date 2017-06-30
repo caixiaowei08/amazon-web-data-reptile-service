@@ -107,7 +107,7 @@ function loadData() {
             if (data.success === "success") {
                 viewModel.promotId(data.content.id);
                 viewModel.asinId(data.content.asinId);
-            } else if (data.success == "fail") {
+            } else if (data.success === "fail") {
                 toastr.warning(data.msg);
             } else {
                 window.location = '/adminSystemController.admin?goAdminLogin'

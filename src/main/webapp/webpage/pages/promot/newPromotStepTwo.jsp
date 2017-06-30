@@ -150,6 +150,7 @@
                                             <div class="text-right" style="width: 80px; ">目标好评数</div>
                                         </span>
                                         <input type="number" data-bind="value:needReviewNum" class="form-control" id="needReviewNum"
+                                               onkeydown="if(event.keyCode==13){event.keyCode=0;event.returnValue=false;}"
                                                name="needReviewNum"
                                                placeholder="请输入目标好评数！"
                                                aria-describedby="needReviewNum-addon">
@@ -170,6 +171,7 @@
                                     <div class="text-right" style="width: 80px; ">每天好评数</div>
                                 </span>
                                         <input type="number" class="form-control" id="dayReviewNum" name="dayReviewNum"
+                                               onkeydown="if(event.keyCode==13){event.keyCode=0;event.returnValue=false;}"
                                                placeholder="请输入每天好评数！"
                                                data-bind='value: dayReviewNum'
                                                aria-describedby="dayReviewNum-addon" value="10">
@@ -197,7 +199,9 @@
                                         <span class="input-group-addon">
                                             <div class="text-right" style="width: 80px;">结束日期</div>
                                         </span>
-                                <input class="form-control" name="finishDate" id="finishDate" size="16" type="text" value="" readonly>
+                                <input class="form-control" name="finishDate" id="finishDate" size="16" type="text" value="" readonly
+                                       onkeydown="if(event.keyCode==13){event.keyCode=0;event.returnValue=false;}"
+                                >
                                 <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
                                 <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                             </div>
@@ -390,10 +394,9 @@
             success:function(data){
                 if(data.success === "success"){
                     window.location='/redirectionController.do?goManagePromot'
-                }else if (result.success == "fail") {
-                    toastr.warning(result.msg);
-                } else if (result.success == "RELOGIN") {
-                    toastr.warning(result.msg);
+                }else if (data.success == "fail") {
+                    toastr.warning(data.msg);
+                } else {
                     window.location='/loginController.do?login';
                 }
             },
@@ -405,6 +408,4 @@
             }
         });
     }
-
-
 </script>

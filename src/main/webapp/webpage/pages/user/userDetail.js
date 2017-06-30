@@ -38,8 +38,11 @@ function loadData() {
                         data.content.beforeVip
                     )
                 );
+            } else if (data.success === "fail") {
+                toastr.warning(data.msg);
             } else {
-                toastr.error(data.msg);
+                toastr.warning(data.msg);
+                setTimeout("window.location='/loginController.do?login'", 200);
             }
         },
         error: function (jqxhr, textStatus, errorThrow) {

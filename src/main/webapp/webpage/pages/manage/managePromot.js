@@ -53,7 +53,6 @@ $(function () {
             {
                 title: '订单编号',
                 field: "id",
-                sortable: true,
                 width: "10%",//宽度
                 align: "center",//水平
                 valign: "middle"//垂直
@@ -61,7 +60,6 @@ $(function () {
             {
                 title: 'ASIN',
                 field: "asinId",
-                sortable: true,
                 width: "10%",//宽度
                 align: "center",//水平
                 valign: "middle",//垂直
@@ -72,7 +70,6 @@ $(function () {
             {
                 title: '店铺名称',
                 field: "brand",
-                sortable: true,
                 width: "10%",//宽度
                 align: "center",//水平
                 valign: "middle"//垂直
@@ -222,20 +219,14 @@ function loadPromotOrder(promotId) {
                     viewModel.buyerNum(data.content.buyerNum);
                     viewModel.evaluateNum(data.content.evaluateNum);
                     viewModel.reviewPrice(data.content.reviewPrice);
+            } else if (data.success === "fail") {
+                toastr.warning(data.msg);
             } else {
-                window.location = '/loginController.do?login'
+                window.location = '/loginController.do?login';
             }
         },
         error: function (jqxhr, textStatus, errorThrow) {
             toastr.success("服务器异常,请联系管理员！");
-        },
-        statusCode: {
-            404: function () {
-                console.log('not found');
-            },
-            500: function () {
-                console.log('error by server');
-            },
         }
     });
 }
@@ -266,8 +257,10 @@ function deleteOrderById(){
             if(data.success==="success"){
                 $('#promotListTable').bootstrapTable("refresh");
                 toastr.success("关闭成功！");
-            }else{
-                toastr.warning("关闭失败！");
+            }else if (data.success === "fail") {
+                toastr.warning(data.msg);
+            } else {
+                window.location = '/loginController.do?login';
             }
         },
         complete:function () {

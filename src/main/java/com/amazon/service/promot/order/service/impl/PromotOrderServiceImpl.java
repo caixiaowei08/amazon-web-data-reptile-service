@@ -1,10 +1,10 @@
 package com.amazon.service.promot.order.service.impl;
 
+import com.amazon.admin.constant.Constants;
 import com.amazon.service.fund.entity.UserFundEntity;
 import com.amazon.service.fund.service.UserFundService;
 import com.amazon.service.promot.flow.entity.PromotOrderEvaluateFlowEntity;
 import com.amazon.service.promot.flow.service.PromotOrderEvaluateFlowService;
-import com.amazon.service.promot.order.controller.PromotOrderController;
 import com.amazon.service.promot.order.entity.PromotOrderEntity;
 import com.amazon.service.promot.order.service.PromotOrderService;
 import com.amazon.service.promot.price.entity.PromotPriceEntity;
@@ -141,11 +141,10 @@ public class PromotOrderServiceImpl extends BaseServiceImpl implements PromotOrd
         AjaxJson j = new AjaxJson();
         if (promotOrderEntity == null || promotOrderEntity.getId() == null) {
             j.setSuccess(AjaxJson.CODE_FAIL);
-            j.setMsg("输入对象有误！");
+            j.setMsg("请选择您需要关闭的订单！");
             logger.error("PromotOrderEntity输入错误参数");
             return j;
         }
-
 
         PromotOrderEntity t = globalService.find(PromotOrderEntity.class, promotOrderEntity.getId());
         if (t.getState().equals(Constant.STATE_N)) {
@@ -156,7 +155,14 @@ public class PromotOrderServiceImpl extends BaseServiceImpl implements PromotOrd
 
         DetachedCriteria promotOrderEvaluateDetachedCriteria = DetachedCriteria.forClass(PromotOrderEvaluateFlowEntity.class);
         promotOrderEvaluateDetachedCriteria.add(Restrictions.eq("sellerId", t.getSellerId()));
-
+        promotOrderEvaluateDetachedCriteria.add(Restrictions.eq("promotId", t.getId()));
+        promotOrderEvaluateDetachedCriteria.add(Restrictions.eq("state", Constants.EVALUATE_STATE_PENDING));
+        List<PromotOrderEvaluateFlowEntity> promotOrderEvaluateFlowEntityList = promotOrderEvaluateFlowService.getListByCriteriaQuery(promotOrderEvaluateDetachedCriteria);
+        if(CollectionUtils.isNotEmpty(promotOrderEvaluateFlowEntityList)){
+            j.setSuccess(AjaxJson.CODE_FAIL);
+            j.setMsg("该订单有pending状态的评价，不能关闭！");
+            return j;
+        }
         DetachedCriteria userFundDetachedCriteria = DetachedCriteria.forClass(UserFundEntity.class);
         userFundDetachedCriteria.add(Restrictions.eq("sellerId", t.getSellerId()));
         List<UserFundEntity> userFundEntityList = userFundService.getListByCriteriaQuery(userFundDetachedCriteria);

@@ -63,7 +63,7 @@ $(function () {
                 align: "center",//水平
                 valign: "middle",//垂直
                 formatter: function (value, row, index) {
-                    if(value === undefined){
+                    if (value === undefined) {
                         return "-"
                     }
                     return "<a href='" + row.reviewUrl + "' target='_blank'>" + value + "</a>";
@@ -100,16 +100,17 @@ $(function () {
     function tableHeight() {
         return $(window).height() - 350;
     }
+
     loadData();
 
     ko.applyBindings(viewModel);
 });
 
 var viewModel = {
-    promotId:ko.observable(),
-    asinId:ko.observable(),
-    id:ko.observable(),
-    remark:ko.observable()
+    promotId: ko.observable(),
+    asinId: ko.observable(),
+    id: ko.observable(),
+    remark: ko.observable()
 }
 
 function loadData() {
@@ -117,16 +118,15 @@ function loadData() {
     $.ajax({
         url: "/promotOrderController.do?doGet",
         type: 'post',
-        data:{id:promotId},
+        data: {id: promotId},
         success: function (data) {
             if (data.success === "success") {
                 viewModel.promotId(data.content.id);
                 viewModel.asinId(data.content.asinId);
-            } else if(data.success === "RELOGIN"){
-                window.location='/loginController.do?login';
-            }else if (result.success == "fail") {
-                toastr.warning(result.msg);
-                form.bootstrapValidator('disableSubmitButtons', false);
+            } else if (data.success === "fail") {
+                toastr.warning(data.msg);
+            } else {
+                window.location = '/loginController.do?login';
             }
         },
         error: function (jqxhr, textStatus, errorThrow) {
@@ -139,7 +139,8 @@ function loadData() {
 function getQueryString(name) {
     var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
     var r = window.location.search.substr(1).match(reg);
-    if (r != null) return unescape(r[2]); return null;
+    if (r != null) return unescape(r[2]);
+    return null;
 }
 
 
@@ -157,7 +158,7 @@ function submitComplaint() {
         } else if (result.success == "fail") {
             toastr.warning(result.msg);
             form.bootstrapValidator('disableSubmitButtons', false);
-        }else if(result.success == "RELOGIN"){
+        } else if (result.success == "RELOGIN") {
             toastr.warning(result.msg);
             setTimeout("window.location='/loginController.do?login'", 200);
         }

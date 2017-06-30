@@ -70,8 +70,8 @@ function loadData() {
                     )
                 );
             } else if (data.success === "fail") {
-                toastr.error(data.msg);
-            } else if (data.success === "RELOGIN") {
+                toastr.warning(data.msg);
+            } else {
                 window.location = '/loginController.do?login';
             }
         },

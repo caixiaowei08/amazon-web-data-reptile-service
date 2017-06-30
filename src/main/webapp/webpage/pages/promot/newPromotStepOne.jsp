@@ -89,7 +89,7 @@
                         <div class="form-group" style="height:40px;">
                             <div class="input-group">
                                 <span class="input-group-addon" id="basic-addon1">ASIN编码：</span>
-                                <input type="text" class="form-control" id="asinOrUrl" name="asinOrUrl" placeholder="请输入亚马逊ASIN或者商品主页链接！"
+                                <input type="text" class="form-control" id="asinOrUrl"  onkeydown="if(event.keyCode==13){event.keyCode=0;event.returnValue=false;}" name="asinOrUrl" placeholder="请输入亚马逊ASIN或者商品主页链接！"
                                        aria-describedby="basic-addon1">
                             </div>
                         </div>

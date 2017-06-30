@@ -212,16 +212,16 @@ public class UserFundServiceImpl extends BaseServiceImpl implements UserFundServ
             List<UserMembershipEntity> userMembershipEntityList = userFundService.getListByCriteriaQuery(userMembershipDetachedCriteria);
             if (CollectionUtils.isEmpty(userMembershipEntityList)) {
                 j.setSuccess(AjaxJson.CODE_FAIL);
-                j.setMsg("无法找到资金账户，请联系管理员！");
+                j.setMsg("缺失会员信息，请联系管理员！");
                 return j;
             }
-
             UserMembershipEntity userMembershipEntity = userMembershipEntityList.get(0);
             //处理会员逻辑
             if (userMembershipEntity.getMembershipEndTime() == null) {
                 Date beginOfDate = DateUtils.getBeginOfDate();
                 userMembershipEntity.setMembershipStartTime(beginOfDate);
-                DateUtils.addMonth(beginOfDate, userRechargeFundEntity.getMemberShipMonth());
+                beginOfDate = DateUtils.addMonth(beginOfDate, userRechargeFundEntity.getMemberShipMonth());
+                beginOfDate = DateUtils.getEndOfDate(beginOfDate);
                 userMembershipEntity.setMembershipEndTime(beginOfDate);
                 userMembershipEntity.setChargeFund(userRechargeFundEntity.getChargeFundRmb());
                 userMembershipEntity.setTotalMembershipCost(userRechargeFundEntity.getChargeFundRmb());

@@ -220,7 +220,7 @@ public class PromotOrderController extends BaseController {
             promotOrderDetachedCriteria.add(Restrictions.eq("id", promotOrderEntity.getId()));
             List<PromotOrderEntity> promotOrderEntityList = promotOrderService.getListByCriteriaQuery(promotOrderDetachedCriteria);
             if (CollectionUtils.isNotEmpty(promotOrderEntityList)) { //归还资金
-                promotOrderService.doClosedPromotOrderById(promotOrderEntityList.get(0));
+               j = promotOrderService.doClosedPromotOrderById(promotOrderEntityList.get(0));
             }
         } catch (Exception e) {
             j.setSuccess(AjaxJson.CODE_FAIL);

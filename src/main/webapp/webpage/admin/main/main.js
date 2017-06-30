@@ -219,7 +219,7 @@ function loadPromotOrder(promotId) {
                 viewModel.buyerNum(data.content.buyerNum);
                 viewModel.evaluateNum(data.content.evaluateNum);
                 viewModel.reviewPrice(data.content.reviewPrice);
-            } else if (data.success == "fail") {
+            } else if (data.success === "fail") {
                 toastr.warning(data.msg);
             } else {
                 window.location = '/adminSystemController.admin?goAdminLogin'

@@ -50,20 +50,20 @@
                             <div class="form-group" style="height: 54px;">
                                 <label for="email" class="col-sm-3 control-label">电子邮箱:</label>
                                 <div class="col-sm-7">
-                                    <input type="email" name="account" id="email"  class="form-control"
+                                    <input type="email" name="account" id="email"  class="form-control" onkeydown="if(event.keyCode==13){event.keyCode=0;event.returnValue=false;}"
                                            placeholder="请输入邮箱账号!">
                                 </div>
                             </div>
                             <div class="form-group" style="height: 54px;">
                                 <label for="password" class="col-sm-3 control-label">密&nbsp;&nbsp;&nbsp;&nbsp;码:</label>
                                 <div class="col-sm-7">
-                                    <input type="password" name="pwd" id="password" class="form-control"
+                                    <input type="password" name="pwd" id="password" class="form-control" onclick="loginSubmit();" onkeydown="if(event.keyCode==13){event.keyCode=0;event.returnValue=false;}"
                                            placeholder="请输入密码！">
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-sm-7  col-sm-offset-3">
-                                    <input type="submit" id="login_submit" onclick="loginSubmit();"  value="登录" class="btn btn-primary btn-block">
+                                    <input type="submit" id="login_submit" onclick="loginSubmit();" onkeydown="if(event.keyCode==13){event.keyCode=0;event.returnValue=false;}"  value="登录" class="btn btn-primary btn-block">
                                 </div>
                             </div>
                         </form>

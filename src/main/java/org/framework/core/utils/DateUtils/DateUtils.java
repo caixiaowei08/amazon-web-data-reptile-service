@@ -717,6 +717,19 @@ public class DateUtils {
      * 获取当天23点59分59秒Date
      * @return
      */
+    public static Date getEndOfDate(Date date) {
+        Calendar calendar2 = Calendar.getInstance();
+        calendar2.setTime(date);
+        calendar2.set(calendar2.get(Calendar.YEAR), calendar2.get(Calendar.MONTH), calendar2.get(Calendar.DAY_OF_MONTH),
+                23, 59, 59);
+        Date endOfDate = calendar2.getTime();
+        return endOfDate;
+    }
+
+    /**
+     * 比较时间大小
+     * @return
+     */
     public static Long compareTo(Date date1,Date date2) {
         return  date1.getTime() - date2.getTime();
     }

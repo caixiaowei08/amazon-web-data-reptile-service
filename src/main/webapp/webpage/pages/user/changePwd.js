@@ -60,10 +60,10 @@ $(function () {
             if (result.success == "success") {
                 toastr.success(result.msg);
                 setTimeout("window.location='/mainController.do?index'", 500);
-            } else if (result.success == "fail") {
+            } else if (result.success === "fail") {
                 toastr.warning(result.msg);
                 form.bootstrapValidator('disableSubmitButtons', false);
-            } else if (result.success == "RELOGIN") {
+            } else {
                 toastr.warning(result.msg);
                 setTimeout("window.location='/loginController.do?login'", 200);
             }

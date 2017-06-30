@@ -68,21 +68,14 @@ function loadData() {
                         100
                     )
                 );
+            } else if (data.success === "fail") {
+                toastr.warning(data.msg);
             } else {
-                toastr.error(data.msg);
+                window.location = '/loginController.do?login';
             }
         },
         error: function (jqxhr, textStatus, errorThrow) {
             toastr.warning("服务器异常,请联系管理员！");
-            console.log(errorThrow);
-        },
-        statusCode: {
-            404: function () {
-                console.log('not found');
-            },
-            500: function () {
-                console.log('error by server');
-            },
         }
     });
 }

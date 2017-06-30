@@ -60,7 +60,7 @@ $(function () {
             if (result.success == "success") {
                 toastr.success(result.msg);
                 setTimeout("window.location='/skipController.admin?goToAdminMain'", 1000);
-            } else if (result.success == "fail") {
+            } else if (result.success === "fail") {
                 toastr.warning(result.msg);
                 form.bootstrapValidator('disableSubmitButtons', false);
             } else{
