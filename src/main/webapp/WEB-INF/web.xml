@@ -74,7 +74,7 @@
 	</filter-mapping>
 	<!--session超时30分钟-->
 	<session-config>
-		<session-timeout>4</session-timeout>
+		<session-timeout>1</session-timeout>
 	</session-config>
 	<welcome-file-list>
 		<welcome-file>/webpage/pages/login/login.jsp</welcome-file>

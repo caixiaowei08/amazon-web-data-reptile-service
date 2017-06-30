@@ -73,24 +73,13 @@ public class PromotOrderController extends BaseController {
         return "pages/promot/newPromotStepTwo";
     }
 
-    @RequestMapping(params = "goLookOrderDetail")
-    public String goLookOrderDetail(HttpServletRequest request, HttpServletResponse response) {
-        return "pages/promot/newPromotStepTwo";
-    }
-
     @RequestMapping(params = "dataGrid")
     public void dataGrid(DataGrid dataGrid, HttpServletRequest request, HttpServletResponse response) {
-        CriteriaQuery criteriaQuery = new CriteriaQuery(PromotOrderEntity.class, dataGrid, request.getParameterMap());
-        UserEntity userEntity = (UserEntity) ContextHolderUtils.getSession().getAttribute(Constant.USER_SESSION_CONSTANTS);
+        UserEntity userEntity = globalService.getUserEntityFromSession();
         if (userEntity == null) {
-            try {
-                response.sendRedirect("/loginController.do?login");
-                return;
-            } catch (IOException e) {
-                logger.info("退出登录失败！", e);
-            }
-
+            return;
         }
+        CriteriaQuery criteriaQuery = new CriteriaQuery(PromotOrderEntity.class, dataGrid, request.getParameterMap());
         try {
             criteriaQuery.installHqlParams();
         } catch (Exception e) {
@@ -106,6 +95,12 @@ public class PromotOrderController extends BaseController {
     @ResponseBody
     public AjaxJson doGetPromotOrderTemp(HttpServletRequest request, HttpServletResponse response) {
         AjaxJson j = new AjaxJson();
+        UserEntity userEntity = globalService.getUserEntityFromSession();
+        if (userEntity == null) {
+            j.setSuccess(AjaxJson.RELOGIN);
+            j.setMsg("请重新登录！");
+            return j;
+        }
         AmazonPageInfoPojo amazonPageInfoPojo = (AmazonPageInfoPojo) ContextHolderUtils.getSession().getAttribute(SpiderConstant.AMAZON_PAGE_INFO_POJO);
         if (amazonPageInfoPojo == null) {
             j.setSuccess(AjaxJson.CODE_FAIL);
@@ -122,6 +117,14 @@ public class PromotOrderController extends BaseController {
     @ResponseBody
     public AjaxJson doDealAsinOrUrl(HttpServletRequest request, HttpServletResponse response) {
         AjaxJson j = new AjaxJson();
+
+        UserEntity userEntity = globalService.getUserEntityFromSession();
+        if (userEntity == null) {
+            j.setSuccess(AjaxJson.RELOGIN);
+            j.setMsg("请重新登录！");
+            return j;
+        }
+
         String asinOrUrl = request.getParameter("asinOrUrl");
         if (!StringUtils.hasText(asinOrUrl)) {
             j.setSuccess(AjaxJson.CODE_FAIL);
@@ -143,7 +146,7 @@ public class PromotOrderController extends BaseController {
         DetachedCriteria promotOrderDetachedCriteria = DetachedCriteria.forClass(PromotPriceEntity.class);
         List<PromotPriceEntity> promotPriceEntityList = promotPriceService.getListByCriteriaQuery(promotOrderDetachedCriteria);
 
-        if(CollectionUtils.isEmpty(promotPriceEntityList)){
+        if (CollectionUtils.isEmpty(promotPriceEntityList)) {
             j.setSuccess(AjaxJson.CODE_FAIL);
             j.setMsg("未设置评价单价！");
             return j;
@@ -157,7 +160,7 @@ public class PromotOrderController extends BaseController {
                 && StringUtils.hasText(amazonPageInfoPojo.getPageUrl())
                 ) {
             amazonPageInfoPojo.setAsin(asin);
-            amazonPageInfoPojo.setReviewPrice("$"+ promotPriceEntityList.get(0).getReviewPrice().toString());
+            amazonPageInfoPojo.setReviewPrice("$" + promotPriceEntityList.get(0).getReviewPrice().toString());
             ContextHolderUtils.getSession().setAttribute(SpiderConstant.AMAZON_PAGE_INFO_POJO, amazonPageInfoPojo);
         } else {
             j.setSuccess(AjaxJson.CODE_FAIL);
@@ -171,21 +174,23 @@ public class PromotOrderController extends BaseController {
     @ResponseBody
     public AjaxJson doAdd(PromotOrderEntity promotOrderEntity, HttpServletRequest request, HttpServletResponse response) {
         AjaxJson j = new AjaxJson();
+        UserEntity userEntity = globalService.getUserEntityFromSession();
+        if (userEntity == null) {
+            j.setSuccess(AjaxJson.RELOGIN);
+            j.setMsg("请重新登录！");
+            return j;
+        }
+
         AmazonPageInfoPojo amazonPageInfoPojo = (AmazonPageInfoPojo) ContextHolderUtils.getSession().getAttribute(SpiderConstant.AMAZON_PAGE_INFO_POJO);
         if (amazonPageInfoPojo == null) {
             j.setSuccess(AjaxJson.CODE_FAIL);
             j.setMsg("请重新建推广活动订单！");
             return j;
         }
-        UserEntity userEntity = (UserEntity) ContextHolderUtils.getSession().getAttribute(Constant.USER_SESSION_CONSTANTS);
-        if (userEntity == null) {
-            j.setSuccess(AjaxJson.CODE_FAIL);
-            j.setMsg("请重新登录！");
-            return j;
-        }
+
         DetachedCriteria promotOrderDetachedCriteria = DetachedCriteria.forClass(PromotOrderEntity.class);
         promotOrderDetachedCriteria.add(Restrictions.eq("asinId", amazonPageInfoPojo.getAsin()));
-        promotOrderDetachedCriteria.add(Restrictions.eq("sellerId", userEntity.getId()));
+        //promotOrderDetachedCriteria.add(Restrictions.eq("sellerId", userEntity.getId()));
         promotOrderDetachedCriteria.add(Restrictions.eq("state", Constant.STATE_Y));
         List<PromotOrderEntity> promotOrderEntityList = promotOrderService.getListByCriteriaQuery(promotOrderDetachedCriteria);
         if (CollectionUtils.isNotEmpty(promotOrderEntityList)) {
@@ -215,10 +220,8 @@ public class PromotOrderController extends BaseController {
             promotOrderDetachedCriteria.add(Restrictions.eq("sellerId", userEntity.getId()));
             promotOrderDetachedCriteria.add(Restrictions.eq("id", promotOrderEntity.getId()));
             List<PromotOrderEntity> promotOrderEntityList = promotOrderService.getListByCriteriaQuery(promotOrderDetachedCriteria);
-            if (CollectionUtils.isNotEmpty(promotOrderEntityList)) {
-                PromotOrderEntity promotOrderEntityDb = promotOrderEntityList.get(0);
-                promotOrderEntityDb.setState(Constant.STATE_N);
-                promotOrderService.saveOrUpdate(promotOrderEntityDb);
+            if (CollectionUtils.isNotEmpty(promotOrderEntityList)) { //归还资金
+                promotOrderService.doClosedPromotOrderById(promotOrderEntityList.get(0));
             }
         } catch (Exception e) {
             j.setSuccess(AjaxJson.CODE_FAIL);
@@ -250,23 +253,6 @@ public class PromotOrderController extends BaseController {
             return j;
         }
         j.setContent(promotOrderEntityList.get(0));
-        return j;
-    }
-
-   // @RequestMapping(params = "doUpdate")
-   // @ResponseBody
-    public AjaxJson doUpdate(PromotOrderEntity promotOrderEntity, HttpServletRequest request) {
-        AjaxJson j = new AjaxJson();
-        PromotOrderEntity t = promotOrderService.find(PromotOrderEntity.class, promotOrderEntity.getId());
-        try {
-            promotOrderEntity.setUpdateTime(new Date());
-            BeanUtils.copyBeanNotNull2Bean(promotOrderEntity, t);
-            promotOrderService.saveOrUpdate(t);
-        } catch (Exception e) {
-            e.printStackTrace();
-            j.setSuccess(AjaxJson.CODE_FAIL);
-            j.setMsg("更新失败！");
-        }
         return j;
     }
 }

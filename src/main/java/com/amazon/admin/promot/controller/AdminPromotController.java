@@ -62,7 +62,6 @@ public class AdminPromotController extends BaseController {
         if(globalService.isNotAdminLogin()){
             return;
         }
-
         try {
             criteriaQuery.installHqlParams();
         } catch (Exception e) {
@@ -115,8 +114,4 @@ public class AdminPromotController extends BaseController {
         j.setContent(promotOrderDb);
         return j;
     }
-
-
-
-
 }

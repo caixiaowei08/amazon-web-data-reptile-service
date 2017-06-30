@@ -47,7 +47,6 @@ public class AdminSystemController extends BaseController {
 
     @RequestMapping(params = "doLogOff")
     public void doLogOff(HttpServletRequest request, HttpServletResponse response) {
-
         HttpSession session = ContextHolderUtils.getSession();
         session.invalidate();//清空session中的所有数据
         try {
@@ -55,7 +54,6 @@ public class AdminSystemController extends BaseController {
         } catch (IOException e) {
             logger.info("退出登录失败！", e);
         }
-
     }
 
 
@@ -83,8 +81,4 @@ public class AdminSystemController extends BaseController {
             return j;
         }
     }
-
-
-
-
 }

@@ -50,6 +50,9 @@ public class EvaluateController extends BaseController {
 
     @RequestMapping(params = "goEvaluateDetail")
     public String goAdminPageIndex(HttpServletRequest request, HttpServletResponse response) {
+        if (globalService.isNotAdminLogin()) {
+            return "/adminSystemController.admin?goAdminLogin";
+        }
         return "admin/evaluate/evaluateDetail";
     }
 
@@ -57,6 +60,11 @@ public class EvaluateController extends BaseController {
     @ResponseBody
     public AjaxJson doAdd(PromotOrderEvaluateFlowEntity promotOrderEvaluateFlowEntity,HttpServletRequest request, HttpServletResponse response) {
         AjaxJson j = new AjaxJson();
+        if (globalService.isNotAdminLogin()) {
+            j.setSuccess(AjaxJson.CODE_FAIL);
+            j.setMsg("请用管理员账户登录！");
+            return j;
+        }
         String amzOrderId =  promotOrderEvaluateFlowEntity.getAmzOrderId();
         String asinId =  promotOrderEvaluateFlowEntity.getAsinId();
         String reviewUrl =  promotOrderEvaluateFlowEntity.getReviewUrl();

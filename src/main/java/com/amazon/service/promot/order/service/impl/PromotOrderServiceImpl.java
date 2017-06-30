@@ -2,6 +2,7 @@ package com.amazon.service.promot.order.service.impl;
 
 import com.amazon.service.fund.entity.UserFundEntity;
 import com.amazon.service.fund.service.UserFundService;
+import com.amazon.service.promot.order.controller.PromotOrderController;
 import com.amazon.service.promot.order.entity.PromotOrderEntity;
 import com.amazon.service.promot.order.service.PromotOrderService;
 import com.amazon.service.promot.price.entity.PromotPriceEntity;
@@ -12,8 +13,11 @@ import com.amazon.service.vip.entity.UserMembershipEntity;
 import com.amazon.service.vip.service.UserMembershipService;
 import com.amazon.system.Constant;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.framework.core.common.model.json.AjaxJson;
 import org.framework.core.common.service.impl.BaseServiceImpl;
+import org.framework.core.global.service.GlobalService;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +35,8 @@ import java.util.List;
 @Transactional
 public class PromotOrderServiceImpl extends BaseServiceImpl implements PromotOrderService {
 
+    private static Logger logger = LogManager.getLogger(PromotOrderServiceImpl.class.getName());
+
     @Autowired
     private PromotOrderService promotOrderService;
 
@@ -42,6 +48,9 @@ public class PromotOrderServiceImpl extends BaseServiceImpl implements PromotOrd
 
     @Autowired
     private PromotPriceService promotPriceService;
+
+    @Autowired
+    private GlobalService globalService;
 
 
     public AjaxJson doAddNewPromot(UserEntity userEntity, AmazonPageInfoPojo amazonPageInfoPojo, PromotOrderEntity promotOrderEntity) {
@@ -120,6 +129,41 @@ public class PromotOrderServiceImpl extends BaseServiceImpl implements PromotOrd
         promotOrderEntity.setCreateTime(new Date());
         promotOrderEntity.setUpdateTime(new Date());
         promotOrderService.save(promotOrderEntity);
+        return j;
+    }
+
+    public AjaxJson doClosedPromotOrderById(PromotOrderEntity promotOrderEntity) {
+        AjaxJson j = new AjaxJson();
+        if (promotOrderEntity == null || promotOrderEntity.getId() == null) {
+            j.setSuccess(AjaxJson.CODE_FAIL);
+            j.setMsg("输入对象有误！");
+            logger.error("PromotOrderEntity输入错误参数");
+            return j;
+        }
+        PromotOrderEntity t = globalService.find(PromotOrderEntity.class, promotOrderEntity.getId());
+        if (t.getState().equals(Constant.STATE_N)) {
+            j.setSuccess(AjaxJson.CODE_FAIL);
+            j.setMsg("订单已经关闭！");
+            return j;
+        }
+
+        DetachedCriteria userFundDetachedCriteria = DetachedCriteria.forClass(UserFundEntity.class);
+        userFundDetachedCriteria.add(Restrictions.eq("sellerId", t.getSellerId()));
+        List<UserFundEntity> userFundEntityList = userFundService.getListByCriteriaQuery(userFundDetachedCriteria);
+        if (CollectionUtils.isEmpty(userFundEntityList)) {
+            j.setSuccess(AjaxJson.CODE_FAIL);
+            j.setMsg("未找到账户信息！");
+            return j;
+        }
+        UserFundEntity userFundEntity = userFundEntityList.get(0);
+        BigDecimal guaranteeFund = t.getGuaranteeFund();
+        t.setState(Constant.STATE_N);
+        t.setUpdateTime(new Date());
+        userFundEntity.setFreezeFund(userFundEntity.getFreezeFund().subtract(guaranteeFund));
+        userFundEntity.setUsableFund(userFundEntity.getUsableFund().add(guaranteeFund));
+        userFundEntity.setUpdateTime(new Date());
+        userFundService.saveOrUpdate(userFundEntity);
+        promotOrderService.saveOrUpdate(t);
         return j;
     }
 }

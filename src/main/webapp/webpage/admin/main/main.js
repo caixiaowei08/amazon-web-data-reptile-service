@@ -106,7 +106,7 @@ $(function () {
                 align: "center",//水平
                 valign: "middle",//垂直
                 formatter: function (value, row, index) {
-                    return "<a href='/skipController.admin?goToEvaluateDetail&promotId=" + row.id + "' target='_parent' title='查看评价详情'>"+value+"</a>";
+                    return "<a href='/skipController.admin?goToEvaluateDetail&promotId=" + row.id + "' target='_parent' title='查看评价详情'>" + value + "</a>";
                 }
             },
             {
@@ -138,7 +138,7 @@ $(function () {
                 field: "id",
                 width: "10%",//宽度
                 formatter: function (value, row, index) {
-                        return "<a onclick='loadPromotOrder(" + value + ")' title='查看详情' data-target='#orderDetailModal'style='cursor:pointer;' data-toggle='modal'><i class='fa fa-search'></i></a>";
+                    return "<a onclick='loadPromotOrder(" + value + ")' title='查看详情' data-target='#orderDetailModal'style='cursor:pointer;' data-toggle='modal'><i class='fa fa-search'></i></a>";
                 }
             }
         ]],
@@ -160,6 +160,7 @@ $(function () {
     function tableHeight() {
         return $(window).height() - 350;
     }
+
     ko.applyBindings(viewModel);
 });
 
@@ -174,7 +175,7 @@ function doPromotSearch() {
 }
 
 var viewModel = {
-    id:ko.observable(),
+    id: ko.observable(),
     asinId: ko.observable(),
     productUrl: ko.observable(),
     productTitle: ko.observable(),
@@ -218,28 +219,20 @@ function loadPromotOrder(promotId) {
                 viewModel.buyerNum(data.content.buyerNum);
                 viewModel.evaluateNum(data.content.evaluateNum);
                 viewModel.reviewPrice(data.content.reviewPrice);
-            } else {
-                window.location = '/loginController.do?login'
+            } else if (data.success === "RELOGIN") {
+                toastr.warning(data.msg);
+                window.location = '/adminSystemController.admin?goAdminLogin';
+            } else if (data.success == "fail") {
+                toastr.warning(data.msg);
             }
         },
         error: function (jqxhr, textStatus, errorThrow) {
             toastr.success("服务器异常,请联系管理员！");
-        },
-        statusCode: {
-            404: function () {
-                console.log('not found');
-            },
-            500: function () {
-                console.log('error by server');
-            },
         }
     });
 }
 
-/*function clickEvaluateModel(promotId) {
-    window.open("/evaluateController.admin?goEvaluateDetail&promotId="+promotId);
-}*/
-function downPromotOrderExcel(){
+function downPromotOrderExcel() {
     var params = new Object();
     params.id = $("#amazon_id").val().trim();
     params.asinId = $("#amazon_asin").val().trim();
@@ -251,14 +244,13 @@ function downPromotOrderExcel(){
         toastr.warning("若填写查询时间，开始时间和结束时间需要同时填写！");
         return;
     }
-    var json = JSON.stringify(params);
 
     window.open(
         "adminPromotController.admin?downPromotOrderExcel&id="
-        +params.id+"&asinId=" +params.asinId
-        +"&state=" +params.state
-        +"&addDate_begin=" +params.addDate_begin
-        +"&addDate_end=" +params.addDate_end
+        + params.id + "&asinId=" + params.asinId
+        + "&state=" + params.state
+        + "&addDate_begin=" + params.addDate_begin
+        + "&addDate_end=" + params.addDate_end
     )
 }
 

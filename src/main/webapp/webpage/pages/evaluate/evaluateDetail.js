@@ -123,8 +123,7 @@ function loadData() {
                 viewModel.promotId(data.content.id);
                 viewModel.asinId(data.content.asinId);
             } else if(data.success === "RELOGIN"){
-                toastr.warning(result.msg);
-                setTimeout("window.location='/loginController.do?login'", 200);
+                window.location='/loginController.do?login';
             }else if (result.success == "fail") {
                 toastr.warning(result.msg);
                 form.bootstrapValidator('disableSubmitButtons', false);
@@ -154,7 +153,7 @@ function submitComplaint() {
     $.post(form.attr('action'), form.serialize(), function (result) {
         if (result.success == "success") {
             toastr.success(result.msg);
-            setTimeout("window.location='/mainController.do?index'", 500);
+            setTimeout("window.location='/redirectionController.do?goManagePromot'", 500);
         } else if (result.success == "fail") {
             toastr.warning(result.msg);
             form.bootstrapValidator('disableSubmitButtons', false);

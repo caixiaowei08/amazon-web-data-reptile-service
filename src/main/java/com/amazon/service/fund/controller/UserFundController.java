@@ -46,7 +46,7 @@ public class UserFundController extends BaseController {
 
     @RequestMapping("/doAlipayTradePagePay")
     public void doAlipayTradePagePay(HttpServletRequest request, HttpServletResponse response) {
-       AjaxJson j = userFundService.goChargeFund(request,response);
+        userFundService.goChargeFund(request,response);
     }
 
     /**
@@ -141,81 +141,4 @@ public class UserFundController extends BaseController {
         }
     }
 
-    @RequestMapping(params = "doAdd")
-    @ResponseBody
-    public AjaxJson doAdd(UserFundEntity userFundEntity, HttpServletRequest request, HttpServletResponse response) {
-        AjaxJson j = new AjaxJson();
-        try {
-            userFundEntity.setUpdateTime(new Date());
-            userFundEntity.setCreateTime(new Date());
-            userFundService.save(userFundEntity);
-        } catch (Exception e) {
-            e.printStackTrace();
-            j.setSuccess(AjaxJson.CODE_FAIL);
-            j.setMsg("保存失败！");
-        }
-        return j;
-    }
-
-    @RequestMapping(params = "doDel")
-    @ResponseBody
-    public AjaxJson doDel(UserFundEntity userFundEntity, HttpServletRequest request) {
-        AjaxJson j = new AjaxJson();
-        String ids = request.getParameter("ids");
-        try {
-            if (StringUtils.hasText(ids)) {
-                String[] id_array = ids.split(",");
-                for (int i = 0; i < id_array.length; i++) {
-                    userFundEntity = userFundService.find(UserFundEntity.class, Integer.parseInt(id_array[i]));
-                    userFundService.delete(userFundEntity);
-                }
-            } else {
-                j.setSuccess(AjaxJson.CODE_FAIL);
-                j.setMsg("请选择需要删除的数据！");
-                return j;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            j.setSuccess(AjaxJson.CODE_FAIL);
-            j.setMsg("删除失败！");
-        }
-        return j;
-    }
-
-    @RequestMapping(params = "doGet")
-    @ResponseBody
-    public AjaxJson doGet(UserFundEntity userFundEntity, HttpServletRequest request, HttpServletResponse response) {
-        AjaxJson j = new AjaxJson();
-        Integer id = userFundEntity.getId();
-        if (id == null) {
-            j.setSuccess(AjaxJson.CODE_FAIL);
-            j.setMsg("请选择你需要查看详情的数据！");
-            return j;
-        }
-        UserFundEntity userFundDb = userFundService.find(UserFundEntity.class, id);
-        if (userFundDb == null) {
-            j.setSuccess(AjaxJson.CODE_FAIL);
-            j.setMsg("该数据不存在！");
-            return j;
-        }
-        j.setContent(userFundDb);
-        return j;
-    }
-
-    @RequestMapping(params = "doUpdate")
-    @ResponseBody
-    public AjaxJson doUpdate(UserFundEntity userFundEntity, HttpServletRequest request) {
-        AjaxJson j = new AjaxJson();
-        UserFundEntity t = userFundService.find(UserFundEntity.class, userFundEntity.getId());
-        try {
-            userFundEntity.setUpdateTime(new Date());
-            BeanUtils.copyBeanNotNull2Bean(userFundEntity, t);
-            userFundService.saveOrUpdate(t);
-        } catch (Exception e) {
-            e.printStackTrace();
-            j.setSuccess(AjaxJson.CODE_FAIL);
-            j.setMsg("更新失败！");
-        }
-        return j;
-    }
 }

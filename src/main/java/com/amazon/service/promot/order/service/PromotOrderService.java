@@ -12,4 +12,8 @@ import org.framework.core.common.service.BaseService;
 public interface PromotOrderService extends BaseService {
 
     public AjaxJson doAddNewPromot(UserEntity userEntity, AmazonPageInfoPojo amazonPageInfoPojo, PromotOrderEntity promotOrderEntity);
+
+    public AjaxJson doClosedPromotOrderById(PromotOrderEntity promotOrderEntity);
+
+
 }

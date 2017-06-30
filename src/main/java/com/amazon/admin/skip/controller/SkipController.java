@@ -1,6 +1,8 @@
 package com.amazon.admin.skip.controller;
 
 import org.framework.core.common.controller.BaseController;
+import org.framework.core.global.service.GlobalService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,13 +18,22 @@ import javax.servlet.http.HttpServletResponse;
 @RequestMapping("/skipController")
 public class SkipController extends BaseController{
 
+    @Autowired
+    private GlobalService globalService;
+
     @RequestMapping(params = "goToAdminMain")
     public String goToAdminMain(HttpServletRequest request, HttpServletResponse response) {
+        if (globalService.isNotAdminLogin()) {
+            return "/adminSystemController.admin?goAdminLogin";
+        }
         return "admin/main/main";
     }
 
     @RequestMapping(params = "goToEvaluateDetail")
     public String goToEvaluateDetail(HttpServletRequest request, HttpServletResponse response) {
+        if (globalService.isNotAdminLogin()) {
+            return "/adminSystemController.admin?goAdminLogin";
+        }
         return "admin/evaluate/promotEvaluteDetail";
     }
 

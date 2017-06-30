@@ -390,19 +390,18 @@
             success:function(data){
                 if(data.success === "success"){
                     window.location='/redirectionController.do?goManagePromot'
-                }else{
-                    toastr.error(data.msg);
+                }else if (result.success == "fail") {
+                    toastr.warning(result.msg);
+                } else if (result.success == "RELOGIN") {
+                    toastr.warning(result.msg);
+                    window.location='/loginController.do?login';
                 }
             },
             error:function(jqxhr,textStatus,errorThrow){
-                toastr.success("服务器异常,请联系管理员！");
+                toastr.error("服务器异常,请联系管理员！");
             },
             complete:function () {
                 SendComplete();
-            },
-            statusCode:{
-                404:function(){console.log('not found');},
-                500:function(){console.log('error by server');},
             }
         });
     }

@@ -57,7 +57,7 @@ $(function () {
                 align: "center",//水平
                 valign: "middle", //垂直
                 formatter: function (value, row, index) {
-                    if(value === undefined){
+                    if (value === undefined) {
                         return "-"
                     }
                     return "<a href='" + row.reviewUrl + "' target='_blank'>" + value + "</a>";
@@ -147,40 +147,35 @@ function doSubmitEvaluate() {
     var amzOrderId = $("#amzOrderId").val();
     var reviewUrl = $("#reviewUrl").val();
     if (
-        asinId === null || asinId === undefined || asinId === ''||
+        asinId === null || asinId === undefined || asinId === '' ||
         amzOrderId === null || amzOrderId === undefined || amzOrderId === ''
     ) {
         return;
     }
 
     $.ajax({
-        url:"/evaluateController.admin?doAdd",
-        type:'post',
-        beforeSend:beforeSend,
-        data:$('#formObj').serialize(),
-        success:function(data){
-            if(data.success === "success"){
+        url: "/evaluateController.admin?doAdd",
+        type: 'post',
+        beforeSend: beforeSend,
+        data: $('#formObj').serialize(),
+        success: function (data) {
+            if (data.success === "success") {
                 toastr.success(data.msg);
-            }else{
-                toastr.error(data.msg);
+            } else if (data.success === "RELOGIN") {
+                window.location = '/adminSystemController.admin?goAdminLogin';
+            } else if (data.success == "fail") {
+                toastr.warning(result.msg);
             }
         },
-        error:function(jqxhr,textStatus,errorThrow){
+        error: function (jqxhr, textStatus, errorThrow) {
             toastr.success("服务器异常,请联系管理员！");
         },
-        complete:function () {
+        complete: function () {
             $('#addNewReview').modal('hide');
             $('#evaluateListTable').bootstrapTable("refresh");
             SendComplete();
-        },
-        statusCode:{
-            404:function(){console.log('not found');},
-            500:function(){console.log('error by server');},
         }
     });
-
-
-
 }
 
 
