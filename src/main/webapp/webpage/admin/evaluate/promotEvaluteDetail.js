@@ -107,11 +107,10 @@ function loadData() {
             if (data.success === "success") {
                 viewModel.promotId(data.content.id);
                 viewModel.asinId(data.content.asinId);
-            } else if (data.success === "RELOGIN") {
-                window.location = '/adminSystemController.admin?goAdminLogin';
             } else if (data.success == "fail") {
-                toastr.warning(result.msg);
-                form.bootstrapValidator('disableSubmitButtons', false);
+                toastr.warning(data.msg);
+            } else {
+                window.location = '/adminSystemController.admin?goAdminLogin'
             }
         },
         error: function (jqxhr, textStatus, errorThrow) {

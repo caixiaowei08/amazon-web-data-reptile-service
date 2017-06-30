@@ -39,13 +39,13 @@ public class AdminLoginFilter  implements Filter {
             res.setHeader("Cache-Control", "no-store");
             res.setHeader("Content-type", "text/html;charset=UTF-8");
             try {
-                PrintWriter pw = response.getWriter();
+                PrintWriter pw = res.getWriter();
                 pw.write(JSON.toJSONString(j));
                 pw.flush();
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }else{//有session user 通过
+        }else{
             chain.doFilter(request, response);
         }
     }

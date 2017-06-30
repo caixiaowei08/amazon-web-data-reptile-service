@@ -219,11 +219,10 @@ function loadPromotOrder(promotId) {
                 viewModel.buyerNum(data.content.buyerNum);
                 viewModel.evaluateNum(data.content.evaluateNum);
                 viewModel.reviewPrice(data.content.reviewPrice);
-            } else if (data.success === "RELOGIN") {
-                toastr.warning(data.msg);
-                window.location = '/adminSystemController.admin?goAdminLogin';
             } else if (data.success == "fail") {
                 toastr.warning(data.msg);
+            } else {
+                window.location = '/adminSystemController.admin?goAdminLogin'
             }
         },
         error: function (jqxhr, textStatus, errorThrow) {

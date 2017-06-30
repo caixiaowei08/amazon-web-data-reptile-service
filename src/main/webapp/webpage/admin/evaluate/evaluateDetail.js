@@ -161,10 +161,10 @@ function doSubmitEvaluate() {
         success: function (data) {
             if (data.success === "success") {
                 toastr.success(data.msg);
-            } else if (data.success === "RELOGIN") {
-                window.location = '/adminSystemController.admin?goAdminLogin';
             } else if (data.success == "fail") {
-                toastr.warning(result.msg);
+                toastr.warning(data.msg);
+            } else {
+                window.location = '/adminSystemController.admin?goAdminLogin'
             }
         },
         error: function (jqxhr, textStatus, errorThrow) {

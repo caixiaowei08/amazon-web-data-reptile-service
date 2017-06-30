@@ -190,7 +190,6 @@ public class PromotOrderController extends BaseController {
 
         DetachedCriteria promotOrderDetachedCriteria = DetachedCriteria.forClass(PromotOrderEntity.class);
         promotOrderDetachedCriteria.add(Restrictions.eq("asinId", amazonPageInfoPojo.getAsin()));
-        //promotOrderDetachedCriteria.add(Restrictions.eq("sellerId", userEntity.getId()));
         promotOrderDetachedCriteria.add(Restrictions.eq("state", Constant.STATE_Y));
         List<PromotOrderEntity> promotOrderEntityList = promotOrderService.getListByCriteriaQuery(promotOrderDetachedCriteria);
         if (CollectionUtils.isNotEmpty(promotOrderEntityList)) {

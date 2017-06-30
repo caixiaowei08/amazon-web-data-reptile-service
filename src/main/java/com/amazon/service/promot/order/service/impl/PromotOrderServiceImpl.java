@@ -2,6 +2,8 @@ package com.amazon.service.promot.order.service.impl;
 
 import com.amazon.service.fund.entity.UserFundEntity;
 import com.amazon.service.fund.service.UserFundService;
+import com.amazon.service.promot.flow.entity.PromotOrderEvaluateFlowEntity;
+import com.amazon.service.promot.flow.service.PromotOrderEvaluateFlowService;
 import com.amazon.service.promot.order.controller.PromotOrderController;
 import com.amazon.service.promot.order.entity.PromotOrderEntity;
 import com.amazon.service.promot.order.service.PromotOrderService;
@@ -51,6 +53,9 @@ public class PromotOrderServiceImpl extends BaseServiceImpl implements PromotOrd
 
     @Autowired
     private GlobalService globalService;
+
+    @Autowired
+    private PromotOrderEvaluateFlowService promotOrderEvaluateFlowService;
 
 
     public AjaxJson doAddNewPromot(UserEntity userEntity, AmazonPageInfoPojo amazonPageInfoPojo, PromotOrderEntity promotOrderEntity) {
@@ -140,12 +145,17 @@ public class PromotOrderServiceImpl extends BaseServiceImpl implements PromotOrd
             logger.error("PromotOrderEntity输入错误参数");
             return j;
         }
+
+
         PromotOrderEntity t = globalService.find(PromotOrderEntity.class, promotOrderEntity.getId());
         if (t.getState().equals(Constant.STATE_N)) {
             j.setSuccess(AjaxJson.CODE_FAIL);
             j.setMsg("订单已经关闭！");
             return j;
         }
+
+        DetachedCriteria promotOrderEvaluateDetachedCriteria = DetachedCriteria.forClass(PromotOrderEvaluateFlowEntity.class);
+        promotOrderEvaluateDetachedCriteria.add(Restrictions.eq("sellerId", t.getSellerId()));
 
         DetachedCriteria userFundDetachedCriteria = DetachedCriteria.forClass(UserFundEntity.class);
         userFundDetachedCriteria.add(Restrictions.eq("sellerId", t.getSellerId()));
