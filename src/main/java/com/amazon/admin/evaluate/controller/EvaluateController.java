@@ -11,6 +11,7 @@ import com.amazon.system.system.bootstrap.hibernate.CriteriaQuery;
 import com.amazon.system.system.bootstrap.json.DataGrid;
 import com.amazon.system.system.bootstrap.json.DataGridReturn;
 import com.amazon.system.system.bootstrap.utils.DatagridJsonUtils;
+import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.framework.core.common.controller.BaseController;
@@ -81,6 +82,7 @@ public class EvaluateController extends BaseController {
                 j =  evaluateService.doAddEvaluateWithNoReviewUrl(promotOrderEvaluateFlowEntity);
             }
         }catch (Exception e){
+            logger.log(Level.ERROR,e);
             j.setSuccess(AjaxJson.CODE_FAIL);
             j.setMsg("添加评论失败！");
             return j;

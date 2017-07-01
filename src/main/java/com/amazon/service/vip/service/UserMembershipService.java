@@ -16,5 +16,9 @@ public interface UserMembershipService extends BaseService {
 
     public AjaxJson goToChargeVipMouth(UserMembershipVo userMembershipVo, HttpServletRequest request, HttpServletResponse response);
 
+    public Boolean isMemberShipVip();
+
+
+
 
 }

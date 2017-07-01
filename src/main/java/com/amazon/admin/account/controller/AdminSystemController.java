@@ -7,6 +7,7 @@ import com.amazon.admin.constant.Constants;
 import com.amazon.service.user.controller.UserController;
 import com.amazon.service.user.entity.UserEntity;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.framework.core.common.controller.BaseController;
@@ -120,6 +121,7 @@ public class AdminSystemController extends BaseController {
             //更新登录时间
             j.setSuccess(AjaxJson.CODE_SUCCESS);
             j.setMsg("登录成功！");
+            logger.log(Level.INFO,"账号登录:"+adminSystemSession.getAccount());
             return j;
         } else {
             j.setSuccess(AjaxJson.CODE_FAIL);

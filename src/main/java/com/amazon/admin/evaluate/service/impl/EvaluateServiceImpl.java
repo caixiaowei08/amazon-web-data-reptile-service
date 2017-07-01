@@ -1,6 +1,8 @@
 package com.amazon.admin.evaluate.service.impl;
 
+import com.amazon.admin.account.controller.AdminSystemController;
 import com.amazon.admin.constant.Constants;
+import com.amazon.admin.evaluate.ComplaintConstant;
 import com.amazon.admin.evaluate.service.EvaluateService;
 import com.amazon.service.fund.entity.UserFundEntity;
 import com.amazon.service.fund.service.UserFundService;
@@ -13,6 +15,9 @@ import com.amazon.service.spider.service.SpiderService;
 import com.amazon.service.vip.entity.UserMembershipEntity;
 import com.amazon.system.Constant;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.framework.core.common.model.json.AjaxJson;
 import org.framework.core.common.service.impl.BaseServiceImpl;
 import org.framework.core.global.service.GlobalService;
@@ -35,6 +40,8 @@ import java.util.List;
 @Service("evaluateService")
 @Transactional
 public class EvaluateServiceImpl extends BaseServiceImpl implements EvaluateService {
+
+    private static Logger logger = LogManager.getLogger(EvaluateServiceImpl.class.getName());
 
     @Autowired
     private PromotOrderService promotOrderService;
@@ -65,6 +72,7 @@ public class EvaluateServiceImpl extends BaseServiceImpl implements EvaluateServ
         if (CollectionUtils.isEmpty(promotOrderEntityList)) {
             j.setSuccess(AjaxJson.CODE_FAIL);
             j.setMsg("未能根据ASIN找到推广订单！");
+            logger.log(Level.ERROR,"未能根据ASIN找到推广订单！----ASIN:"+promotOrderEvaluateFlowEntity.getAsinId());
             return j;
         }
         PromotOrderEntity promotOrderEntity = promotOrderEntityList.get(0);
@@ -90,6 +98,7 @@ public class EvaluateServiceImpl extends BaseServiceImpl implements EvaluateServ
         if (CollectionUtils.isEmpty(promotOrderEntityList)) {
             j.setSuccess(AjaxJson.CODE_FAIL);
             j.setMsg("未能根据ASIN找到推广订单！");
+            logger.log(Level.ERROR,"未能根据ASIN找到推广订单！----ASIN:"+promotOrderEvaluateFlowEntity.getAsinId());
             return j;
         }
         PromotOrderEntity promotOrderEntity = promotOrderEntityList.get(0);
@@ -100,6 +109,7 @@ public class EvaluateServiceImpl extends BaseServiceImpl implements EvaluateServ
                 !StringUtils.hasText(amazonEvaluateReviewPojo.getReviewDate())) {
             j.setSuccess(AjaxJson.CODE_FAIL);
             j.setMsg("请确认给定的评价链接是否正确！");
+            logger.log(Level.ERROR,"请确认给定的评价链接是否正确！----ASIN:"+promotOrderEvaluateFlowEntity.getAsinId());
             return j;
         }
 
@@ -110,12 +120,14 @@ public class EvaluateServiceImpl extends BaseServiceImpl implements EvaluateServ
         if (CollectionUtils.isNotEmpty(promotOrderEvaluateFlowEntityList)) {
             j.setSuccess(AjaxJson.CODE_FAIL);
             j.setMsg("该评价已经被使用，请核对！");
+            logger.log(Level.ERROR,"该评价已经被使用，请核对！----reviewCode:"+ amazonEvaluateReviewPojo.getReviewCode());
             return j;
         }
         //ASIN 是否正确
         if (!promotOrderEntity.getAsinId().equals(amazonEvaluateReviewPojo.getAsin())) {
             j.setSuccess(AjaxJson.CODE_FAIL);
             j.setMsg("评价ASIN编号和商品ASIN不匹配！");
+            logger.log(Level.ERROR,"该评价已经被使用，请核对！----ASIN:"+ amazonEvaluateReviewPojo.getAsin());
             return j;
         }
         //账目变动
@@ -175,12 +187,16 @@ public class EvaluateServiceImpl extends BaseServiceImpl implements EvaluateServ
         promotOrderEvaluateFlowEntity.setReviewUrl(amazonEvaluateReviewPojo.getReviewUrl());
         promotOrderEvaluateFlowEntity.setReviewStar(Double.parseDouble(amazonEvaluateReviewPojo.getReviewStar().trim().substring(0, 2)));
         promotOrderEvaluateFlowEntity.setReviewDate(amazonEvaluateReviewPojo.getReviewDate());
-        promotOrderEvaluateFlowEntity.setComplaint(0);
+        promotOrderEvaluateFlowEntity.setComplaint(ComplaintConstant.COMPLAINT_ZERO);
         promotOrderEvaluateFlowEntity.setBuyerId("-1");
         if (promotOrderEvaluateFlowEntityExist == null) {
             promotOrderEvaluateFlowEntity.setCreateTime(new Date());
         }
 
+        //完成订单指定数量的评价 订单关闭
+        if(promotOrderEntity.getNeedReviewNum().equals(promotOrderEntity.getEvaluateNum())){
+            promotOrderEntity.setState(Constant.STATE_N);
+        }
 
         promotOrderEvaluateFlowEntity.setUpdateTime(new Date());
         userFundService.saveOrUpdate(userFundEntity);

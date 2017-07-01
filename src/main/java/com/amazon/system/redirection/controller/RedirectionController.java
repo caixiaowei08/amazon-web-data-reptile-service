@@ -1,6 +1,11 @@
 package com.amazon.system.redirection.controller;
 
+import com.amazon.service.fund.controller.UserFundController;
+import com.amazon.service.vip.service.UserMembershipService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.framework.core.common.controller.BaseController;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,9 +21,18 @@ import javax.servlet.http.HttpServletResponse;
 @RequestMapping("/redirectionController")
 public class RedirectionController extends BaseController{
 
+    private static Logger logger = LogManager.getLogger(RedirectionController.class.getName());
+
+    @Autowired
+    private UserMembershipService userMembershipService;
+
     @RequestMapping(params = "goManagePromot")
     public String goManagePromot(HttpServletRequest request, HttpServletResponse response) {
-        return "pages/manage/managePromot";
+        if(userMembershipService.isMemberShipVip()){
+            return "pages/manage/managePromot";
+        }else{
+            return "pages/fund/memberShip";
+        }
     }
 
     @RequestMapping(params = "goToChargeFund")

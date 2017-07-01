@@ -140,7 +140,7 @@ public class UserMembershipServiceImpl extends BaseServiceImpl implements UserMe
         }
 
         BigDecimal totalMonthRent = monthRent.multiply(new BigDecimal(memberShipMonth));
-        chargeFund = totalMonthRent.divide(exchangeRate,2,BigDecimal.ROUND_DOWN);
+        chargeFund = totalMonthRent.divide(exchangeRate, 2, BigDecimal.ROUND_DOWN);
         totalMonthRent = totalMonthRent.setScale(2, BigDecimal.ROUND_UP);
 
         AlipayTradePayModel alipayTradePayModel = new AlipayTradePayModel();
@@ -172,5 +172,25 @@ public class UserMembershipServiceImpl extends BaseServiceImpl implements UserMe
             logger.error(se);
         }
         return j;
+    }
+
+    public Boolean isMemberShipVip() {
+        UserEntity userEntity = globalService.getUserEntityFromSession();
+        if (userEntity == null) {
+            return false;
+        }
+        DetachedCriteria userMembershipDetachedCriteria = DetachedCriteria.forClass(UserMembershipEntity.class);
+        userMembershipDetachedCriteria.add(Restrictions.eq("sellerId", userEntity.getId()));
+        List<UserMembershipEntity> userMembershipEntityList = globalService.getListByCriteriaQuery(userMembershipDetachedCriteria);
+        if (CollectionUtils.isEmpty(userMembershipEntityList)) {
+            return false;
+        }
+        UserMembershipEntity userMembershipEntity = userMembershipEntityList.get(0);
+        if (userMembershipEntity.getMembershipEndTime() == null ||
+                DateUtils.compareTo(DateUtils.getBeginOfDate(), userMembershipEntity.getMembershipEndTime()) > 0) {
+            return false;
+        }else{
+            return true;
+        }
     }
 }

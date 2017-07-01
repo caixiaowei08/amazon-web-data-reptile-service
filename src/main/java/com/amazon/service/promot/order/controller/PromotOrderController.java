@@ -9,6 +9,7 @@ import com.amazon.service.spider.pojo.AmazonPageInfoPojo;
 import com.amazon.service.spider.service.SpiderService;
 import com.amazon.service.user.controller.UserController;
 import com.amazon.service.user.entity.UserEntity;
+import com.amazon.service.vip.service.UserMembershipService;
 import com.amazon.system.Constant;
 import com.amazon.system.system.bootstrap.hibernate.CriteriaQuery;
 import com.amazon.system.system.bootstrap.json.DataGrid;
@@ -63,14 +64,26 @@ public class PromotOrderController extends BaseController {
     @Autowired
     private PromotPriceService promotPriceService;
 
+    @Autowired
+    private UserMembershipService userMembershipService;
+
+
     @RequestMapping(params = "goNewPromotOne")
     public String goNewPromotOne(HttpServletRequest request, HttpServletResponse response) {
-        return "pages/promot/newPromotStepOne";
+        if(userMembershipService.isMemberShipVip()){
+            return "pages/promot/newPromotStepOne";
+        }else{
+            return "pages/fund/memberShip";
+        }
     }
 
     @RequestMapping(params = "goNewPromotTwo")
     public String goNewPromotOneTwo(HttpServletRequest request, HttpServletResponse response) {
-        return "pages/promot/newPromotStepTwo";
+        if(userMembershipService.isMemberShipVip()){
+            return "pages/promot/newPromotStepTwo";
+        }else{
+            return "pages/fund/memberShip";
+        }
     }
 
     @RequestMapping(params = "dataGrid")
@@ -225,6 +238,7 @@ public class PromotOrderController extends BaseController {
         } catch (Exception e) {
             j.setSuccess(AjaxJson.CODE_FAIL);
             j.setMsg("关闭失败！");
+            return j;
         }
         return j;
     }
