@@ -708,7 +708,7 @@ public class DateUtils {
     public static Date getEndOfDate() {
         Calendar calendar2 = Calendar.getInstance();
         calendar2.set(calendar2.get(Calendar.YEAR), calendar2.get(Calendar.MONTH), calendar2.get(Calendar.DAY_OF_MONTH),
-                23, 59, 59);
+                23, 59, 58);
         Date endOfDate = calendar2.getTime();
         return endOfDate;
     }
@@ -720,8 +720,11 @@ public class DateUtils {
     public static Date getEndOfDate(Date date) {
         Calendar calendar2 = Calendar.getInstance();
         calendar2.setTime(date);
-        calendar2.set(calendar2.get(Calendar.YEAR), calendar2.get(Calendar.MONTH), calendar2.get(Calendar.DAY_OF_MONTH),
-                23, 59, 59);
+        calendar2.set(
+                calendar2.get(Calendar.YEAR),
+                calendar2.get(Calendar.MONTH),
+                calendar2.get(Calendar.DAY_OF_MONTH),
+                23, 59, 58);
         Date endOfDate = calendar2.getTime();
         return endOfDate;
     }

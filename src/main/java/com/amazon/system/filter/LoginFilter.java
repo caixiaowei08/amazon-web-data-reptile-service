@@ -21,14 +21,17 @@ public class LoginFilter implements Filter {
     public void init(FilterConfig filterConfig) throws ServletException {
 
     }
+
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest req = (HttpServletRequest) request;
         HttpServletResponse res = (HttpServletResponse) response;
         HttpSession session = req.getSession();
         String url = req.getServletPath();
-        if (url.equals("/loginController.do")||url.equals("/userController.do")) {
+        if (url.equals("/loginController.do")
+                || url.equals("/userController.do")
+                || url.equals("/userFundController/doAlipayTradePageNotify.do")) {
             chain.doFilter(request, response);
-        } else if(session.getAttribute(Constant.USER_SESSION_CONSTANTS) == null){
+        } else if (session.getAttribute(Constant.USER_SESSION_CONSTANTS) == null) {
             session.invalidate();
             res.sendRedirect("/loginController.do?login");
             AjaxJson j = new AjaxJson();
@@ -43,10 +46,11 @@ public class LoginFilter implements Filter {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }else{//有session user 通过
+        } else {//有session user 通过
             chain.doFilter(request, response);
         }
     }
+
     public void destroy() {
 
     }

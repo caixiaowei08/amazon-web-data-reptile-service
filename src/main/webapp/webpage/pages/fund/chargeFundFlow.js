@@ -26,11 +26,19 @@ $(function () {
                 valign: "middle"//垂直
             },
             {
-                title: '支付宝交易流水',
-                field: "zfbOrderNum",
-                width: "10%",//宽度
+                title: '充值类型',
+                field: "chargeType",
+                width: "8%",//宽度
                 align: "center",//水平
                 valign: "middle",//垂直
+                formatter: function (value, row, index) {
+                    if (value == 1) {
+                        return "<span class='label label-primary'>余额充值</span>"
+                    } else if (value == 2) {
+                        return "<span class='label label-danger'>购买会员</span>"
+                    }
+                    return "";
+                }
             },
             {
                 title: '充值金额($)',
@@ -64,7 +72,7 @@ $(function () {
                     if (value == 1) {
                         return "<span class='label label-info'>支付宝</span>"
                     } else if (value == 2) {
-                        return "<span class='label label-success'>微信</span>"
+                        return "<span class='label label-warning'>微信</span>"
                     }
                     return "";
                 }
@@ -78,7 +86,7 @@ $(function () {
                 valign: "middle",//垂直
                 formatter: function (value, row, index) {
                     if (value == 1) {
-                        return "<span class='label label-primary'>未支付</span>"
+                        return "<span class='label label-default'>未支付</span>"
                     } else if (value == 2) {
                         return "<span class='label label-success'>成功</span>"
                     } else if (value == 3) {
@@ -88,20 +96,13 @@ $(function () {
                 }
             },
             {
-                title: '充值类型',
-                field: "chargeType",
-                width: "10%",//宽度
+                title: '时间',
+                field: "createTime",
+                width: "15%",//宽度
                 align: "center",//水平
-                valign: "middle",//垂直
-                formatter: function (value, row, index) {
-                    if (value == 1) {
-                        return "<span class='label label-info'>余额充值</span>"
-                    } else if (value == 2) {
-                        return "<span class='label label-success'>购买会员</span>"
-                    }
-                    return "";
-                }
+                valign: "middle"//垂直
             }
+
         ]],
         queryParams: function (params) {
             return params;

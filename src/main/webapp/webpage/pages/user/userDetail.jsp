@@ -13,7 +13,6 @@
     <link rel="stylesheet" href="/webpage/plug-in/bootstrap/css/bootstrap-theme.min.css"/>
     <link rel="stylesheet" href="/webpage/plug-in/font-awesome/css/font-awesome.min.css"/>
     <link rel="stylesheet" href="/webpage/plug-in/toastr/toastr.css"/>
-    <link rel="stylesheet" href="/webpage/plug-in/common/css/main.css"/>
     <link rel="stylesheet" href="/webpage/plug-in/bootstrapvalidator/dist/css/bootstrapValidator.min.css"/>
     <link rel="stylesheet" href="/webpage/pages/main/index.css"/>
     <!--[if lte IE 9]>

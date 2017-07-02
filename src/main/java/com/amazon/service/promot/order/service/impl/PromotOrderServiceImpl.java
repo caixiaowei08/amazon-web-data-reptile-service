@@ -91,13 +91,15 @@ public class PromotOrderServiceImpl extends BaseServiceImpl implements PromotOrd
             j.setMsg("您的会员已到期，请购买会员！");
             return j;
         }
-        PromotPriceEntity promotPriceEntity = promotPriceService.find(PromotPriceEntity.class, 1);
-        if (promotPriceEntity == null) {
+        DetachedCriteria promotPriceEntityDetachedCriteria = DetachedCriteria.forClass(PromotPriceEntity.class);
+        List<PromotPriceEntity> promotPriceEntityList = promotPriceService.getListByCriteriaQuery(promotPriceEntityDetachedCriteria);
+
+        if (CollectionUtils.isEmpty(promotPriceEntityList)) {
             j.setSuccess(AjaxJson.CODE_FAIL);
             j.setMsg("未设置价格信息，请联系管理员！");
             return j;
         }
-
+        PromotPriceEntity promotPriceEntity = promotPriceEntityList.get(0);
         //目标好评数
         Integer needReviewNum = promotOrderEntity.getNeedReviewNum();
         //好评价

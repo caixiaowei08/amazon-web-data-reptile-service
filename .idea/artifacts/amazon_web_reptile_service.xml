@@ -1,0 +1,6 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="amazon_web_reptile_service">
+    <output-path>$PROJECT_DIR$/out/artifacts/amazon_web_reptile_service</output-path>
+    <root id="archive" name="amazon_web_reptile_service.war" />
+  </artifact>
+</component>

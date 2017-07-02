@@ -1,7 +1,7 @@
 <component name="ArtifactManager">
   <artifact type="war" name="amazon-web-data-reptile-service:war">
     <output-path>$PROJECT_DIR$/target</output-path>
-    <root id="archive" name="amazon-web-data-reptile-service.war">
+    <root id="archive" name="amazon-web-data-reptile-service_war.war">
       <element id="artifact" artifact-name="amazon-web-data-reptile-service:war exploded" />
     </root>
   </artifact>

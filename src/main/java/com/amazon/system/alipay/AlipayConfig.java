@@ -44,18 +44,18 @@ public class AlipayConfig {
     public static String FORMAT = "json";
 
     //编码集，支持GBK/UTF-8
-    public static String CHARSET = "UTF-8";
+    public static String CHARSET = "utf-8";
 
     //支付宝公钥，由支付宝生成
     public static String ALIPAY_PUBLIC_KEY = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAlthvvrj+Ozv+8oPO4cjish/heF1SLMQrAUkQw6SFB08WBoOR7K3aTYtqr49GLaWqLw/ZRxKb9ZggiyPqP5qf+sMstplCjQwV1GgauSE3i/76W6vx5GbJCImfXDLHkkEb7+xe+qJJqVEZ9eGkX1DYUTG14mBcoYKi2hAe7ze1EgGoGr1f5r1SGYfyW9mc56J/3ADoh6iDeW02cJzE03LqzLedWhdY/yHEuCw3RiEUuaV1IMkDFM+wExVYoGQTHv95Medwu8C6Es7Eg5yCnajPVwcjH3jRz1VhocYDAJs5yPRSISggwmyItEi9oJpapo5ra6aKtRRcFidgAaTUsOx1OQIDAQAB";
 
-    //编码集，支持GBK/UTF-8
+    //签名方式
     public static String SIGN_TYPE = "RSA2";
 
     // 页面跳转同步通知页面路径 需http://格式的完整路径，不能加?id=123这类自定义参数，必须外网可以正常访问
-    public static String RETURN_URL = "http://59.78.194.248:8888/mainController.do?index";
+    public static String RETURN_URL = "http://www.amreviewtracker.com/mainController.do?index";
 
     // 服务器异步通知页面路径  需http://格式的完整路径，不能加?id=123这类自定义参数，必须外网可以正常访问
-    public static String NOTIFY_URL = "http://59.78.194.248:8888/userFundController/doAlipayTradePageNotify.do";
+    public static String NOTIFY_URL = "http://www.amreviewtracker.com/userFundController/doAlipayTradePageNotify.do";
 
 }

@@ -99,7 +99,12 @@
                 <div class="panel-footer">
                     <div class="container">
                         <div class="row">
-                            <div class="col-md-2 col-md-offset-8">
+
+                            <div class="col-md-2 col-md-offset-2">
+                                <a href="/mainController.do?index" class="btn btn-default">返回主页</a>
+                            </div>
+
+                            <div class="col-md-2 col-md-offset-4">
                                 <div class="btn-group" role="group">
                                     <button type="button" id="btn_sub" class="btn btn-default">下一步</button>
                                 </div>
