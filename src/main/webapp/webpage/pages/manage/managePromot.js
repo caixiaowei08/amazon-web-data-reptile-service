@@ -43,7 +43,7 @@ $(function () {
         pageSize: 20,
         pageList: [10, 20, 30, 50, 100],
         pagination: true,
-        height: tableHeight(),
+        height: 700,
         clickToSelect: true,//是否启用点击选中行
         uniqueId: "id",
         locale: "zh-CN",
@@ -153,14 +153,14 @@ $(function () {
             return params;
         }
     });
-    $(window).resize(function () {
+/*    $(window).resize(function () {
         $('#promotListTable').bootstrapTable('resetView', {
             height: tableHeight()
         })
     })
     function tableHeight() {
         return $(window).height() - 350;
-    }
+    }*/
 })
 
 function doPromotSearch() {

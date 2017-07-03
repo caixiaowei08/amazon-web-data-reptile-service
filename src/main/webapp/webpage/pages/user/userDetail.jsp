@@ -29,7 +29,7 @@
     <script type="text/javascript" src="/webpage/plug-in/knockoutjs/dist/knockout.js"></script>
     <script type="text/javascript" src="/webpage/pages/user/userDetail.js"></script>
 </head>
-<body>
+<body style="overflow-y:auto;">
 <div class="main-container">
     <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
         <div class="container">
@@ -182,6 +182,7 @@
                     </div>
                 </div>
             </div>
+            <div style="height: 100px;"></div>
         </div>
     </div>
     <nav class="navbar navbar-default navbar-fixed-bottom">

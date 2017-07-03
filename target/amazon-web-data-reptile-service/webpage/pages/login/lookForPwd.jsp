@@ -27,9 +27,9 @@
     <script type="text/javascript" src="/webpage/plug-in/bootstrapvalidator/dist/js/language/zh_CN.js"></script>
     <script type="text/javascript" src="/webpage/pages/login/lookForPwd.js"></script>
 </head>
-<body class="container-fluid">
+<body class="container-fluid" style="overflow-y:auto;">
 <div class="row">
-    <div style="margin-top: 100px;">
+    <div style="margin-top: 100px;margin-bottom: 100px;">
         <div class="col-lg-10 col-lg-offset-1">
             <div class="row">
                 <div class="col-md-4 col-md-offset-1">

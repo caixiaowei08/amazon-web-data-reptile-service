@@ -1,7 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/webpage/context/baseTags.jsp" %>
 <html>
-<head>
+<head >
     <title>Seller Assistant</title>
     <meta charset="utf-8"/>
     <link rel="shortcut icon" type="image/x-icon" href="/webpage/plug-in/imgs/favicon.ico" media="screen"/>
@@ -23,7 +23,7 @@
     <script src="http://apps.bdimg.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
 </head>
-<body>
+<body style="overflow-y:auto;">
 <div class="main-container">
     <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
         <div class="container">
@@ -114,6 +114,7 @@
                 </div>
             </div>
         </div>
+        <div style="height: 100px;"></div>
     </div>
 </div>
 <nav class="navbar navbar-default navbar-fixed-bottom">

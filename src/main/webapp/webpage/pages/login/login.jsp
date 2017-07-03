@@ -31,7 +31,7 @@
 </head>
 <body class="container-fluid">
 <div class="row">
-    <div style="margin-top: 100px;">
+    <div style="margin-top: 100px;margin-bottom: 100px;">
         <div class="col-lg-10 col-lg-offset-1">
             <div class="row">
                 <div class="col-md-4 col-md-offset-1">
@@ -80,6 +80,7 @@
                     </div>
                 </div>
             </div>
+            <div style="height: 100px;"></div>
         </div>
     </div>
     <nav class="navbar navbar-default navbar-fixed-bottom">
@@ -96,23 +97,3 @@
 </div>
 </body>
 </html>
-<%--<script>
-    $(function () {
-        $("#formobj").Validform({
-            tiptype: 4,
-            btnSubmit: "#login_submit",
-            ajaxPost: true,
-            callback: function (data) {
-                if (data.success == "success") {
-                    toastr.info(data.msg);
-                    setTimeout("window.location='/mainController.do?index'", 1000);
-                } else if (data.success == "fail") {
-                    toastr.warning(data.msg);
-                } else {
-                    toastr.error("服务器宕机或者网络问题！");
-                    return false;
-                }
-            }
-        })
-    })
-</script>--%>

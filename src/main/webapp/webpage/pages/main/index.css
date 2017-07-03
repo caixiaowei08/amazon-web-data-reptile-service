@@ -5,11 +5,10 @@
 }
 
 .main-content {
-    top: 50px;
-    position: fixed;
+    margin-top: 50px;
     min-width: 100%;
-    margin: 0 auto;
     overflow-x: hidden;
+    overflow-y: auto;
 }
 
 .header-section {
