@@ -45,6 +45,7 @@ public class AdminLoginFilter  implements Filter {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+            return;
         }else{
             chain.doFilter(request, response);
         }

@@ -183,14 +183,13 @@ public class UserController extends BaseController {
     @ResponseBody
     public AjaxJson doGetBaseUserInfo(HttpServletRequest request, HttpServletResponse response) {
         AjaxJson j = new AjaxJson();
-        UserEntity userSession = (UserEntity) ContextHolderUtils.getSession().getAttribute(Constant.USER_SESSION_CONSTANTS);
-        if (userSession == null) {
-            ContextHolderUtils.getSession().invalidate();
-            j.setSuccess(AjaxJson.CODE_FAIL);
-            j.setMsg("跳转登录页失败！");
+        UserEntity userEntity = globalService.getUserEntityFromSession();
+        if (userEntity == null) {
+            j.setSuccess(AjaxJson.RELOGIN);
+            j.setMsg("修改失败，用户登录超时！");
             return j;
         }
-        UserBaseInfoVo userBaseInfoVo = userService.doGetBaseUserInfo(userSession);
+        UserBaseInfoVo userBaseInfoVo = userService.doGetBaseUserInfo(userEntity);
         j.setContent(userBaseInfoVo);
         return j;
     }
@@ -202,7 +201,7 @@ public class UserController extends BaseController {
         UserEntity userEntity = globalService.getUserEntityFromSession();
         if (userEntity == null) {
             j.setSuccess(AjaxJson.RELOGIN);
-            j.setMsg("修改失败，用户登录超时！");
+            j.setMsg("用户登录超时！");
             return j;
         }
         String oldPwd = request.getParameter("oldPwd");

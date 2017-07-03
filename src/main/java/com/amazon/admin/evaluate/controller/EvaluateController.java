@@ -61,8 +61,9 @@ public class EvaluateController extends BaseController {
     @ResponseBody
     public AjaxJson doAdd(PromotOrderEvaluateFlowEntity promotOrderEvaluateFlowEntity,HttpServletRequest request, HttpServletResponse response) {
         AjaxJson j = new AjaxJson();
+        logger.info("----evaluateController----doAdd---start----");
         if (globalService.isNotAdminLogin()) {
-            j.setSuccess(AjaxJson.CODE_FAIL);
+            j.setSuccess(AjaxJson.RELOGIN);
             j.setMsg("请用管理员账户登录！");
             return j;
         }
@@ -77,14 +78,16 @@ public class EvaluateController extends BaseController {
 
         try {
             if(StringUtils.hasText(reviewUrl)){
+                logger.info("----evaluateController----doAddEvaluateWithReviewUrl---start----");
                 j =  evaluateService.doAddEvaluateWithReviewUrl(promotOrderEvaluateFlowEntity);
             }else{
+                logger.info("----evaluateController----doAddEvaluateWithNoReviewUrl---start----");
                 j =  evaluateService.doAddEvaluateWithNoReviewUrl(promotOrderEvaluateFlowEntity);
             }
         }catch (Exception e){
-            logger.log(Level.ERROR,e);
             j.setSuccess(AjaxJson.CODE_FAIL);
             j.setMsg("添加评论失败！");
+            logger.error(e.toString());
             return j;
         }
         return j;
@@ -114,7 +117,7 @@ public class EvaluateController extends BaseController {
         AjaxJson j = new AjaxJson();
 
         if (globalService.isNotAdminLogin()) {
-            j.setSuccess(AjaxJson.CODE_FAIL);
+            j.setSuccess(AjaxJson.RELOGIN);
             j.setMsg("请先登录管理账号！");
             return j;
         }

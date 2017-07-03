@@ -6,7 +6,6 @@ import us.codecraft.webmagic.ResultItems;
 import us.codecraft.webmagic.Task;
 import us.codecraft.webmagic.pipeline.Pipeline;
 
-import static sun.security.x509.AlgorithmId.get;
 
 /**
  * Created by User on 2017/6/24.

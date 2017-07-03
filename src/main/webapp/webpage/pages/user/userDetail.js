@@ -41,8 +41,7 @@ function loadData() {
             } else if (data.success === "fail") {
                 toastr.warning(data.msg);
             } else {
-                toastr.warning(data.msg);
-                setTimeout("window.location='/loginController.do?login'", 200);
+                window.location='/loginController.do?login';
             }
         },
         error: function (jqxhr, textStatus, errorThrow) {

@@ -64,8 +64,7 @@ $(function () {
                 toastr.warning(result.msg);
                 form.bootstrapValidator('disableSubmitButtons', false);
             } else {
-                toastr.warning(result.msg);
-                setTimeout("window.location='/loginController.do?login'", 200);
+                window.location='/loginController.do?login';
             }
         }, 'json');
     });

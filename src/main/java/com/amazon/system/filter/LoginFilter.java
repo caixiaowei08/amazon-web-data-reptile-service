@@ -46,6 +46,7 @@ public class LoginFilter implements Filter {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+            return;
         } else {//有session user 通过
             chain.doFilter(request, response);
         }

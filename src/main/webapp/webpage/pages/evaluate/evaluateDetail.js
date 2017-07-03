@@ -158,9 +158,8 @@ function submitComplaint() {
         } else if (result.success == "fail") {
             toastr.warning(result.msg);
             form.bootstrapValidator('disableSubmitButtons', false);
-        } else if (result.success == "RELOGIN") {
-            toastr.warning(result.msg);
-            setTimeout("window.location='/loginController.do?login'", 200);
+        } else {
+            window.location = '/loginController.do?login';
         }
     }, 'json');
 }

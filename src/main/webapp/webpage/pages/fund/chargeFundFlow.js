@@ -6,6 +6,8 @@ $(function () {
         url: "/userRechargeFundController.do?dataGrid",
         sidePagination: "server",
         dataType: "json",
+        sortName: "updateTime",
+        sortOrder: 'desc',
         search: false,
         pageNumber: 1,
         pageSize: 20,
@@ -98,6 +100,7 @@ $(function () {
             {
                 title: '时间',
                 field: "createTime",
+                sortable: true,
                 width: "15%",//宽度
                 align: "center",//水平
                 valign: "middle"//垂直

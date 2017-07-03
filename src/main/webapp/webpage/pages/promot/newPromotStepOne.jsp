@@ -183,7 +183,7 @@
                     window.location='/promotOrderController.do?goNewPromotTwo'
                 }else if (data.success === "fail") {
                     toastr.error(data.msg);
-                } else if (data.success === "RELOGIN") {
+                } else {
                     window.location = '/loginController.do?login';
                 }
             },
@@ -192,10 +192,6 @@
             },
             complete:function () {
                 SendComplete();
-            },
-            statusCode:{
-                404:function(){console.log('not found');},
-                500:function(){console.log('error by server');},
             }
         });
     }
