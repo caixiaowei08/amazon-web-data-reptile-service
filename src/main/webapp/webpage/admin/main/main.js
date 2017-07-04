@@ -49,6 +49,10 @@ $(function () {
         locale: "zh-CN",
         showColumns: false,
         singleSelect: true,
+        onLoadError:function () {
+            toastr.warning("请重新登录！");
+            setTimeout("window.location='/adminSystemController.admin?goAdminLogin'", 1000);
+        },
         columns: [[
             {
                 title: '订单编号',

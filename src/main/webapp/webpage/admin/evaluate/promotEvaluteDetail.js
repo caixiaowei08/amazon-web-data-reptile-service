@@ -10,6 +10,10 @@ $(function () {
         pageSize: 20,
         pageList: [10, 20, 30, 50, 100],
         pagination: true,
+        onLoadError:function () {
+            toastr.warning("请重新登录！");
+            setTimeout("window.location='/adminSystemController.admin?goAdminLogin'", 1000);
+        },
         height: 650,
         clickToSelect: true,//是否启用点击选中行
         uniqueId: "id",

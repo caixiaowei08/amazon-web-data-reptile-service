@@ -174,7 +174,6 @@
     function doDealAsinOrUrl() {
         var asinOrUrl = $("#asinOrUrl").val();
         if (asinOrUrl === null || asinOrUrl === undefined || asinOrUrl === '') {
-            console.log("true");
             return;
         }
         

@@ -14,6 +14,10 @@ $(function () {
         pageList: [10, 20, 30, 50, 100],
         pagination: true,
         height: 700,
+        onLoadError:function () {
+            toastr.warning("请重新登录！");
+            setTimeout("window.location='/loginController.do?login'", 1000);
+        },
         clickToSelect: true,//是否启用点击选中行
         uniqueId: "id",
         locale: "zh-CN",
