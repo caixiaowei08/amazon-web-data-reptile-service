@@ -111,13 +111,4 @@ $(function () {
             return params;
         }
     });
-    /*$(window).resize(function () {
-        $('#chargeFundFlowListTable').bootstrapTable('resetView', {
-            height: tableHeight()
-        })
-    })
-    function tableHeight() {
-        return $(window).height() - 350;
-    }*/
-
 });

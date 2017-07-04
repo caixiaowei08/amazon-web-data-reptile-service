@@ -13,9 +13,9 @@
     <link rel="stylesheet" href="/webpage/plug-in/bootstrap/css/bootstrap-theme.min.css"/>
     <link rel="stylesheet" href="/webpage/plug-in/font-awesome/css/font-awesome.min.css"/>
     <link rel="stylesheet" href="/webpage/plug-in/toastr/toastr.css"/>
-    <link rel="stylesheet" href="/webpage/plug-in/common/css/main.css"/>
     <link rel="stylesheet" href="/webpage/plug-in/bootstrapvalidator/dist/css/bootstrapValidator.min.css"/>
     <link rel="stylesheet" href="/webpage/pages/main/index.css"/>
+    <link rel="stylesheet" href="/webpage/admin/main/main.css"/>
     <!--[if lte IE 9]>
     <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
     <script src="https://cdn.bootcss.com/html5shiv/r29/html5.js"></script>
@@ -46,9 +46,24 @@
             </div>
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">
-                    <li><a href="/skipController.admin?goToAdminMain">推广订单管理</a></li>
-                    <li><a href="/evaluateController.admin?goEvaluateDetail">订单评价管理</a></li>
-                    <li><a href="#">我的账户</a></li>
+                    <li><a href="/skipController.admin?goToAdminMain" target="_parent"></a></li>
+                    <li><a href="/skipController.admin?goToAdminMain" target="_parent">推广订单管理</a></li>
+                    <li><a href="/evaluateController.admin?goEvaluateDetail" target="_parent">订单评价管理</a></li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle " data-toggle="dropdown" role="button" aria-haspopup="true"
+                           aria-expanded="false">系统设置<span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="/skipController.admin?goPriceExchange" target="_parent">价格汇率</a></li>
+                            <%--<li><a href="/skipController.admin?goQQContacts" target="_parent">联系人</a></li>--%>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle " data-toggle="dropdown" role="button" aria-haspopup="true"
+                           aria-expanded="false">我的账号<span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="/skipController.admin?goAdminChangePwd" target="_parent">修改密码</a></li>
+                        </ul>
+                    </li>
                     <li>
                         <a href="/adminSystemController.admin?doLogOff">
                             退出

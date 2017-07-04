@@ -20,6 +20,12 @@ public class RegularExpressionUtils {
         return matcher.matches();
     }
 
+    public static boolean isFourDecimalNumber(String number){
+        Pattern pattern = Pattern .compile("^[0-9]+([.]{1}[0-9]{1,4})?$");
+        Matcher matcher = pattern.matcher(number);
+        return matcher.matches();
+    }
+
 
 
 
