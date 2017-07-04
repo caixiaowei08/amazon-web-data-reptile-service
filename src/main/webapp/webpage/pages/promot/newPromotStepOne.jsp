@@ -99,7 +99,7 @@
                         </h5>
                         <div style="height: 25px;">
                             <div class="row">
-                                <div id="loading" class="hidden col-lg-6 col-lg-offset-3">爬虫正在抓取网页数据。。。</div>
+                                <div id="loading" class="hidden col-lg-6 col-lg-offset-3">正在处理信息，请稍候....</div>
                             </div>
                         </div>
                         <div class="form-group" style="height:40px;">

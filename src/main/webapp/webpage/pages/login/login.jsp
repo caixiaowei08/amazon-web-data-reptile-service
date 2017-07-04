@@ -37,8 +37,8 @@
                 <div class="col-md-4 col-md-offset-1">
                     <h2>欢迎使用Seller Assistant</h2>
                     <p>&nbsp;</p>
-                    <p class="sign-left">您唯一需要做的就是在我们的平台上设置需要推广的产品，其他事情将由我们处理。只有当为您带来亚马逊评论时，我们才会收取少许费用。</p>
-                    <p class="sign-left">现在开始行动，加入我们吧！</p>
+                    <p class="sign-left">这是一个精心设计的亚马逊产品测评平台，为您提供专业、高效的测评服务。</p>
+                    <p class="sign-left">现在就开始行动，加入我们打造您的亚马逊爆款吧！</p>
                 </div>
                 <div class="col-md-4 col-md-offset-1">
                     <div class="thumbnail">

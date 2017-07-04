@@ -285,6 +285,27 @@ function downPromotOrderExcel() {
         return;
     }
 
+    $.ajax({
+        url: "/userController.do?doCheckLogin",
+        type: 'post',
+        success: function (data) {
+            if(data.success==="success"){
+                //doNothing
+            }else if (data.success === "fail") {
+                toastr.warning(data.msg);
+                setTimeout("window.location='/loginController.do?login'", 1000);
+                return;
+            } else {
+                window.location = '/loginController.do?login';
+                return;
+            }
+        },
+        error: function (jqxhr, textStatus, errorThrow) {
+            toastr.success("服务器异常,请联系管理员！");
+        }
+    })
+
+
     window.open(
         "/promotOrderController.do?downPromotOrderExcel&asinId=" + params.asinId
         + "&state=" + params.state

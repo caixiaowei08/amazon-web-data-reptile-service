@@ -357,9 +357,9 @@
                             data.content.priceblockSaleprice,
                             data.content.brand,
                             data.content.reviewPrice,
-                            50,
+                            1,
                             data.content.landingImage,
-                            10
+                            1
                         )
                     );
                 } else if (data.success === "fail") {

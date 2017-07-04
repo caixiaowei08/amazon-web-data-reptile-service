@@ -84,6 +84,19 @@ public class UserController extends BaseController {
         }
     }
 
+    @RequestMapping(params = "doCheckLogin")
+    public AjaxJson doCheckLogin(HttpServletRequest request, HttpServletResponse response) {
+        AjaxJson j = new AjaxJson();
+        UserEntity userEntity = globalService.getUserEntityFromSession();
+        if(userEntity == null){
+            j.setSuccess(AjaxJson.CODE_FAIL);
+            j.setMsg("登录超时，请重新登录！");
+            return j;
+        }else{
+            return j;
+        }
+    }
+
     @RequestMapping(params = "doRegister")
     @ResponseBody
     public AjaxJson doRegister(UserEntity userEntity, HttpServletRequest request) {

@@ -151,7 +151,7 @@
                                         <div class="row">
                                             <div class="col-xs-6">
                                                 <lable class="control-label" style="color:#8a6d3b;">
-                                                    汇率(人民币/美元)：
+                                                    汇率(美元/人民币)：
                                                 </lable>
                                             </div>
                                             <div class="col-xs-6">
