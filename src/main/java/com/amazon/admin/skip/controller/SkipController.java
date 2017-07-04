@@ -58,4 +58,12 @@ public class SkipController extends BaseController{
         return "admin/systemConfig/QQContacts";
     }
 
+    @RequestMapping(params = "goUserManage")
+    public String goUserManage(HttpServletRequest request, HttpServletResponse response) {
+        if (globalService.isNotAdminLogin()) {
+            return "/adminSystemController.admin?goAdminLogin";
+        }
+        return "admin/systemConfig/userManage";
+    }
+
 }
