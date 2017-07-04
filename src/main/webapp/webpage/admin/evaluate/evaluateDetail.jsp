@@ -52,9 +52,9 @@
         </div>
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="/skipController.admin?goUserManage" target="_parent">卖家管理</a></li>
                 <li><a href="/skipController.admin?goToAdminMain" target="_parent">推广订单管理</a></li>
                 <li><a href="/evaluateController.admin?goEvaluateDetail" target="_parent">订单评价管理</a></li>
+                <li><a href="/skipController.admin?goUserManage" target="_parent">卖家管理</a></li>
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle " data-toggle="dropdown" role="button" aria-haspopup="true"
                        aria-expanded="false">系统设置<span class="caret"></span></a>

@@ -84,14 +84,6 @@ $(function () {
             }
         ]]
     });
-    // $(window).resize(function () {
-    //     $('#evaluateListTable').bootstrapTable('resetView', {
-    //         height: tableHeight()
-    //     })
-    // })
-    // function tableHeight() {
-    //     return $(window).height() - 300;
-    // }
 
     $("#btn_sub").click(function () {
         $('#formObj').submit();

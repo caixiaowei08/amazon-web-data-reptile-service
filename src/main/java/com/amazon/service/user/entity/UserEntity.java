@@ -4,10 +4,7 @@ import com.alibaba.fastjson.annotation.JSONField;
 import org.framework.core.common.entity.IdEntity;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -16,7 +13,12 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "amazon_user_info_table",uniqueConstraints={@UniqueConstraint(columnNames={"account"})})
-public class UserEntity extends IdEntity implements Serializable {
+public class UserEntity implements Serializable {
+
+    /**
+     * 主键
+     */
+    private Integer id;
 
     /**
      * 账号编码 邮箱地址
@@ -49,6 +51,17 @@ public class UserEntity extends IdEntity implements Serializable {
     @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
     @JSONField(format="yyyy-MM-dd HH:mm:ss")
     private Date updateTime;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name ="id",nullable=false,length=20)
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
     @Column(name = "account", nullable = false, length = 100)
     public String getAccount() {
