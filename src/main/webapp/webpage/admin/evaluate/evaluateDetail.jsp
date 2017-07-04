@@ -37,7 +37,7 @@
     <script type="text/javascript" src="/webpage/plug-in/toastr/toastr.min.js"></script>
     <script type="text/javascript" src="/webpage/admin/evaluate/evaluateDetail.js"></script>
 </head>
-<body class="main-container">
+<body class="main-container" style="overflow-y:auto;">
 <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
     <div class="container">
         <div class="navbar-header">
@@ -102,6 +102,7 @@
         <table id="evaluateListTable" class="table table-hover">
         </table>
     </div>
+    <div style="height: 20px;"></div>
 </div>
 <nav class="navbar navbar-default navbar-fixed-bottom">
     <div class="container">

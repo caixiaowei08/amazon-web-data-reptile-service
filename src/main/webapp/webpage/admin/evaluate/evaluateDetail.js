@@ -13,7 +13,7 @@ $(function () {
         sortOrder: 'desc',
         pageList: [10, 20, 30, 50, 100],
         pagination: true,
-        height: tableHeight(),
+        height: 650,
         clickToSelect: true,//是否启用点击选中行
         uniqueId: "id",
         locale: "zh-CN",
@@ -80,14 +80,14 @@ $(function () {
             }
         ]]
     });
-    $(window).resize(function () {
-        $('#evaluateListTable').bootstrapTable('resetView', {
-            height: tableHeight()
-        })
-    })
-    function tableHeight() {
-        return $(window).height() - 300;
-    }
+    // $(window).resize(function () {
+    //     $('#evaluateListTable').bootstrapTable('resetView', {
+    //         height: tableHeight()
+    //     })
+    // })
+    // function tableHeight() {
+    //     return $(window).height() - 300;
+    // }
 
     $("#btn_sub").click(function () {
         $('#formObj').submit();

@@ -43,7 +43,7 @@ $(function () {
         sortOrder: 'desc',
         pageList: [10, 20, 30, 50, 100],
         pagination: true,
-        height: tableHeight(),
+        height: 700,
         clickToSelect: true,
         uniqueId: "id",
         locale: "zh-CN",
@@ -152,14 +152,14 @@ $(function () {
         }
     });
 
-    $(window).resize(function () {
+ /*   $(window).resize(function () {
         $('#promotListTable').bootstrapTable('resetView', {
             height: tableHeight()
         })
     })
     function tableHeight() {
         return $(window).height() - 350;
-    }
+    }*/
 
     ko.applyBindings(viewModel);
 });

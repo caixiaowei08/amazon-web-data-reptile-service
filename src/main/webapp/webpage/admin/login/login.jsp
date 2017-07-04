@@ -27,7 +27,7 @@
     <script type="text/javascript" src="/webpage/admin/login/login.js"></script>
     <script type="text/javascript" src="/webpage/plug-in/bootstrapvalidator/dist/js/bootstrapValidator.min.js"></script>
 </head>
-<body class="container-fluid">
+<body class="container-fluid" style="overflow-y:auto;">
 <div style="height: 100px;"></div>
 <div class="row">
     <div class="col-lg-4 col-lg-offset-4" >

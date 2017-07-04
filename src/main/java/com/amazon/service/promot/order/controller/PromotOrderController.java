@@ -1,5 +1,6 @@
 package com.amazon.service.promot.order.controller;
 
+import com.amazon.admin.poi.service.PoiPromotService;
 import com.amazon.service.promot.order.entity.PromotOrderEntity;
 import com.amazon.service.promot.order.service.PromotOrderService;
 import com.amazon.service.promot.price.entity.PromotPriceEntity;
@@ -23,8 +24,10 @@ import org.framework.core.common.model.json.AjaxJson;
 import org.framework.core.global.service.GlobalService;
 import org.framework.core.utils.BeanUtils;
 import org.framework.core.utils.ContextHolderUtils;
+import org.framework.core.utils.DateUtils.DateUtils;
 import org.framework.core.utils.RegularExpressionUtils;
 import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -67,6 +70,9 @@ public class PromotOrderController extends BaseController {
     @Autowired
     private UserMembershipService userMembershipService;
 
+    @Autowired
+    private PoiPromotService poiPromotService;
+
 
     @RequestMapping(params = "goNewPromotOne")
     public String goNewPromotOne(HttpServletRequest request, HttpServletResponse response) {
@@ -83,6 +89,30 @@ public class PromotOrderController extends BaseController {
             return "pages/promot/newPromotStepTwo";
         }else{
             return "pages/fund/memberShip";
+        }
+    }
+
+    @RequestMapping(params = "downPromotOrderExcel")
+    public void downPromotOrderExcel(HttpServletRequest request, HttpServletResponse response) {
+        UserEntity userEntity = globalService.getUserEntityFromSession();
+        if(userEntity == null){
+            return;
+        }
+        CriteriaQuery criteriaQuery = new CriteriaQuery(PromotOrderEntity.class, null, request.getParameterMap());
+        try {
+            criteriaQuery.installHqlParams();
+        } catch (Exception e) {
+            //打印日志信息
+            logger.error(e);
+        }
+        criteriaQuery.getDetachedCriteria().addOrder(Order.desc("id"));
+        criteriaQuery.getDetachedCriteria().add(Restrictions.eq("sellerId",userEntity.getId()));
+        List<PromotOrderEntity> promotOrderEntityList = promotOrderService.getListByCriteriaQuery(criteriaQuery.getDetachedCriteria());
+        String excelFileNameHeader = "平台订单表" + DateUtils.getDate(new Date()) ;
+        try{
+            poiPromotService.downPromotOrderExcel(promotOrderEntityList,response,excelFileNameHeader);
+        }catch (Exception e){
+            logger.error(e);
         }
     }
 
