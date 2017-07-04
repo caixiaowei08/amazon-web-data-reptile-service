@@ -6,7 +6,7 @@
     <meta charset="utf-8"/>
     <link rel="shortcut icon" type="image/x-icon" href="/webpage/plug-in/imgs/favicon.ico" media="screen"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-    <meta http-equiv="X-UA-Compatible" content="IE=9" />
+    <meta http-equiv="X-UA-Compatible" content="IE=9"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0,user-scalable=no"/>
     <!-- bootstrap & fontawesome -->
     <link rel="stylesheet" href="/webpage/plug-in/bootstrap/css/bootstrap.min.css"/>
@@ -44,28 +44,32 @@
                             <h3>找回密码Seller Assistant</h3>
                         </div>
                         <p>&nbsp;</p>
-                        <form id="formobj" class="form-horizontal" action="userController.do?doLookForPwd" onsubmit="return false;">
+                        <form id="formobj" class="form-horizontal" action="userController.do?doLookForPwd"
+                              onsubmit="return false;">
                             <div class="form-group" style="height: 54px;">
                                 <label for="email" class="col-sm-3 control-label">电子邮箱:</label>
                                 <div class="col-sm-6">
-                                    <input type="email" name="account" id="email" class="form-control" onkeydown="if(event.keyCode==13){event.keyCode=0;event.returnValue=false;}"
+                                    <input type="email" name="account" id="email" class="form-control"
+                                           onkeydown="if(event.keyCode==13){event.keyCode=0;event.returnValue=false;}"
                                            placeholder="请输入邮箱账号!">
                                 </div>
                                 <div class="col-sm-3">
-                                    <input type="button" id="getEmailCode"  value="获取验证码" class="btn btn-info btn-block">
+                                    <input type="button" id="getEmailCode" value="获取验证码" class="btn btn-info btn-block">
                                 </div>
                             </div>
                             <div class="form-group" style="height: 54px;">
                                 <label for="email" class="col-sm-3 control-label">邮件验证码:</label>
                                 <div class="col-sm-6">
-                                    <input type="text" name="emailCode" id="emailCode"  class="form-control"
-                                           placeholder="请输入邮箱所收到的验证码" onkeydown="if(event.keyCode==13){event.keyCode=0;event.returnValue=false;}" >
+                                    <input type="text" name="emailCode" id="emailCode" class="form-control"
+                                           placeholder="请输入邮箱所收到的验证码"
+                                           onkeydown="if(event.keyCode==13){event.keyCode=0;event.returnValue=false;}">
                                 </div>
                             </div>
                             <div class="form-group" style="height: 54px;">
                                 <label for="password" class="col-sm-3 control-label">新密码:</label>
                                 <div class="col-sm-6">
-                                    <input type="password" name="pwd" id="password" onkeydown="if(event.keyCode==13){event.keyCode=0;event.returnValue=false;}"
+                                    <input type="password" name="pwd" id="password"
+                                           onkeydown="if(event.keyCode==13){event.keyCode=0;event.returnValue=false;}"
                                            class="form-control" placeholder="请输入新密码！">
                                 </div>
                             </div>
@@ -73,7 +77,8 @@
                                 <label for="reRwd"
                                        class="col-sm-3 control-label">再次输入密码:</label>
                                 <div class="col-sm-7">
-                                    <input type="password" id="reRwd" name="reRwd" onkeydown="if(event.keyCode==13){event.keyCode=0;event.returnValue=false;}"
+                                    <input type="password" id="reRwd" name="reRwd"
+                                           onkeydown="if(event.keyCode==13){event.keyCode=0;event.returnValue=false;}"
                                            class="form-control" placeholder="请再次输入密码！">
                                 </div>
                             </div>
@@ -87,7 +92,8 @@
                         <p>&nbsp;</p>
                         <div class="row" style="border-top: 1px solid #e4e5e6">
                             <div class="col-sm-5 col-sm-offset-1">
-                                <a href="/loginController.do?login" style="text-decoration: none;color:#03a9f4">已有账号？登录</a>
+                                <a href="/loginController.do?login"
+                                   style="text-decoration: none;color:#03a9f4">已有账号？登录</a>
                             </div>
                             <p>&nbsp;</p>
                         </div>

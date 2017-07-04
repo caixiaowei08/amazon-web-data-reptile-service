@@ -144,4 +144,18 @@ public class AdminSystemController extends BaseController {
         return j;
     }
 
+
+    @RequestMapping(params = "doCheckLogin")
+    @ResponseBody
+    public AjaxJson doCheckLogin(HttpServletRequest request,HttpServletResponse response) {
+        AjaxJson j = new AjaxJson();
+        if(globalService.isNotAdminLogin()){
+            j.setSuccess(AjaxJson.CODE_FAIL);
+            j.setMsg("请重新登录！");
+            return j;
+        }
+        return j;
+    }
+
+
 }

@@ -1,13 +1,11 @@
 package com.amazon.admin.promot.controller;
 
-import com.amazon.admin.account.controller.AdminSystemController;
-import com.amazon.admin.account.entity.AdminSystemEntity;
-import com.amazon.admin.constant.Constants;
 import com.amazon.admin.poi.service.PoiPromotService;
 import com.amazon.admin.promot.service.AdminPromotService;
 import com.amazon.service.promot.order.entity.PromotOrderEntity;
 import com.amazon.service.promot.order.service.PromotOrderService;
 import com.amazon.service.user.entity.UserEntity;
+import com.amazon.system.Constant;
 import com.amazon.system.system.bootstrap.hibernate.CriteriaQuery;
 import com.amazon.system.system.bootstrap.json.DataGrid;
 import com.amazon.system.system.bootstrap.json.DataGridReturn;
@@ -26,6 +24,7 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -59,7 +58,7 @@ public class AdminPromotController extends BaseController {
     @RequestMapping(params = "dataGrid")
     public void dataGrid(DataGrid dataGrid, HttpServletRequest request, HttpServletResponse response) {
         CriteriaQuery criteriaQuery = new CriteriaQuery(PromotOrderEntity.class, dataGrid, request.getParameterMap());
-        if(globalService.isNotAdminLogin()){
+        if (globalService.isNotAdminLogin()) {
             return;
         }
         try {
@@ -68,6 +67,18 @@ public class AdminPromotController extends BaseController {
             //打印日志信息
             logger.error(e);
         }
+
+        String account = request.getParameter("account").trim();
+        if (StringUtils.hasText(account)) {
+            DetachedCriteria userDetachedCriteria = DetachedCriteria.forClass(UserEntity.class);
+            userDetachedCriteria.add(Restrictions.eq("account", account));
+            List<UserEntity> userEntityList = promotOrderService.getListByCriteriaQuery(userDetachedCriteria);
+            if (CollectionUtils.isNotEmpty(userEntityList)) {
+                criteriaQuery.getDetachedCriteria().add(Restrictions.eq("sellerId", userEntityList.get(0).getId()));
+            } else {
+                criteriaQuery.getDetachedCriteria().add(Restrictions.eq("sellerId", -1));
+            }
+        }
         DataGridReturn dataGridReturn = adminPromotService.getDataGridReturn(criteriaQuery);
         DatagridJsonUtils.listToObj(dataGridReturn, PromotOrderEntity.class, dataGrid.getField());
         DatagridJsonUtils.datagrid(response, dataGridReturn);
@@ -75,7 +86,7 @@ public class AdminPromotController extends BaseController {
 
     @RequestMapping(params = "downPromotOrderExcel")
     public void downPromotOrderExcel(HttpServletRequest request, HttpServletResponse response) {
-        if(globalService.isNotAdminLogin()){
+        if (globalService.isNotAdminLogin()) {
             return;
         }
         CriteriaQuery criteriaQuery = new CriteriaQuery(PromotOrderEntity.class, null, request.getParameterMap());
@@ -85,12 +96,24 @@ public class AdminPromotController extends BaseController {
             //打印日志信息
             logger.error(e);
         }
+        String account = request.getParameter("account").trim();
+        if (StringUtils.hasText(account)) {
+            DetachedCriteria userDetachedCriteria = DetachedCriteria.forClass(UserEntity.class);
+            userDetachedCriteria.add(Restrictions.eq("account", account));
+            List<UserEntity> userEntityList = promotOrderService.getListByCriteriaQuery(userDetachedCriteria);
+            if (CollectionUtils.isNotEmpty(userEntityList)) {
+                criteriaQuery.getDetachedCriteria().add(Restrictions.eq("sellerId", userEntityList.get(0).getId()));
+            } else {
+                criteriaQuery.getDetachedCriteria().add(Restrictions.eq("sellerId", -1));
+            }
+        }
+
         criteriaQuery.getDetachedCriteria().addOrder(Order.desc("id"));
         List<PromotOrderEntity> promotOrderEntityList = adminPromotService.getListByCriteriaQuery(criteriaQuery.getDetachedCriteria());
-        String excelFileNameHeader = "平台订单表" + DateUtils.getDate(new Date()) ;
-        try{
-            poiPromotService.downPromotOrderExcel(promotOrderEntityList,response,excelFileNameHeader);
-        }catch (Exception e){
+        String excelFileNameHeader = "平台订单表" + DateUtils.getDate(new Date());
+        try {
+            poiPromotService.downPromotOrderExcel(promotOrderEntityList, response, excelFileNameHeader);
+        } catch (Exception e) {
             logger.error(e);
         }
     }
@@ -99,7 +122,7 @@ public class AdminPromotController extends BaseController {
     @ResponseBody
     public AjaxJson doGet(PromotOrderEntity promotOrderEntity, HttpServletRequest request, HttpServletResponse response) {
         AjaxJson j = new AjaxJson();
-        if(globalService.isNotAdminLogin()){
+        if (globalService.isNotAdminLogin()) {
             j.setContent(AjaxJson.RELOGIN);
             j.setMsg("请登录管理员账号！");
             return j;
@@ -110,8 +133,33 @@ public class AdminPromotController extends BaseController {
             j.setMsg("请选择您需要查看信息详情！");
             return j;
         }
-        PromotOrderEntity promotOrderDb = promotOrderService.find(PromotOrderEntity.class,promotOrderEntity.getId());
+        PromotOrderEntity promotOrderDb = promotOrderService.find(PromotOrderEntity.class, promotOrderEntity.getId());
         j.setContent(promotOrderDb);
         return j;
     }
+
+    @RequestMapping(params = "doCloseById")
+    @ResponseBody
+    public AjaxJson doCloseById(PromotOrderEntity promotOrderEntity, HttpServletRequest request) {
+        AjaxJson j = new AjaxJson();
+        if(globalService.isNotAdminLogin()){
+            j.setSuccess(AjaxJson.RELOGIN);
+            j.setMsg("请重新登录！");
+            return j;
+        }
+        try {
+            DetachedCriteria promotOrderDetachedCriteria = DetachedCriteria.forClass(PromotOrderEntity.class);
+            promotOrderDetachedCriteria.add(Restrictions.eq("id", promotOrderEntity.getId()));
+            List<PromotOrderEntity> promotOrderEntityList = promotOrderService.getListByCriteriaQuery(promotOrderDetachedCriteria);
+            if (CollectionUtils.isNotEmpty(promotOrderEntityList)) { //归还资金
+                j = promotOrderService.doClosedPromotOrderById(promotOrderEntityList.get(0));
+            }
+        } catch (Exception e) {
+            j.setSuccess(AjaxJson.CODE_FAIL);
+            j.setMsg("关闭失败！");
+            return j;
+        }
+        return j;
+    }
+
 }

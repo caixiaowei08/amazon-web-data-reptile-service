@@ -120,6 +120,14 @@
                     </div>
                 </div>
                 <div class="row">
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label class="col-xs-4 control-label amazon-label" for="amazon_asin">邮箱账号</label>
+                            <div class="col-xs-8">
+                                <input class="form-control" id="account" type="text"/>
+                            </div>
+                        </div>
+                    </div>
                     <div class="col-sm-8">
                         <div class="form-group">
                             <label class="col-xs-2 control-label amazon-label" for="amazon_state">
@@ -320,6 +328,30 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">关闭
                 </button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade bs-example-modal-sm" id="deleteOrderModel" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close"
+                        data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title" id="deleteOrderByIdLabel">
+                    关闭订单
+                </h4>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="deleteId" data-bind="value:deleteId">
+                确认关闭订单 <span data-bind="text:deleteId"></span>吗？
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" id="deleteOrderByIdBtn" onclick="deleteOrderById();">确定</button>
             </div>
         </div>
     </div>

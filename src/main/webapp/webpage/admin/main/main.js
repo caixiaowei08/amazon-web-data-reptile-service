@@ -53,14 +53,14 @@ $(function () {
             {
                 title: '订单编号',
                 field: "id",
-                width: "10%",//宽度
+                width: "8%",//宽度
                 align: "center",//水平
                 valign: "middle"//垂直
             },
             {
                 title: 'ASIN',
                 field: "asinId",
-                width: "10%",//宽度
+                width: "8%",//宽度
                 align: "center",//水平
                 valign: "middle",//垂直
                 formatter: function (value, row, index) {
@@ -70,15 +70,14 @@ $(function () {
             {
                 title: '店铺名称',
                 field: "brand",
-                width: "10%",//宽度
+                width: "8%",//宽度
                 align: "center",//水平
                 valign: "middle"//垂直
             },
             {
                 title: '状态',
                 field: "state",
-                sortable: true,
-                width: "10%",//宽度
+                width: "8%",//宽度
                 align: "center",//水平
                 valign: "middle",//垂直
                 formatter: function (value, row, index) {
@@ -93,16 +92,30 @@ $(function () {
             {
                 title: '联系买家',
                 field: "buyerNum",
-                sortable: true,
-                width: "10%",//宽度
+                width: "8%",//宽度
                 align: "center",//水平
                 valign: "middle"//垂直
             },
             {
+                title: '目标评论',
+                field: "needReviewNum",
+                width: "8%",//宽度
+                align: "center",//水平
+                valign: "middle"//垂直
+            },
+            {
+                title: '每日评论',
+                field: "dayReviewNum",
+                width: "8%",//宽度
+                align: "center",//水平
+                valign: "middle"//垂直
+            }
+            ,
+            {
                 title: '获得评论',
                 field: "evaluateNum",
                 sortable: true,
-                width: "10%",//宽度
+                width: "8%",//宽度
                 align: "center",//水平
                 valign: "middle",//垂直
                 formatter: function (value, row, index) {
@@ -113,7 +126,7 @@ $(function () {
                 title: '费用(美元)',
                 field: "consumption",
                 sortable: true,
-                width: "10%",//宽度
+                width: "8%",//宽度
                 align: "center",//水平
                 valign: "middle"//垂直
             },
@@ -138,7 +151,14 @@ $(function () {
                 field: "id",
                 width: "10%",//宽度
                 formatter: function (value, row, index) {
-                    return "<a onclick='loadPromotOrder(" + value + ")' title='查看详情' data-target='#orderDetailModal'style='cursor:pointer;' data-toggle='modal'><i class='fa fa-search'></i></a>";
+                    if (row.state === 1) {//开启状态
+                        return "<a onclick='loadPromotOrder(" + value + ")' title='查看详情' data-target='#orderDetailModal' data-toggle='modal'><i class='fa fa-search'></i></a>&nbsp;&nbsp;<a onclick='clickDeleteModel(" + value + ");' title='关闭推广' data-target='#deleteOrderModel' data-toggle='modal'><i class='fa fa-window-close'></i></a>";
+                    } else if (row.state === 2) { //关闭状态*/
+                        return "<a onclick='loadPromotOrder(" + value + ")'title='查看详情' data-target='#orderDetailModal' data-toggle='modal'><i class='fa fa-search'></i></a>";
+                    } else {
+                        return "";
+                    }
+                   // return "<a onclick='loadPromotOrder(" + value + ")' title='查看详情' data-target='#orderDetailModal'style='cursor:pointer;' data-toggle='modal'><i class='fa fa-search'></i></a>";
                 }
             }
         ]],
@@ -148,21 +168,17 @@ $(function () {
             params.state = $("#amazon_state").val().trim();
             params.addDate_begin = $("#addDate_begin_value").val().trim();
             params.addDate_end = $("#addDate_end_value").val().trim();
+            params.account  = $("#account").val().trim();
             return params;
         }
     });
 
- /*   $(window).resize(function () {
-        $('#promotListTable').bootstrapTable('resetView', {
-            height: tableHeight()
-        })
-    })
-    function tableHeight() {
-        return $(window).height() - 350;
-    }*/
-
     ko.applyBindings(viewModel);
 });
+
+function clickDeleteModel(id) {
+    viewModel.deleteId(id);
+}
 
 function doPromotSearch() {
     var addDate_begin = $("#addDate_begin_value").val().trim();
@@ -176,6 +192,7 @@ function doPromotSearch() {
 
 var viewModel = {
     id: ko.observable(),
+    deleteId: ko.observable(),
     asinId: ko.observable(),
     productUrl: ko.observable(),
     productTitle: ko.observable(),
@@ -238,18 +255,74 @@ function downPromotOrderExcel() {
     params.state = $("#amazon_state").val().trim();
     params.addDate_begin = $("#addDate_begin_value").val().trim();
     params.addDate_end = $("#addDate_end_value").val().trim();
+    params.account  = $("#account").val().trim();
 
     if ((params.addDate_end === "") ^ (params.addDate_begin === "")) {
         toastr.warning("若填写查询时间，开始时间和结束时间需要同时填写！");
         return;
     }
 
-    window.open(
-        "adminPromotController.admin?downPromotOrderExcel&id="
-        + params.id + "&asinId=" + params.asinId
-        + "&state=" + params.state
-        + "&addDate_begin=" + params.addDate_begin
-        + "&addDate_end=" + params.addDate_end
-    )
+    $.ajax({
+        url: "/adminSystemController.admin?doCheckLogin",
+        type: 'post',
+        success: function (data) {
+            if (data.success === "success") {
+                window.open(
+                    "/adminPromotController.admin?downPromotOrderExcel&asinId=" + params.asinId
+                    + "&state=" + params.state
+                    + "&addDate_begin=" + params.addDate_begin
+                    + "&addDate_end=" + params.addDate_end
+                    + "&account=" + params.account
+                )
+            } else if (data.success === "fail") {
+                toastr.warning(data.msg);
+                setTimeout("window.location='/adminSystemController.admin?goAdminLogin'", 1000);
+                return;
+            } else {
+                window.location = '/adminSystemController.admin?goAdminLogin';
+                return;
+            }
+        },
+        error: function (jqxhr, textStatus, errorThrow) {
+            toastr.success("服务器异常,请联系管理员！");
+        }
+    });
+}
+
+function deleteOrderById() {
+    var promotId = $("#deleteId").val();
+    $.ajax({
+        url: "/adminPromotController.admin?doCloseById",
+        type: 'post',
+        beforeSend: beforeSend,
+        data: {id: promotId},
+        success: function (data) {
+            if (data.success === "success") {
+                $('#promotListTable').bootstrapTable("refresh");
+                toastr.success("关闭成功！");
+            } else if (data.success === "fail") {
+                toastr.warning(data.msg);
+            } else {
+                window.location = '/adminSystemController.admin?goAdminLogin';
+            }
+        },
+        complete: function () {
+            $('#deleteOrderModel').modal('hide');
+            SendComplete();
+        },
+        error: function (jqxhr, textStatus, errorThrow) {
+            toastr.success("服务器异常,请联系管理员！");
+        }
+    })
+}
+
+function beforeSend() {
+    $("#deleteOrderByIdBtn").addClass("disabled"); // Disables visually
+    $("#deleteOrderByIdBtn").prop("disabled", true); // Disables visually + functionally
+}
+
+function SendComplete() {
+    $("#deleteOrderByIdBtn").removeClass("disabled"); // Disables visually
+    $("#deleteOrderByIdBtn").prop("disabled", false); // Disables visually + functionally
 }
 

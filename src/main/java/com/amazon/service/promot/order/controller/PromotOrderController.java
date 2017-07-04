@@ -251,8 +251,8 @@ public class PromotOrderController extends BaseController {
         return j;
     }
 
-    @RequestMapping(params = "doCloseById")
-    @ResponseBody
+    //@RequestMapping(params = "doCloseById")
+    //@ResponseBody
     public AjaxJson doCloseById(PromotOrderEntity promotOrderEntity, HttpServletRequest request) {
         AjaxJson j = new AjaxJson();
         //安全校验

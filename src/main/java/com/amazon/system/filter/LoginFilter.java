@@ -31,6 +31,7 @@ public class LoginFilter implements Filter {
                 || url.equals("/userController.do")
                 || url.equals("/userFundController/doAlipayTradePageNotify.do")) {
             chain.doFilter(request, response);
+            return;
         } else if (session.getAttribute(Constant.USER_SESSION_CONSTANTS) == null) {
             session.invalidate();
             res.sendRedirect("/loginController.do?login");
@@ -49,6 +50,7 @@ public class LoginFilter implements Filter {
             return;
         } else {//有session user 通过
             chain.doFilter(request, response);
+            return;
         }
     }
 

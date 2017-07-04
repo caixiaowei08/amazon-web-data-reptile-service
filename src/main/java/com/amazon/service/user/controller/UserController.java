@@ -85,6 +85,7 @@ public class UserController extends BaseController {
     }
 
     @RequestMapping(params = "doCheckLogin")
+    @ResponseBody
     public AjaxJson doCheckLogin(HttpServletRequest request, HttpServletResponse response) {
         AjaxJson j = new AjaxJson();
         UserEntity userEntity = globalService.getUserEntityFromSession();

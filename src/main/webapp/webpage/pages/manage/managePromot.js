@@ -91,6 +91,20 @@ $(function () {
                 }
             },
             {
+                title: '目标评论',
+                field: "needReviewNum",
+                width: "10%",//宽度
+                align: "center",//水平
+                valign: "middle"//垂直
+            },
+            {
+                title: '每日评论',
+                field: "dayReviewNum",
+                width: "10%",//宽度
+                align: "center",//水平
+                valign: "middle"//垂直
+            },
+            {
                 title: '联系买家',
                 field: "buyerNum",
                 width: "10%",//宽度
@@ -104,7 +118,7 @@ $(function () {
                 align: "center",//水平
                 valign: "middle",//垂直
                 formatter: function (value, row, index) {
-                    return "<a href='/redirectionController.do?goToEvaluateDetail&promotId=" + row.id + "' target='_parent' title='查看评价详情'>"+value+"</a>";
+                    return "<a href='/redirectionController.do?goToEvaluateDetail&promotId=" + row.id + "' target='_parent' title='查看评价详情'>" + value + "</a>";
                 }
             },
             {
@@ -135,13 +149,13 @@ $(function () {
                 field: "id",
                 width: "10%",//宽度
                 formatter: function (value, row, index) {
-                    if (row.state === 1) {//开启状态
-                        return "<a onclick='loadPromotOrder(" + value + ")' title='查看详情' data-target='#orderDetailModal' data-toggle='modal'><i class='fa fa-search'></i></a>&nbsp;&nbsp;<a onclick='clickDeleteModel("+value+");' title='关闭推广' data-target='#deleteOrderModel' data-toggle='modal'><i class='fa fa-window-close'></i></a>";
-                    } else if (row.state === 2) { //关闭状态
-                        return "<a onclick='loadPromotOrder(" + value + ")'title='查看详情' data-target='#orderDetailModal' data-toggle='modal'><i class='fa fa-search'></i></a>";
-                    } else {
-                        return "";
-                    }
+                    /*    if (row.state === 1) {//开启状态
+                     return "<a onclick='loadPromotOrder(" + value + ")' title='查看详情' data-target='#orderDetailModal' data-toggle='modal'><i class='fa fa-search'></i></a>&nbsp;&nbsp;<a onclick='clickDeleteModel("+value+");' title='关闭推广' data-target='#deleteOrderModel' data-toggle='modal'><i class='fa fa-window-close'></i></a>";
+                     } else if (row.state === 2) { //关闭状态*/
+                    return "<a onclick='loadPromotOrder(" + value + ")'title='查看详情' data-target='#orderDetailModal' data-toggle='modal'><i class='fa fa-search'></i></a>";
+                    /* } else {
+                     return "";
+                     }*/
                 }
             }
         ]],
@@ -153,14 +167,6 @@ $(function () {
             return params;
         }
     });
-/*    $(window).resize(function () {
-        $('#promotListTable').bootstrapTable('resetView', {
-            height: tableHeight()
-        })
-    })
-    function tableHeight() {
-        return $(window).height() - 350;
-    }*/
 })
 
 function doPromotSearch() {
@@ -174,7 +180,7 @@ function doPromotSearch() {
 }
 
 var viewModel = {
-    id:ko.observable(),
+    id: ko.observable(),
     asinId: ko.observable(),
     productUrl: ko.observable(),
     productTitle: ko.observable(),
@@ -202,23 +208,23 @@ function loadPromotOrder(promotId) {
         data: {id: promotId},
         success: function (data) {
             if (data.success === "success") {
-                    viewModel.id(data.content.id);
-                    viewModel.asinId(data.content.asinId);
-                    viewModel.productUrl(data.content.productUrl);
-                    viewModel.productTitle(data.content.productTitle);
-                    viewModel.brand(data.content.brand);
-                    viewModel.landingImage(data.content.thumbnail);
-                    viewModel.salePrice(data.content.salePrice);
-                    viewModel.state(data.content.state);
-                    viewModel.addDate(data.content.addDate);
-                    viewModel.finishDate(data.content.finishDate);
-                    viewModel.guaranteeFund(data.content.guaranteeFund);
-                    viewModel.consumption(data.content.consumption);
-                    viewModel.needReviewNum(data.content.needReviewNum);
-                    viewModel.dayReviewNum(data.content.dayReviewNum);
-                    viewModel.buyerNum(data.content.buyerNum);
-                    viewModel.evaluateNum(data.content.evaluateNum);
-                    viewModel.reviewPrice(data.content.reviewPrice);
+                viewModel.id(data.content.id);
+                viewModel.asinId(data.content.asinId);
+                viewModel.productUrl(data.content.productUrl);
+                viewModel.productTitle(data.content.productTitle);
+                viewModel.brand(data.content.brand);
+                viewModel.landingImage(data.content.thumbnail);
+                viewModel.salePrice(data.content.salePrice);
+                viewModel.state(data.content.state);
+                viewModel.addDate(data.content.addDate);
+                viewModel.finishDate(data.content.finishDate);
+                viewModel.guaranteeFund(data.content.guaranteeFund);
+                viewModel.consumption(data.content.consumption);
+                viewModel.needReviewNum(data.content.needReviewNum);
+                viewModel.dayReviewNum(data.content.dayReviewNum);
+                viewModel.buyerNum(data.content.buyerNum);
+                viewModel.evaluateNum(data.content.evaluateNum);
+                viewModel.reviewPrice(data.content.reviewPrice);
             } else if (data.success === "fail") {
                 toastr.warning(data.msg);
             } else {
@@ -229,48 +235,6 @@ function loadPromotOrder(promotId) {
             toastr.success("服务器异常,请联系管理员！");
         }
     });
-}
-
-function clickDeleteModel(id){
-    viewModel.id(id);
-}
-
-
-function beforeSend() {
-    $("#deleteOrderByIdBtn").addClass("disabled"); // Disables visually
-    $("#deleteOrderByIdBtn").prop("disabled", true); // Disables visually + functionally
-}
-
-function SendComplete() {
-    $("#deleteOrderByIdBtn").removeClass("disabled"); // Disables visually
-    $("#deleteOrderByIdBtn").prop("disabled", false); // Disables visually + functionally
-}
-
-function deleteOrderById(){
-    var promotId = $("#deleteId").val();
-    $.ajax({
-        url: "/promotOrderController.do?doCloseById",
-        type: 'post',
-        beforeSend:beforeSend,
-        data: {id: promotId},
-        success: function (data) {
-            if(data.success==="success"){
-                $('#promotListTable').bootstrapTable("refresh");
-                toastr.success("关闭成功！");
-            }else if (data.success === "fail") {
-                toastr.warning(data.msg);
-            } else {
-                window.location = '/loginController.do?login';
-            }
-        },
-        complete:function () {
-            $('#deleteOrderModel').modal('hide');
-            SendComplete();
-        },
-        error: function (jqxhr, textStatus, errorThrow) {
-            toastr.success("服务器异常,请联系管理员！");
-        }
-    })
 }
 
 function downPromotOrderExcel() {
@@ -284,14 +248,18 @@ function downPromotOrderExcel() {
         toastr.warning("若填写查询时间，开始时间和结束时间需要同时填写！");
         return;
     }
-
     $.ajax({
         url: "/userController.do?doCheckLogin",
         type: 'post',
         success: function (data) {
-            if(data.success==="success"){
-                //doNothing
-            }else if (data.success === "fail") {
+            if (data.success === "success") {
+                window.open(
+                    "/promotOrderController.do?downPromotOrderExcel&asinId=" + params.asinId
+                    + "&state=" + params.state
+                    + "&addDate_begin=" + params.addDate_begin
+                    + "&addDate_end=" + params.addDate_end
+                )
+            } else if (data.success === "fail") {
                 toastr.warning(data.msg);
                 setTimeout("window.location='/loginController.do?login'", 1000);
                 return;
@@ -303,13 +271,5 @@ function downPromotOrderExcel() {
         error: function (jqxhr, textStatus, errorThrow) {
             toastr.success("服务器异常,请联系管理员！");
         }
-    })
-
-
-    window.open(
-        "/promotOrderController.do?downPromotOrderExcel&asinId=" + params.asinId
-        + "&state=" + params.state
-        + "&addDate_begin=" + params.addDate_begin
-        + "&addDate_end=" + params.addDate_end
-    )
+    });
 }
