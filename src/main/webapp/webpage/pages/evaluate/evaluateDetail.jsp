@@ -52,13 +52,13 @@
                            aria-expanded="false">客服咨询<span class="caret"></span></a>
                         <ul class="dropdown-menu">
                             <li>
-                                <a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin=397256825&site=qq&menu=yes">
-                                    客服1&nbsp;<img border="0" src="http://wpa.qq.com/pa?p=2:397256825:51" alt="客服1" title="客服1"/>
+                                <a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin=710535607&site=qq&menu=yes">
+                                    客服1&nbsp;<img border="0" src="http://wpa.qq.com/pa?p=2:710535607:51" alt="客服1" title="客服1"/>
                                 </a>
                             </li>
                             <li>
-                                <a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin=331219046&site=qq&menu=yes">
-                                    客服2&nbsp;<img border="0" src="http://wpa.qq.com/pa?p=2:331219046:51" alt="客服2" title="客服2"/>
+                                <a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin=1005814292&site=qq&menu=yes">
+                                    客服2&nbsp;<img border="0" src="http://wpa.qq.com/pa?p=2:1005814292:51" alt="客服2" title="客服2"/>
                                 </a>
                             </li>
                         </ul>
