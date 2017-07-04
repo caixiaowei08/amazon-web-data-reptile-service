@@ -1,7 +1,10 @@
 package com.amazon.service.spider.service.impl;
 
+import com.amazon.service.fund.controller.UserFundController;
 import com.amazon.service.spider.pojo.AmazonEvaluateReviewPojo;
 import com.amazon.service.spider.service.*;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.framework.core.utils.ContextHolderUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,19 +16,19 @@ import us.codecraft.webmagic.Spider;
 @Service("spiderService")
 public class SpiderServiceImpl implements SpiderService{
 
+    private static Logger logger = LogManager.getLogger(SpiderServiceImpl.class.getName());
+
     public boolean spiderAmazonPageInfoSaveToHttpSession(String pageUrl,int threadNum) {
         AmazonOrderPipeline amazonOrderPipeline = new AmazonOrderPipeline();
         amazonOrderPipeline.setSession(ContextHolderUtils.getSession());
         try {
             Spider.create(new AmazonPageProcessor())
-                    //从"https://github.com/code4craft"开始抓
                     .addUrl(pageUrl)
                     .addPipeline(amazonOrderPipeline)
-                    //开启5个线程抓取
                     .thread(threadNum)
-                    //启动爬虫
                     .run();
         }catch (Exception e){
+            logger.error(e.fillInStackTrace());
             return false;
         }
         return true;
@@ -33,13 +36,15 @@ public class SpiderServiceImpl implements SpiderService{
 
     public AmazonEvaluateReviewPojo spiderAmazonEvaluateReviewPojo(String pageUrl, int threadNum) {
         AmazonEvaluateReviewPipeline amazonEvaluateReviewPipeline = new AmazonEvaluateReviewPipeline();
-        Spider.create(new AmazonEvaluateReviewProcessor())
-                .addUrl(pageUrl)
-                .addPipeline(amazonEvaluateReviewPipeline)
-                //开启5个线程抓取
-                .thread(threadNum)
-                //启动爬虫
-                .run();
+        try {
+            Spider.create(new AmazonEvaluateReviewProcessor())
+                    .addUrl(pageUrl)
+                    .addPipeline(amazonEvaluateReviewPipeline)
+                    .thread(threadNum)
+                    .run();
+        }catch (Exception e){
+            logger.error(e.fillInStackTrace());
+        }
         return amazonEvaluateReviewPipeline.getAmazonEvaluateReviewPojo();
     }
 }

@@ -28,7 +28,7 @@
     <script type="text/javascript" src="/webpage/plug-in/bootstrap/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="/webpage/plug-in/toastr/toastr.min.js"></script>
     <script type="text/javascript" src="/webpage/plug-in/knockoutjs/dist/knockout.js"></script>
-    <script type="text/javascript" src="/webpage/admin/admin/changePwd.js"></script>
+    <script type="text/javascript" src="/webpage/admin/systemConfig/system.js"></script>
 </head>
 <body>
 <div class="main-container">
@@ -64,28 +64,22 @@
             <div style="height: 20px;"></div>
             <div class="panel panel-warning">
                 <div class="panel-heading">
-                    <h3 class="panel-title">密码修改</h3>
+                    <h3 class="panel-title">汇率价格管理</h3>
                 </div>
                 <div class="panel-body">
                     <div class="row">
-                        <div class="col-md-2 col-md-offset-2">
-                            <div style="height: 30px;"></div>
-                            <a href="#" class="thumbnail">
-                                <img src="/webpage/plug-in/imgs/profile-pic.jpg" alt="头像">
-                            </a>
-                        </div>
-                        <div class="col-md-6">
+                        <div class="col-md-6 col-md-offset-3">
                             <div class="jumbotron">
                                 <form id="formobj" action="/adminSystemController.admin?doChangePwd" onsubmit="return false;">
                                     <div class="form-group">
                                         <div class="row">
                                             <div class="col-xs-6">
                                                 <lable class="control-label" style="color:#8a6d3b;">
-                                                    账户名称：
+                                                    月租会员价格(人民币)：
                                                 </lable>
                                             </div>
                                             <div class="col-xs-6">
-                                                <span class="control-label" data-bind="text:account"></span>
+                                                <input type="" class="control-label" data-bind="text:monthRent" name="monthRent" id="monthRent" >
                                             </div>
                                         </div>
                                     </div>
@@ -93,11 +87,11 @@
                                         <div class="row">
                                             <div class="col-xs-6">
                                                 <lable class="control-label" style="color:#8a6d3b;">
-                                                    输入原始密码：
+                                                    单个评价价格(美元)：
                                                 </lable>
                                             </div>
                                             <div class="col-xs-6">
-                                                <input type="password" class="control-label" name="oldPwd">
+                                                <input type="" class="control-label" data-bind="text:reviewPrice" name="reviewPrice" id="reviewPrice" >
                                             </div>
                                         </div>
                                     </div>
@@ -105,23 +99,11 @@
                                         <div class="row">
                                             <div class="col-xs-6">
                                                 <lable class="control-label" style="color:#8a6d3b;">
-                                                    输入新密码：
+                                                    汇率(人民币/美元)：
                                                 </lable>
                                             </div>
                                             <div class="col-xs-6">
-                                                <input type="password" class="control-label" name="newPwd">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <div class="row">
-                                            <div class="col-xs-6">
-                                                <lable class="control-label" style="color:#8a6d3b;">
-                                                    重新输入新密码：
-                                                </lable>
-                                            </div>
-                                            <div class="col-xs-6">
-                                                <input type="password" class="control-label" name="reRwd" id="reRwd">
+                                                <input type="" class="control-label" data-bind="text:exchangeRate" name="exchangeRate" id="exchangeRate" >
                                             </div>
                                         </div>
                                     </div>
@@ -130,7 +112,7 @@
                                             <div class="col-xs-6">
                                             </div>
                                             <div class="col-xs-6">
-                                                <input type="submit" onclick="changeUserPwd();" class="btn btn-primary" value="确认修改">
+                                                <input type="submit" onclick="submitPriceExchange();" class="btn btn-primary" value="确认修改">
                                             </div>
                                         </div>
                                     </div>

@@ -42,4 +42,20 @@ public class SkipController extends BaseController{
         return "admin/admin/changePwd";
     }
 
+    @RequestMapping(params = "goPriceExchange")
+    public String goPriceExchange(HttpServletRequest request, HttpServletResponse response) {
+        if (globalService.isNotAdminLogin()) {
+            return "/adminSystemController.admin?goAdminLogin";
+        }
+        return "admin/systemConfig/priceExchange";
+    }
+
+    @RequestMapping(params = "goQQContacts")
+    public String goQQContacts(HttpServletRequest request, HttpServletResponse response) {
+        if (globalService.isNotAdminLogin()) {
+            return "/adminSystemController.admin?goAdminLogin";
+        }
+        return "admin/systemConfig/QQContacts";
+    }
+
 }

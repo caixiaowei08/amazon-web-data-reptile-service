@@ -51,8 +51,17 @@
         </div>
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="/skipController.admin?goToAdminMain">推广订单管理</a></li>
-                <li><a href="/evaluateController.admin?goEvaluateDetail">订单评价管理</a></li>
+                <li><a href="/skipController.admin?goToAdminMain" target="_parent"></a></li>
+                <li><a href="/skipController.admin?goToAdminMain" target="_parent">推广订单管理</a></li>
+                <li><a href="/evaluateController.admin?goEvaluateDetail" target="_parent">订单评价管理</a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle " data-toggle="dropdown" role="button" aria-haspopup="true"
+                       aria-expanded="false">系统设置<span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="/skipController.admin?goPriceExchange" target="_parent">价格汇率</a></li>
+                        <%--<li><a href="/skipController.admin?goQQContacts" target="_parent">联系人</a></li>--%>
+                    </ul>
+                </li>
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle " data-toggle="dropdown" role="button" aria-haspopup="true"
                        aria-expanded="false">我的账号<span class="caret"></span></a>

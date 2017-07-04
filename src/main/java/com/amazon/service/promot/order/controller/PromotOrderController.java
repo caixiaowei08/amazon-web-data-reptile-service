@@ -147,39 +147,44 @@ public class PromotOrderController extends BaseController {
         String asin = "";
         String url = "";
         if (RegularExpressionUtils.isHttpOrHttps(asinOrUrl)) {
-            int start = asinOrUrl.indexOf("/dp/") + 4;
-            int end = asinOrUrl.indexOf("/ref=");
-            asin = asinOrUrl.substring(start, end);
             url = asinOrUrl;
         } else {
-            asin = asinOrUrl;
             String baseUrl = Constant.AMAZON_URL_PRODUCT;
             url = baseUrl.replace("#", asinOrUrl);
         }
+        //校验价格设置
         DetachedCriteria promotOrderDetachedCriteria = DetachedCriteria.forClass(PromotPriceEntity.class);
         List<PromotPriceEntity> promotPriceEntityList = promotPriceService.getListByCriteriaQuery(promotOrderDetachedCriteria);
-
         if (CollectionUtils.isEmpty(promotPriceEntityList)) {
             j.setSuccess(AjaxJson.CODE_FAIL);
             j.setMsg("未设置评价单价！");
             return j;
         }
-
-        boolean flag = spiderService.spiderAmazonPageInfoSaveToHttpSession(url, 2);
+        spiderService.spiderAmazonPageInfoSaveToHttpSession(url, 4);
         AmazonPageInfoPojo amazonPageInfoPojo = (AmazonPageInfoPojo) ContextHolderUtils.getSession().getAttribute(SpiderConstant.AMAZON_PAGE_INFO_POJO);
-        if (amazonPageInfoPojo != null
-                && StringUtils.hasText(amazonPageInfoPojo.getProductTitle())
-                && StringUtils.hasText(amazonPageInfoPojo.getPriceblockSaleprice())
-                && StringUtils.hasText(amazonPageInfoPojo.getPageUrl())
-                ) {
-            amazonPageInfoPojo.setAsin(asin);
-            amazonPageInfoPojo.setReviewPrice("$" + promotPriceEntityList.get(0).getReviewPrice().toString());
-            ContextHolderUtils.getSession().setAttribute(SpiderConstant.AMAZON_PAGE_INFO_POJO, amazonPageInfoPojo);
-        } else {
+        if(amazonPageInfoPojo == null){
             j.setSuccess(AjaxJson.CODE_FAIL);
-            j.setMsg("ASIN或者亚马逊商品主页链接有误，请确认之后，再尝试！");
+            j.setMsg("解析网页失败，请检查输入ASIN或者URL是否准确！");
             return j;
         }
+        if(StringUtils.isEmpty(amazonPageInfoPojo.getProductTitle())){
+            j.setSuccess(AjaxJson.CODE_FAIL);
+            j.setMsg("未能获取网页中的商品标题，请确认ASIN或者URL是否准确！");
+            return j;
+        }
+        if(StringUtils.isEmpty(amazonPageInfoPojo.getPageUrl())){
+            j.setSuccess(AjaxJson.CODE_FAIL);
+            j.setMsg("未能获取商品网页链接，请确认ASIN或者URL是否准确！");
+            return j;
+        }
+        if(StringUtils.isEmpty(amazonPageInfoPojo.getAsin())){
+            j.setSuccess(AjaxJson.CODE_FAIL);
+            j.setMsg("未能获取商品ASIN编号，请确认ASIN或者URL是否准确！");
+            return j;
+        }
+
+        amazonPageInfoPojo.setReviewPrice("$" + promotPriceEntityList.get(0).getReviewPrice().toString());
+        ContextHolderUtils.getSession().setAttribute(SpiderConstant.AMAZON_PAGE_INFO_POJO, amazonPageInfoPojo);
         return j;
     }
 

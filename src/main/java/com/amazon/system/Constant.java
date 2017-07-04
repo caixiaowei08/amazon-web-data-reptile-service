@@ -28,8 +28,6 @@ public class Constant {
     /**
      * 亚马逊产品模板链接
      */
-    public static final String AMAZON_URL_PRODUCT = "https://www.amazon.com/JINRI-Negative-Button-Speeds-Settings/dp/#/ref=cm_rdp_product";
-
-
+    public static final String AMAZON_URL_PRODUCT = "https://www.amazon.com/dp/#";
 
 }

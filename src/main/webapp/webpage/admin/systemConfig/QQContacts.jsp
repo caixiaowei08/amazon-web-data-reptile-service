@@ -28,7 +28,7 @@
     <script type="text/javascript" src="/webpage/plug-in/bootstrap/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="/webpage/plug-in/toastr/toastr.min.js"></script>
     <script type="text/javascript" src="/webpage/plug-in/knockoutjs/dist/knockout.js"></script>
-    <script type="text/javascript" src="/webpage/admin/admin/changePwd.js"></script>
+    <script type="text/javascript" src="/webpage/admin/systemConfig/system.js"></script>
 </head>
 <body>
 <div class="main-container">

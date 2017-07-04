@@ -48,6 +48,22 @@
             </div>
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle " data-toggle="dropdown" role="button" aria-haspopup="true"
+                           aria-expanded="false">客服咨询<span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin=397256825&site=qq&menu=yes">
+                                    客服1&nbsp;<img border="0" src="http://wpa.qq.com/pa?p=2:397256825:51" alt="客服1" title="客服1"/>
+                                </a>
+                            </li>
+                            <li>
+                                <a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin=331219046&site=qq&menu=yes">
+                                    客服2&nbsp;<img border="0" src="http://wpa.qq.com/pa?p=2:331219046:51" alt="客服2" title="客服2"/>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
                     <li><a href="/promotOrderController.do?goNewPromotOne" target="_parent">新建推广活动</a></li>
                     <li><a href="/redirectionController.do?goManagePromot" target="_parent">推广活动管理</a></li>
                     <li class="dropdown">

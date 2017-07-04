@@ -70,6 +70,14 @@ $(function () {
                 }
             },
             {
+                title: '评价星级',
+                field: "reviewStar",
+                sortable: true,
+                width: "10%",//宽度
+                align: "center",//水平
+                valign: "middle"//垂直
+            },
+            {
                 title: '评价日期',
                 field: "reviewDate",
                 width: "10%",//宽度

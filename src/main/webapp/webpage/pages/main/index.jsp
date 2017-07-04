@@ -42,6 +42,22 @@
             </div>
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle " data-toggle="dropdown" role="button" aria-haspopup="true"
+                           aria-expanded="false">客服咨询<span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin=397256825&site=qq&menu=yes">
+                                    客服1&nbsp;<img border="0" src="http://wpa.qq.com/pa?p=2:397256825:51" alt="客服1" title="客服1"/>
+                                </a>
+                            </li>
+                            <li>
+                                <a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin=331219046&site=qq&menu=yes">
+                                    客服2&nbsp;<img border="0" src="http://wpa.qq.com/pa?p=2:331219046:51" alt="客服2" title="客服2"/>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
                     <li><a href="/promotOrderController.do?goNewPromotOne" target="_parent">新建推广活动</a></li>
                     <li><a href="/redirectionController.do?goManagePromot" target="_parent">推广活动管理</a></li>
                     <li class="dropdown">
@@ -82,23 +98,24 @@
                     <div class="row">
                         <div class="space-6"></div>
                         <div class="col-sm-7 infobox-container">
-                            <div class="infobox infobox-green">
-                                <div class="infobox-icon">
-                                    <i class="ace-icon fa fa-shopping-cart"></i>
+                            <a href="/redirectionController.do?goManagePromot" target="_parent">
+                                <div class="infobox infobox-green btn-a-infobox">
+                                        <div class="infobox-icon">
+                                            <i class="ace-icon fa fa-shopping-cart"></i>
+                                        </div>
+                                       <div class="infobox-data">
+                                            <span class="infobox-data-number" data-bind="text:activeOrderNum">0</span>
+                                            <div
+                                               class="infobox-content">活动订单</div>
+                                       </div>
                                 </div>
-                                <div class="infobox-data">
-                                    <span class="infobox-data-number" data-bind="text:activeOrderNum">0</span>
-                                    <a href="/redirectionController.do?goManagePromot" target="_parent"
-                                       class="infobox-content">活动订单</a>
-                                </div>
-                            </div>
+                            </a>
                             <div class="infobox infobox-pink">
                                 <div class="infobox-icon">
                                     <i class="ace-icon fa fa-comments"></i>
                                 </div>
                                 <div class="infobox-data">
                                     <span class="infobox-data-number" data-bind="text:todayEvaluateNum">0</span>
-                                    <%--<a href="" class="infobox-content">今日评论</a>--%>
                                     <lable href="" class="infobox-content">今日评论</lable>
                                 </div>
                             </div>
@@ -108,7 +125,6 @@
                                 </div>
                                 <div class="infobox-data">
                                     <span class="infobox-data-number" data-bind="text:buyerNum">0</span>
-                                    <%--<a class="infobox-content">联系买家</a>--%>
                                     <lable class="infobox-content">联系买家</lable>
                                 </div>
                             </div>
@@ -118,7 +134,6 @@
                                 </div>
                                 <div class="infobox-data">
                                     <span class="infobox-data-number" data-bind="text:totalEvaluateNum">0</span>
-                                    <%--<a class="infobox-content">总好评数</a>--%>
                                     <lable class="infobox-content">总好评数</lable>
                                 </div>
                             </div>
@@ -128,7 +143,6 @@
                                 </div>
                                 <div class="infobox-data">
                                     <span class="infobox-data-number" data-bind="text:historyOrderNum">0</span>
-                                    <%--<a class="infobox-content">完成推广</a>--%>
                                     <lable class="infobox-content">完成推广</lable>
                                 </div>
                             </div>
@@ -197,6 +211,17 @@
                                                     </div>
                                                     <div class="col-xs-7"><span style="color:#0bb8e3;">$<span
                                                             data-bind="text:freezeFund"></span></span></div>
+                                                </div>
+                                            </li>
+                                            <li class="list-group-item">
+                                                <div class="row">
+                                                    <div class="col-xs-5"><span style="color:#555;">会员标识:</span>
+                                                    </div>
+                                                    <div class="col-xs-7">
+                                                        <span>
+                                                            <i data-bind="style:{ color: vip() ? 'red' : 'black' }" class="fa fa-vimeo"></i>
+                                                        </span>
+                                                    </div>
                                                 </div>
                                             </li>
                                         </ul>
