@@ -1,5 +1,6 @@
 package com.amazon.admin.user.service;
 
+import com.amazon.admin.user.vo.FundVo;
 import com.amazon.admin.user.vo.VipVo;
 import org.framework.core.common.model.json.AjaxJson;
 
@@ -9,5 +10,8 @@ import org.framework.core.common.model.json.AjaxJson;
 public interface AdminUserMangeService {
 
     public AjaxJson chargeVipMonth(VipVo vipVo);
+
+    public AjaxJson chargeFund(FundVo fundVo);
+
 
 }

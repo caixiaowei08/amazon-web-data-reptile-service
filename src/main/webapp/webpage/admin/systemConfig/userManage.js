@@ -19,7 +19,7 @@ $(function () {
         locale: "zh-CN",
         showColumns: false,
         singleSelect: true,
-        onLoadError:function () {
+        onLoadError: function () {
             toastr.warning("请重新登录！");
             setTimeout("window.location='/adminSystemController.admin?goAdminLogin'", 1000);
         },
@@ -72,12 +72,12 @@ $(function () {
                 field: "id",
                 width: "10%",//宽度
                 formatter: function (value, row, index) {
-                    return "&nbsp;&nbsp;&nbsp;&nbsp;<a onclick='loadUserVipInfo(" + value + ")' href='#' title='VIP充值' data-target='#vipCharge'  data-toggle='modal'><i class='fa fa-vimeo'></i></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a onclick='clickDeleteModel(" + value + ");' title='资金充值' href='#' data-target='#deleteOrderModel' data-toggle='modal'><i class='fa fa-money'></i></a>";
+                    return "&nbsp;&nbsp;&nbsp;&nbsp;<a onclick='loadUserVipInfo(" + value + ")' href='#' title='VIP充值' data-target='#vipCharge'  data-toggle='modal'><i class='fa fa-vimeo'></i></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a onclick='loadUserFundInfo(" + value + ");' title='资金充值' href='#' data-target='#fundCharge' data-toggle='modal'><i class='fa fa-money'></i></a>";
                 }
             }
         ]],
         queryParams: function (params) {
-            params.account  = $("#account").val().trim();
+            params.account = $("#account").val().trim();
             return params;
         }
     });
@@ -89,7 +89,7 @@ function doUserSearch() {
     $('#userListTable').bootstrapTable("refresh");
 }
 
-function loadUserVipInfo(id){
+function loadUserVipInfo(id) {
     $.ajax({
         url: "/adminUserMangeController.admin?doGetVipInfo",
         type: 'post',
@@ -99,6 +99,7 @@ function loadUserVipInfo(id){
                 viewModel.sellerId(data.content.sellerId);
                 viewModel.account(data.content.account);
                 viewModel.membershipEndTime(data.content.membershipEndTime);
+                viewModel.memberShipMonth(1);
             } else if (data.success === "fail") {
                 toastr.warning(data.msg);
             } else {
@@ -109,7 +110,31 @@ function loadUserVipInfo(id){
             toastr.warning("服务器异常,请联系管理员！");
         }
     });
+}
 
+function loadUserFundInfo(id) {
+    $.ajax({
+        url: "/adminUserMangeController.admin?doGetFundInfo",
+        type: 'post',
+        data: {sellerId: id},
+        success: function (data) {
+            if (data.success === "success") {
+                viewModel.sellerId(data.content.sellerId);
+                viewModel.account(data.content.account);
+                viewModel.totalFund(data.content.totalFund);
+                viewModel.usableFund(data.content.usableFund);
+                viewModel.freezeFund(data.content.freezeFund);
+                viewModel.chargeFund("");
+            } else if (data.success === "fail") {
+                toastr.warning(data.msg);
+            } else {
+                window.location = '/adminSystemController.admin?goAdminLogin'
+            }
+        },
+        error: function (jqxhr, textStatus, errorThrow) {
+            toastr.warning("服务器异常,请联系管理员！");
+        }
+    });
 }
 
 function formValidator() {
@@ -125,6 +150,10 @@ function formValidator() {
                 validators: {
                     notEmpty: {
                         message: '请输入会员充值月份！'
+                    },
+                    regexp: {
+                        regexp: /^[1-9]\d*$/,
+                        message: '充值月份必须为正整数！'
                     }
                 }
             }
@@ -135,15 +164,55 @@ function formValidator() {
             if (result.success === "success") {
                 toastr.success(result.msg);
                 $('#userListTable').bootstrapTable("refresh");
+                $('#vipCharge').modal('hide');
                 form.bootstrapValidator('disableSubmitButtons', false);
             } else if (result.success === "fail") {
                 toastr.warning(result.msg);
                 form.bootstrapValidator('disableSubmitButtons', false);
-            } else{
-                window.location='/adminSystemController.admin?goAdminLogin';
+            } else {
+                window.location = '/adminSystemController.admin?goAdminLogin';
             }
         }, 'json');
     });
+
+    $('#formObj_submitFundCharge').bootstrapValidator({
+        framework: 'bootstrap',
+        icon: {
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {
+            chargeFund: {
+                validators: {
+                    notEmpty: {
+                        message: '请输入充值金额！'
+                    },
+                    regexp: {
+                        regexp: /^[0-9]+([.]{1}[0-9]{1,2})?$/,
+                        message: '金额至多保留两位小数的正数!'
+                    }
+                }
+            }
+        }
+    }).on('success.form.bv', function (e) {
+        var form = $('#formObj_submitFundCharge');
+        $.post(form.attr('action'), form.serialize(), function (result) {
+            if (result.success === "success") {
+                toastr.success(result.msg);
+                $('#userListTable').bootstrapTable("refresh");
+                $('#fundCharge').modal('hide');
+                form.bootstrapValidator('disableSubmitButtons', false);
+            } else if (result.success === "fail") {
+                toastr.warning(result.msg);
+                form.bootstrapValidator('disableSubmitButtons', false);
+            } else {
+                window.location = '/adminSystemController.admin?goAdminLogin';
+            }
+        }, 'json');
+    });
+
+
 }
 
 function submitMemberShipMonth() {
@@ -151,8 +220,18 @@ function submitMemberShipMonth() {
     return false;
 }
 
+function submitFundCharge(){
+    $('#formObj_submitFundCharge').submit();
+    return false;
+}
+
 var viewModel = {
     sellerId: ko.observable(),
     account: ko.observable(),
-    membershipEndTime: ko.observable()
+    membershipEndTime: ko.observable(),
+    memberShipMonth:ko.observable(),
+    totalFund:ko.observable(),
+    usableFund:ko.observable(),
+    freezeFund:ko.observable(),
+    chargeFund:ko.observable()
 }

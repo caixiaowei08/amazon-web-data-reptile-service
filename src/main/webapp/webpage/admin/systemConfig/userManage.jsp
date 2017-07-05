@@ -159,20 +159,88 @@
                     <div class="form-group">
                         <div class="input-group" style="width: 100%;">
                             <span class="input-group-addon" style="width:150px;" id="membershipEndTime-addon">会员到期时间</span>
-                            <input type="text" class="form-control" data-bind="value:membershipEndTime" readonly="readonly"  id="membershipEndTime" name="membershipEndTime" placeholder="会员到期时间"
+                            <input type="text" class="form-control" data-bind="value:membershipEndTime" readonly="readonly"  id="membershipEndTime" placeholder="会员到期时间"
                                    aria-describedby="basic-addon1">
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="input-group" style="width: 100%;">
                             <span class="input-group-addon" style="width:150px;" id="memberShipMonth-addon">充值月数</span>
-                            <input type="number" min="1" step="1" class="form-control" id="memberShipMonth" name="memberShipMonth" placeholder="请填写充值月数"
+                            <input type="number" min="1" step="1" class="form-control" data-bind="value:memberShipMonth" id="memberShipMonth" name="memberShipMonth" placeholder="请填写充值月数"
                                    aria-describedby="basic-addon1">
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" id="btn_sub_memberShipMonth" onclick="submitMemberShipMonth();" class="btn btn-primary">确定
+                    </button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="fundCharge" tabindex="-1" role="dialog" aria-labelledby=""
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="formObj_submitFundCharge" action="/adminUserMangeController.admin?doFundCharge" onsubmit="return false;">
+                <div class="modal-header">
+                    <button type="button" class="close"
+                            data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                    <h4 class="modal-title">
+                        资金充值
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <div class="input-group" style="width: 100%;">
+                            <span class="input-group-addon" style="width:150px;">卖家编号</span>
+                            <input type="text" class="form-control" data-bind="value:sellerId" name="sellerId" readonly="readonly"
+                                   aria-describedby="basic-addon1">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="input-group" style="width: 100%;">
+                            <span class="input-group-addon" style="width:150px;">邮箱</span>
+                            <input type="text" class="form-control"  data-bind="value:account" name="account" placeholder="邮箱" readonly="readonly"
+                                   aria-describedby="basic-addon1">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="input-group" style="width: 100%;">
+                            <span class="input-group-addon" style="width:150px;">账户总额(美元)</span>
+                            <input type="text" class="form-control" data-bind="value:totalFund" readonly="readonly" placeholder="账户总额(美元)"
+                                   aria-describedby="basic-addon1">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="input-group" style="width: 100%;">
+                            <span class="input-group-addon" style="width:150px;">可用金额(美元)</span>
+                            <input type="text" class="form-control" data-bind="value:usableFund" readonly="readonly"  placeholder="可用金额(美元)"
+                                   aria-describedby="basic-addon1">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="input-group" style="width: 100%;">
+                            <span class="input-group-addon" style="width:150px;">冻结金额(美元)</span>
+                            <input type="text" class="form-control" data-bind="value:freezeFund" readonly="readonly"  placeholder="冻结金额(美元)"
+                                   aria-describedby="basic-addon1">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="input-group" style="width: 100%;">
+                            <span class="input-group-addon" style="width:150px;">充值金额(美元)</span>
+                            <input type="number" step="1" class="form-control"  data-bind="value:chargeFund" name="chargeFund" placeholder="充值金额(美元)"
+                                   aria-describedby="basic-addon1">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="btn_sub_fundCharge" onclick="submitFundCharge();" class="btn btn-primary">确定
                     </button>
                     <button type="button" class="btn btn-default" data-dismiss="modal">关闭
                     </button>

@@ -1,7 +1,11 @@
 package com.amazon.admin.user.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.amazon.admin.user.service.AdminUserMangeService;
+import com.amazon.admin.user.vo.FundVo;
 import com.amazon.admin.user.vo.VipVo;
+import com.amazon.service.fund.entity.UserFundEntity;
+import com.amazon.service.fund.service.UserFundService;
 import com.amazon.service.user.entity.UserEntity;
 import com.amazon.service.user.service.UserService;
 import com.amazon.service.vip.entity.UserMembershipEntity;
@@ -16,6 +20,7 @@ import org.apache.logging.log4j.Logger;
 import org.framework.core.common.controller.BaseController;
 import org.framework.core.common.model.json.AjaxJson;
 import org.framework.core.global.service.GlobalService;
+import org.framework.core.utils.RegularExpressionUtils;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,6 +56,9 @@ public class AdminUserMangeController extends BaseController {
     @Autowired
     private AdminUserMangeService adminUserMangeService;
 
+    @Autowired
+    private UserFundService userFundService;
+
     @RequestMapping(params = "doGetVipInfo")
     @ResponseBody
     public AjaxJson doGetVipInfo(VipVo vipVo, HttpServletRequest request, HttpServletResponse response) {
@@ -85,6 +93,42 @@ public class AdminUserMangeController extends BaseController {
         return j;
     }
 
+    @RequestMapping(params = "doGetFundInfo")
+    @ResponseBody
+    public AjaxJson doGetFundInfo(FundVo fundVo, HttpServletRequest request, HttpServletResponse response) {
+        AjaxJson j = new AjaxJson();
+        if (globalService.isNotAdminLogin()) {
+            j.setSuccess(AjaxJson.RELOGIN);
+            j.setMsg("请重新登录!");
+            return j;
+        }
+
+        if (fundVo.getSellerId() == null) {
+            j.setSuccess(AjaxJson.CODE_FAIL);
+            j.setMsg("请求参数有误！");
+            return j;
+        }
+
+        UserEntity userEntity = userService.find(UserEntity.class, fundVo.getSellerId());
+        DetachedCriteria userFundDetachedCriteria = DetachedCriteria.forClass(UserFundEntity.class);
+        userFundDetachedCriteria.add(Restrictions.eq("sellerId", userEntity.getId()));
+        List<UserFundEntity> userFundEntityList = userFundService.getListByCriteriaQuery(userFundDetachedCriteria);
+        if (CollectionUtils.isEmpty(userFundEntityList)) {
+            j.setSuccess(AjaxJson.CODE_FAIL);
+            j.setMsg("缺失买家资金信息，请联系管理员！");
+            return j;
+        }
+        UserFundEntity userFundEntity = userFundEntityList.get(0);
+        fundVo.setId(userFundEntity.getId());
+        fundVo.setSellerId(userFundEntity.getSellerId());
+        fundVo.setAccount(userEntity.getAccount());
+        fundVo.setTotalFund(userFundEntity.getTotalFund());
+        fundVo.setFreezeFund(userFundEntity.getFreezeFund());
+        fundVo.setUsableFund(userFundEntity.getUsableFund());
+        j.setContent(fundVo);
+        return j;
+    }
+
     @RequestMapping(params = "doChargeVip")
     @ResponseBody
     public AjaxJson doChargeVip(VipVo vipVo, HttpServletRequest request, HttpServletResponse response) {
@@ -101,6 +145,7 @@ public class AdminUserMangeController extends BaseController {
             j.setMsg("请求参数有误！");
             return j;
         }
+        logger.info("会员充值---开始-----"+ JSON.toJSONString(vipVo));
         UserEntity userEntity = userService.find(UserEntity.class, vipVo.getSellerId());
         if(userEntity == null){
             j.setSuccess(AjaxJson.CODE_FAIL);
@@ -110,8 +155,53 @@ public class AdminUserMangeController extends BaseController {
         try {
             j = adminUserMangeService.chargeVipMonth(vipVo);
         }catch (Exception e){
+            j.setSuccess(AjaxJson.CODE_FAIL);
+            j.setContent("充值会员失败！");
             logger.error(e.fillInStackTrace());
+            return j;
         }
+        logger.info("会员充值---结束-----"+ JSON.toJSONString(j));
+        return j;
+    }
+
+    @RequestMapping(params = "doFundCharge")
+    @ResponseBody
+    public AjaxJson doFundCharge(FundVo fundVo, HttpServletRequest request, HttpServletResponse response) {
+        AjaxJson j = new AjaxJson();
+        if (globalService.isNotAdminLogin()) {
+            j.setSuccess(AjaxJson.RELOGIN);
+            j.setMsg("请重新登录!");
+            return j;
+        }
+        if (fundVo.getSellerId() == null||StringUtils.isEmpty(fundVo.getChargeFund())) {
+            j.setSuccess(AjaxJson.CODE_FAIL);
+            j.setMsg("请求参数有误！");
+            return j;
+        }
+
+        if(!RegularExpressionUtils.isMoney(fundVo.getChargeFund())){
+            j.setSuccess(AjaxJson.CODE_FAIL);
+            j.setMsg("金额输入错误,请检查！");
+            return j;
+        }
+
+
+        UserEntity userEntity = userService.find(UserEntity.class, fundVo.getSellerId());
+        if(userEntity == null){
+            j.setSuccess(AjaxJson.CODE_FAIL);
+            j.setMsg("该卖家不存在！");
+            return j;
+        }
+        logger.info("资金充值---开始-----"+ JSON.toJSONString(fundVo));
+        try {
+            j = adminUserMangeService.chargeFund(fundVo);
+        }catch (Exception e){
+            j.setSuccess(AjaxJson.CODE_FAIL);
+            j.setContent("充值金额失败！");
+            logger.error(e.fillInStackTrace());
+            return j;
+        }
+        logger.info("资金充值---结束-----"+ JSON.toJSONString(j));
         return j;
     }
 

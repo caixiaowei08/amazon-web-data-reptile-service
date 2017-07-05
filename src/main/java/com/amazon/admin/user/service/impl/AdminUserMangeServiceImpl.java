@@ -3,8 +3,11 @@ package com.amazon.admin.user.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.amazon.admin.promot.controller.AdminPromotController;
 import com.amazon.admin.user.service.AdminUserMangeService;
+import com.amazon.admin.user.vo.FundVo;
 import com.amazon.admin.user.vo.VipVo;
 import com.amazon.service.fund.ConstantFund;
+import com.amazon.service.fund.entity.UserFundEntity;
+import com.amazon.service.fund.service.UserFundService;
 import com.amazon.service.vip.entity.UserMembershipEntity;
 import com.amazon.service.vip.service.UserMembershipService;
 import org.apache.commons.collections.CollectionUtils;
@@ -19,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -38,6 +42,9 @@ public class AdminUserMangeServiceImpl implements AdminUserMangeService {
     private GlobalService globalService;
 
 
+    @Autowired
+    private UserFundService userFundService;
+
 
     public AjaxJson chargeVipMonth(VipVo vipVo) {
         AjaxJson j = new AjaxJson();
@@ -50,7 +57,7 @@ public class AdminUserMangeServiceImpl implements AdminUserMangeService {
             return j;
         }
         UserMembershipEntity userMembershipEntity = userMembershipEntityList.get(0);
-        logger.info("---------------userMembershipEntity--------------"+JSON.toJSONString(userMembershipEntity));
+        logger.info("---------------userMembershipEntity---充值之前-----------" + JSON.toJSONString(userMembershipEntity));
         //处理会员逻辑
         if (userMembershipEntity.getMembershipEndTime() == null) {
             Date beginOfDate = DateUtils.getBeginOfDate();
@@ -61,12 +68,12 @@ public class AdminUserMangeServiceImpl implements AdminUserMangeService {
         } else {
             //判断是否到期
             Date membershipEndTime = userMembershipEntity.getMembershipEndTime();
-            if (DateUtils.compareTo(membershipEndTime, new Date()) > 0){//未到期处理
+            if (DateUtils.compareTo(membershipEndTime, new Date()) > 0) {//未到期处理
                 userMembershipEntity.setLastMembershipEndTime(membershipEndTime);
-                membershipEndTime = DateUtils.addMonth(membershipEndTime,vipVo.getMemberShipMonth());
+                membershipEndTime = DateUtils.addMonth(membershipEndTime, vipVo.getMemberShipMonth());
                 membershipEndTime = DateUtils.getEndOfDate(membershipEndTime);
                 userMembershipEntity.setMembershipEndTime(membershipEndTime);
-            }else{//到期处理
+            } else {//到期处理
                 Date beginOfDate = DateUtils.getBeginOfDate();
                 userMembershipEntity.setMembershipStartTime(beginOfDate);
                 Date newMembershipEndTime = DateUtils.addMonth(beginOfDate, vipVo.getMemberShipMonth());
@@ -76,8 +83,40 @@ public class AdminUserMangeServiceImpl implements AdminUserMangeService {
             }
         }
         userMembershipEntity.setChargeTime(new Date());
-        logger.info("---------------userMembershipEntity saveOrUpdate --------------"+JSON.toJSONString(userMembershipEntity));
+        logger.info("---------------userMembershipEntity saveOrUpdate 充值完成 --------------" + JSON.toJSONString(userMembershipEntity));
         userMembershipService.saveOrUpdate(userMembershipEntity);
+        return j;
+    }
+
+    public AjaxJson chargeFund(FundVo fundVo) {
+        AjaxJson j = new AjaxJson();
+        DetachedCriteria userFundDetachedCriteria = DetachedCriteria.forClass(UserFundEntity.class);
+        userFundDetachedCriteria.add(Restrictions.eq("sellerId", fundVo.getSellerId()));
+        List<UserFundEntity> userFundEntityList = userFundService.getListByCriteriaQuery(userFundDetachedCriteria);
+        if (CollectionUtils.isEmpty(userFundEntityList)) {
+            j.setSuccess(AjaxJson.CODE_FAIL);
+            j.setMsg("无法找到资金账户，请联系管理员！");
+            return j;
+        }
+
+        BigDecimal chargeFund = new BigDecimal(0);
+        try {
+            chargeFund = new BigDecimal(fundVo.getChargeFund());
+        } catch (Exception e) {
+            logger.error(e.fillInStackTrace());
+            j.setSuccess(AjaxJson.CODE_FAIL);
+            j.setMsg("充值金额输入有误！");
+            return j;
+        }
+        //资金变动
+        UserFundEntity userFundEntity = userFundEntityList.get(0);
+        logger.info("---------------userFundEntity----- 开始---------" + JSON.toJSONString(userFundEntity));
+        userFundEntity.setTotalFund(userFundEntity.getTotalFund().add(chargeFund));
+        userFundEntity.setUsableFund(userFundEntity.getUsableFund().add(chargeFund));
+        userFundEntity.setUpdateTime(new Date());
+        //充值流水变动
+        userFundService.saveOrUpdate(userFundEntity);
+        logger.info("---------------userFundEntity-----结束---------" + JSON.toJSONString(userFundEntity));
         return j;
     }
 }
