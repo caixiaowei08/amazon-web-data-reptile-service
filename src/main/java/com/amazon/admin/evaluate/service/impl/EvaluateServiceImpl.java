@@ -214,12 +214,68 @@ public class EvaluateServiceImpl extends BaseServiceImpl implements EvaluateServ
                 BeanUtils.copyBeanNotNull2Bean(promotOrderEvaluateFlowEntity, promotOrderEvaluateFlowEntityExist);
                 promotOrderEvaluateFlowService.saveOrUpdate(promotOrderEvaluateFlowEntityExist);
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             j.setSuccess(AjaxJson.CODE_FAIL);
             j.setMsg("保存出错！");
             logger.info(e.toString());
         }
 
+        return j;
+    }
+
+    public AjaxJson doDelPromotOrderEvaluate(PromotOrderEvaluateFlowEntity promotOrderEvaluateFlowEntity) {
+        AjaxJson j = new AjaxJson();
+        PromotOrderEntity promotOrderEntity = promotOrderService.find(PromotOrderEntity.class, promotOrderEvaluateFlowEntity.getPromotId());
+        if (promotOrderEntity == null) {
+            j.setSuccess(AjaxJson.CODE_FAIL);
+            j.setMsg("评价对应推广订单不存在！");
+            return j;
+        }
+        if (promotOrderEvaluateFlowEntity.getState().equals(Constants.EVALUATE_STATE_PENDING)) {
+            promotOrderEntity.setBuyerNum(promotOrderEntity.getBuyerNum() - 1);
+            promotOrderEntity.setUpdateTime(new Date());
+            promotOrderService.saveOrUpdate(promotOrderEntity);
+            promotOrderEvaluateFlowService.delete(promotOrderEvaluateFlowEntity);
+
+        } else if (promotOrderEvaluateFlowEntity.getState().equals(Constants.EVALUATE_STATE_REVIEW)) {
+            //账目变动
+            DetachedCriteria userFundDetachedCriteria = DetachedCriteria.forClass(UserFundEntity.class);
+            userFundDetachedCriteria.add(Restrictions.eq("sellerId", promotOrderEntity.getSellerId()));
+            List<UserFundEntity> userFundEntityList = userFundService.getListByCriteriaQuery(userFundDetachedCriteria);
+            if (CollectionUtils.isEmpty(userFundEntityList)) {
+                j.setSuccess(AjaxJson.CODE_FAIL);
+                j.setMsg("无法找到资金账户，请联系管理员！");
+                return j;
+            }
+            UserFundEntity userFundEntity = userFundEntityList.get(0);
+            userFundEntity.setTotalFund(userFundEntity.getTotalFund().add(promotOrderEntity.getCashback())
+                    .add(promotOrderEntity.getReviewPrice()));
+
+            if (promotOrderEntity.getState().equals(Constant.STATE_Y)) {
+                userFundEntity.setFreezeFund(userFundEntity.getFreezeFund().add(promotOrderEntity.getCashback())
+                        .add(promotOrderEntity.getReviewPrice()));
+            } else {
+                userFundEntity.setUsableFund(userFundEntity.getUsableFund().add(promotOrderEntity.getCashback())
+                        .add(promotOrderEntity.getReviewPrice()));
+            }
+            userFundEntity.setUpdateTime(new Date());
+
+            if (promotOrderEntity.getState().equals(Constant.STATE_Y)) {
+                promotOrderEntity.setGuaranteeFund(
+                        promotOrderEntity.getGuaranteeFund()
+                                .add(promotOrderEntity.getCashback())
+                                .add(promotOrderEntity.getReviewPrice())
+                );
+            }
+            promotOrderEntity.setEvaluateNum(promotOrderEntity.getEvaluateNum() - 1);
+            promotOrderEntity.setBuyerNum(promotOrderEntity.getBuyerNum() - 1);
+            promotOrderEntity.setCashBackConsumption(promotOrderEntity.getCashBackConsumption().subtract(promotOrderEntity.getCashback()));
+            promotOrderEntity.setConsumption(promotOrderEntity.getConsumption().subtract(promotOrderEntity.getReviewPrice()));
+            promotOrderEntity.setUpdateTime(new Date());
+            userFundService.saveOrUpdate(userFundEntity);
+            promotOrderService.saveOrUpdate(promotOrderEntity);
+            promotOrderEvaluateFlowService.delete(promotOrderEvaluateFlowEntity);
+        }
         return j;
     }
 }

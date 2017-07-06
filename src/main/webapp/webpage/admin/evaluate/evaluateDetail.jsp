@@ -87,6 +87,30 @@
             <div class="panel-heading">
                 <h3 class="panel-title">订单评价</h3>
             </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="row">
+                            <div class="form-group">
+                                <label class="col-xs-4 control-label amazon-label" for="amazon_asin">ASIN</label>
+                                <div class="col-xs-8">
+                                    <input class="form-control" id="amazon_asin" type="text"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="row">
+                            <div class="form-group">
+                                <label class="col-xs-4 control-label amazon-label" for="amazon_amzOrderId">亚马逊订单号</label>
+                                <div class="col-xs-8">
+                                    <input class="form-control" id="amazon_amzOrderId" type="text"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div class="panel-footer">
                 <div class="row">
                     <div class="col-sm-4 col-sm-offset-8">
@@ -94,6 +118,9 @@
                             <a type="button" data-target='#addNewReview' class="btn btn-default" data-toggle='modal'
                                style="width: 104px;">评论录入
                             </a>
+                            <button type="button" onclick="downEvaluateSearch();" class="btn btn-default"
+                                    style="width: 104px;">查询
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -159,6 +186,30 @@
                     </button>
                 </div>
             </form>
+        </div>
+    </div>
+</div>
+<div class="modal fade bs-example-modal-sm" id="deleteEvaluateModel" tabindex="-1" role="dialog" aria-labelledby="deleteEvaluateModel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close"
+                        data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title">
+                    删除评价
+                </h4>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="deleteId" data-bind="value:deleteId">
+                确认删除评价 <span data-bind="text:deleteId"></span>吗？
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" id="deleteEvaluateByIdBtn" onclick="deleteEvaluateById();">确定</button>
+            </div>
         </div>
     </div>
 </div>

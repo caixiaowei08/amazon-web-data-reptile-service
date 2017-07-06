@@ -14,6 +14,11 @@ $(function () {
         pageList: [10, 20, 30, 50, 100],
         pagination: true,
         height: 650,
+        queryParams: function (params) {
+            params.amzOrderId = $("#amazon_amzOrderId").val().trim();
+            params.asinId = $("#amazon_asin").val().trim();
+            return params;
+        },
         onLoadError:function () {
             toastr.warning("请重新登录！");
             setTimeout("window.location='/adminSystemController.admin?goAdminLogin'", 1000);
@@ -46,6 +51,13 @@ $(function () {
                     }
                     return "";
                 }
+            },
+            {
+                title: 'ASIN',
+                field: "asinId",
+                width: "10%",//宽度
+                align: "center",//水平
+                valign: "middle"//垂直
             },
             {
                 title: '亚马逊订单号',
@@ -81,6 +93,19 @@ $(function () {
                 width: "20%",//宽度
                 align: "center",//水平
                 valign: "middle"//垂直
+            },
+            {
+                title: '操作',
+                field: "id",
+                width: "5%",//宽度
+                align: "center",//水平
+                valign: "middle",//垂直
+                formatter: function (value, row, index) {
+                    if (value === undefined) {
+                        return "-"
+                    }
+                    return "<a onclick='clickEvaluateModel(" + value + ");' title='删除评价' data-target='#deleteEvaluateModel' data-toggle='modal'><i class='fa fa-window-close'></i></a>";
+                }
             }
         ]]
     });
@@ -99,7 +124,53 @@ $(function () {
     })
 
     formValidator();
+    ko.applyBindings(viewModel);
 });
+
+var viewModel = {
+    deleteId: ko.observable()
+}
+
+function clickEvaluateModel(id) {
+    viewModel.deleteId(id);
+}
+
+function beforeSend() {
+    $("#deleteEvaluateByIdBtn").addClass("disabled"); // Disables visually
+    $("#deleteEvaluateByIdBtn").prop("disabled", true); // Disables visually + functionally
+}
+
+function SendComplete() {
+    $("#deleteEvaluateByIdBtn").removeClass("disabled"); // Disables visually
+    $("#deleteEvaluateByIdBtn").prop("disabled", false); // Disables visually + functionally
+}
+
+function deleteEvaluateById() {
+    var  deleteId = $("#deleteId").val();
+    $.ajax({
+        url: "/evaluateController.admin?doDel",
+        type: 'post',
+        beforeSend: beforeSend,
+        data: {id: deleteId},
+        success: function (data) {
+            if (data.success === "success") {
+                $('#evaluateListTable').bootstrapTable("refresh");
+                toastr.success("关闭成功！");
+            } else if (data.success === "fail") {
+                toastr.warning(data.msg);
+            } else {
+                window.location = '/adminSystemController.admin?goAdminLogin';
+            }
+        },
+        complete: function () {
+            $('#deleteEvaluateModel').modal('hide');
+            SendComplete();
+        },
+        error: function (jqxhr, textStatus, errorThrow) {
+            toastr.success("服务器异常,请联系管理员！");
+        }
+    })
+}
 
 function formValidator() {
     $('#formObj').bootstrapValidator({
@@ -126,6 +197,10 @@ function formValidator() {
             }
         }
     });
+}
+
+function downEvaluateSearch(){
+    $('#evaluateListTable').bootstrapTable("refresh");
 }
 
 function beforeSend() {

@@ -7,6 +7,7 @@ import com.amazon.admin.promot.controller.AdminPromotController;
 import com.amazon.service.promot.flow.entity.PromotOrderEvaluateFlowEntity;
 import com.amazon.service.promot.order.entity.PromotOrderEntity;
 import com.amazon.service.promot.order.service.PromotOrderService;
+import com.amazon.system.Constant;
 import com.amazon.system.system.bootstrap.hibernate.CriteriaQuery;
 import com.amazon.system.system.bootstrap.json.DataGrid;
 import com.amazon.system.system.bootstrap.json.DataGridReturn;
@@ -59,7 +60,7 @@ public class EvaluateController extends BaseController {
 
     @RequestMapping(params = "doAdd")
     @ResponseBody
-    public AjaxJson doAdd(PromotOrderEvaluateFlowEntity promotOrderEvaluateFlowEntity,HttpServletRequest request, HttpServletResponse response) {
+    public AjaxJson doAdd(PromotOrderEvaluateFlowEntity promotOrderEvaluateFlowEntity, HttpServletRequest request, HttpServletResponse response) {
         AjaxJson j = new AjaxJson();
         logger.info("----evaluateController----doAdd---start----");
         if (globalService.isNotAdminLogin()) {
@@ -67,24 +68,24 @@ public class EvaluateController extends BaseController {
             j.setMsg("请用管理员账户登录！");
             return j;
         }
-        String amzOrderId =  promotOrderEvaluateFlowEntity.getAmzOrderId();
-        String asinId =  promotOrderEvaluateFlowEntity.getAsinId();
-        String reviewUrl =  promotOrderEvaluateFlowEntity.getReviewUrl();
-        if((!StringUtils.hasText(amzOrderId))||(!StringUtils.hasText(asinId))){
+        String amzOrderId = promotOrderEvaluateFlowEntity.getAmzOrderId();
+        String asinId = promotOrderEvaluateFlowEntity.getAsinId();
+        String reviewUrl = promotOrderEvaluateFlowEntity.getReviewUrl();
+        if ((!StringUtils.hasText(amzOrderId)) || (!StringUtils.hasText(asinId))) {
             j.setSuccess(AjaxJson.CODE_FAIL);
             j.setMsg("亚马逊订单号和ASIN编号必填！");
             return j;
         }
 
         try {
-            if(StringUtils.hasText(reviewUrl)){
+            if (StringUtils.hasText(reviewUrl)) {
                 logger.info("----evaluateController----doAddEvaluateWithReviewUrl---start----");
-                j =  evaluateService.doAddEvaluateWithReviewUrl(promotOrderEvaluateFlowEntity);
-            }else{
+                j = evaluateService.doAddEvaluateWithReviewUrl(promotOrderEvaluateFlowEntity);
+            } else {
                 logger.info("----evaluateController----doAddEvaluateWithNoReviewUrl---start----");
-                j =  evaluateService.doAddEvaluateWithNoReviewUrl(promotOrderEvaluateFlowEntity);
+                j = evaluateService.doAddEvaluateWithNoReviewUrl(promotOrderEvaluateFlowEntity);
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             j.setSuccess(AjaxJson.CODE_FAIL);
             j.setMsg("添加评论失败！");
             logger.error(e.toString());
@@ -93,12 +94,10 @@ public class EvaluateController extends BaseController {
         return j;
     }
 
-
-
     @RequestMapping(params = "dataGrid")
     public void dataGrid(DataGrid dataGrid, HttpServletRequest request, HttpServletResponse response) {
         if (globalService.isNotAdminLogin()) {
-          return;
+            return;
         }
         CriteriaQuery criteriaQuery = new CriteriaQuery(PromotOrderEvaluateFlowEntity.class, dataGrid, request.getParameterMap());
         try {
@@ -136,4 +135,32 @@ public class EvaluateController extends BaseController {
         j.setContent(promotOrderEntityDb);
         return j;
     }
+
+    @RequestMapping(params = "doDel")
+    @ResponseBody
+    public AjaxJson doDel(PromotOrderEvaluateFlowEntity promotOrderEvaluateFlowEntity, HttpServletRequest request) {
+        AjaxJson j = new AjaxJson();
+        if (globalService.isNotAdminLogin()) {
+            j.setSuccess(AjaxJson.RELOGIN);
+            j.setMsg("请先登录管理账号！");
+            return j;
+        }
+        PromotOrderEvaluateFlowEntity promotOrderEvaluateFlowDb = evaluateService.find(PromotOrderEvaluateFlowEntity.class, promotOrderEvaluateFlowEntity.getId());
+        if (promotOrderEvaluateFlowDb == null) {
+            j.setSuccess(AjaxJson.CODE_FAIL);
+            j.setMsg("评价已被删除或者不存在！");
+            return j;
+        }
+
+        try {
+                j = evaluateService.doDelPromotOrderEvaluate(promotOrderEvaluateFlowDb);
+        } catch (Exception e) {
+            logger.error(e.fillInStackTrace());
+            j.setSuccess(AjaxJson.CODE_FAIL);
+            j.setMsg("删除失败！");
+            return j;
+        }
+        return j;
+    }
+
 }

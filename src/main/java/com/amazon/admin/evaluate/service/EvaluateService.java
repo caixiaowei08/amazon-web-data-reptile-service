@@ -15,5 +15,7 @@ public interface EvaluateService extends BaseService{
 
     public AjaxJson doAddEvaluateWithReviewUrl(PromotOrderEvaluateFlowEntity promotOrderEvaluateFlowEntity) throws Exception;
 
+    public AjaxJson doDelPromotOrderEvaluate(PromotOrderEvaluateFlowEntity promotOrderEvaluateFlowEntity);
+
 
 }
