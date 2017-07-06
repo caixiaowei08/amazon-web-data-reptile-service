@@ -102,7 +102,7 @@
         <table id="evaluateListTable" class="table table-hover">
         </table>
     </div>
-    <div style="height: 20px;"></div>
+    <div style="height: 100px;"></div>
 </div>
 <nav class="navbar navbar-default navbar-fixed-bottom">
     <div class="container">

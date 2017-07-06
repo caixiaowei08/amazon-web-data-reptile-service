@@ -110,7 +110,7 @@
             </div>
             <table id="evaluateDetailListTable" class="table table-hover">
             </table>
-            <div style="height: 20px;"></div>
+            <div style="height: 100px;"></div>
         </div>
     </div>
     <nav class="navbar navbar-default navbar-fixed-bottom">

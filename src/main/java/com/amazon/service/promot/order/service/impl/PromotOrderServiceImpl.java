@@ -25,6 +25,7 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -104,8 +105,12 @@ public class PromotOrderServiceImpl extends BaseServiceImpl implements PromotOrd
         Integer needReviewNum = promotOrderEntity.getNeedReviewNum();
         //好评价
         BigDecimal reviewPrice = promotPriceEntity.getReviewPrice();
+        String cashback = promotOrderEntity.getSalePrice().trim();
+        if(StringUtils.hasText(cashback)){
+            promotOrderEntity.setCashback(new BigDecimal(cashback.substring(1,cashback.length())));
+        }
         //总价
-        BigDecimal totalPrice = (new BigDecimal(needReviewNum)).multiply(reviewPrice);
+        BigDecimal totalPrice = (new BigDecimal(needReviewNum)).multiply(reviewPrice.add(promotOrderEntity.getCashback()));
         if (totalPrice.compareTo(userFundEntity.getUsableFund()) > 0) {
             j.setSuccess(AjaxJson.CODE_FAIL);
             j.setMsg("可用余额不足，请充值！");
@@ -129,6 +134,7 @@ public class PromotOrderServiceImpl extends BaseServiceImpl implements PromotOrd
         promotOrderEntity.setReviewPrice(reviewPrice);
         promotOrderEntity.setGuaranteeFund(totalPrice);
         promotOrderEntity.setConsumption(new BigDecimal("0.00"));
+        promotOrderEntity.setCashBackConsumption(new BigDecimal("0.00"));
         promotOrderEntity.setNeedReviewNum(promotOrderEntity.getNeedReviewNum());
         promotOrderEntity.setDayReviewNum(promotOrderEntity.getDayReviewNum());
         promotOrderEntity.setBuyerNum(0);

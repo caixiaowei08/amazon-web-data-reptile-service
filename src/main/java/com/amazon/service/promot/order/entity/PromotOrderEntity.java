@@ -84,6 +84,11 @@ public class PromotOrderEntity extends IdEntity implements Serializable {
     private BigDecimal consumption;
 
     /**
+     * 返现花费
+     */
+    private BigDecimal cashBackConsumption;
+
+    /**
      * 目标好评数
      */
     private Integer needReviewNum;
@@ -107,6 +112,11 @@ public class PromotOrderEntity extends IdEntity implements Serializable {
      * 评价扣款
      */
     private BigDecimal reviewPrice;
+
+    /**
+     * 返现扣款
+     */
+    private BigDecimal cashback;
 
     /**
      * 创建时间
@@ -290,5 +300,23 @@ public class PromotOrderEntity extends IdEntity implements Serializable {
 
     public void setEvaluateNum(Integer evaluateNum) {
         this.evaluateNum = evaluateNum;
+    }
+
+    @Column(name = "cashBackConsumption", nullable = false,precision = 50, scale = 4)
+    public BigDecimal getCashBackConsumption() {
+        return cashBackConsumption;
+    }
+
+    public void setCashBackConsumption(BigDecimal cashBackConsumption) {
+        this.cashBackConsumption = cashBackConsumption;
+    }
+
+    @Column(name = "cashback", nullable = false,precision = 50, scale = 4)
+    public BigDecimal getCashback() {
+        return cashback;
+    }
+
+    public void setCashback(BigDecimal cashback) {
+        this.cashback = cashback;
     }
 }

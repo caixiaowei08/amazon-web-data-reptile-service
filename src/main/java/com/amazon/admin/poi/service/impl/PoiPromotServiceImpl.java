@@ -1,16 +1,15 @@
 package com.amazon.admin.poi.service.impl;
 
 import com.amazon.admin.poi.service.PoiPromotService;
+import com.amazon.service.promot.flow.entity.PromotOrderEvaluateFlowEntity;
 import com.amazon.service.promot.order.entity.PromotOrderEntity;
+import com.amazon.service.promot.order.vo.PromotOrderEvaluateVo;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFDataFormat;
 import org.apache.poi.hssf.usermodel.HSSFFont;
 import org.apache.poi.hssf.util.HSSFColor;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.IndexedColors;
-import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.*;
 import org.framework.core.utils.DateUtils.DateUtils;
 import org.springframework.stereotype.Service;
@@ -19,6 +18,8 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -28,6 +29,122 @@ import java.util.List;
 @Service("poiPromotService")
 @Transactional
 public class PoiPromotServiceImpl implements PoiPromotService {
+
+    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy/MM/dd");
+
+    public void downEvaluateExcel(List<PromotOrderEvaluateVo> promotOrderEvaluateVoList, HttpServletResponse response, String excelFileName) throws FileNotFoundException, IOException {
+        XSSFWorkbook workBook = new XSSFWorkbook();//一个excel文档对象
+        XSSFSheet sheet = workBook.createSheet();// 创建一个工作薄对象
+        String[] columns = {
+                "日期", "ASIN", "订单号", "刷单单价(USD)", "刷单佣金(USD)"
+        };
+        int[] columnsColumnWidth = {
+                4000, 4000, 4000, 4500,4000
+        };
+
+        CellStyle headStyle = workBook.createCellStyle();
+        headStyle.setAlignment(CellStyle.ALIGN_CENTER);
+        headStyle.setVerticalAlignment(CellStyle.VERTICAL_CENTER);
+        headStyle.setBorderTop(CellStyle.BORDER_THIN);
+        headStyle.setTopBorderColor(IndexedColors.BLACK.getIndex());
+        headStyle.setBorderLeft(CellStyle.BORDER_THIN); // 左边边框
+        headStyle.setLeftBorderColor(IndexedColors.BLACK.getIndex()); // 左边边框颜色
+        headStyle.setBorderRight(CellStyle.BORDER_THIN); // 右边边框
+        headStyle.setRightBorderColor(IndexedColors.BLACK.getIndex()); // 右边边框颜色
+        headStyle.setBorderBottom(CellStyle.BORDER_THIN); // 下边框
+        headStyle.setBottomBorderColor(IndexedColors.BLACK.getIndex());
+        headStyle.setFillForegroundColor(IndexedColors.SEA_GREEN.getIndex());
+        headStyle.setFillPattern(CellStyle.SOLID_FOREGROUND);
+        headStyle.setWrapText(true);
+        Cell cell = null;
+        Row row =  sheet.createRow(0);
+        for (int i = 0; i < columnsColumnWidth.length; i++) {
+            sheet.setColumnWidth(i, columnsColumnWidth[i]);
+            cell = row.createCell(i);
+            cell.setCellValue(columns[i]);
+            cell.setCellStyle(headStyle);
+        }
+        //填充数据
+        if(CollectionUtils.isNotEmpty(promotOrderEvaluateVoList)){
+            BigDecimal totalCashback = new BigDecimal("0.00");
+            BigDecimal totalReviewPrice = new BigDecimal("0.00");
+            for (int i = 0; i <promotOrderEvaluateVoList.size() ; i++) {
+                PromotOrderEvaluateVo promotOrderEvaluateVo = promotOrderEvaluateVoList.get(i);
+                row = sheet.createRow(i+1);
+                cell = row.createCell(0);
+                cell.setCellValue(simpleDateFormat.format(promotOrderEvaluateVo.getUpdateTime()));
+                cell = row.createCell(1);
+                cell.setCellValue(promotOrderEvaluateVo.getAsin());
+                cell = row.createCell(2);
+                cell.setCellValue(promotOrderEvaluateVo.getAmzOrderId().trim());
+                cell = row.createCell(3);
+                cell.setCellType(CellType.NUMERIC);
+                cell.setCellValue(Double.parseDouble(promotOrderEvaluateVo.getCashback().toString()));
+                cell = row.createCell(4);
+                cell.setCellType(CellType.NUMERIC);
+                cell.setCellValue(Double.parseDouble(promotOrderEvaluateVo.getReviewPrice().toString()));
+                totalCashback = totalCashback.add(promotOrderEvaluateVo.getCashback());
+                totalReviewPrice = totalReviewPrice.add(promotOrderEvaluateVo.getReviewPrice());
+            }
+            row = sheet.createRow(promotOrderEvaluateVoList.size()+1);
+            cell = row.createCell(3);
+            cell.setCellType(CellType.NUMERIC);
+            cell.setCellValue(Double.parseDouble(totalCashback.toString()));
+            cell = row.createCell(4);
+            cell.setCellType(CellType.NUMERIC);
+            cell.setCellValue(Double.parseDouble(totalReviewPrice.toString()));
+        }
+
+        ByteArrayOutputStream os = new ByteArrayOutputStream();
+        try {
+            workBook.write(os);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        byte[] content = os.toByteArray();
+        InputStream is = new ByteArrayInputStream(content);
+        response.reset();
+        response.setContentType("application/vnd.ms-excel;charset=utf-8");
+        try {
+            response.setHeader("Content-Disposition",
+                    "attachment;filename=" + new String(excelFileName.getBytes("utf-8"), "iso-8859-1").toString() + ".xlsx");
+        } catch (UnsupportedEncodingException e) {
+
+        }
+        ServletOutputStream out = null;
+        try {
+            out = response.getOutputStream();
+        } catch (Exception e) {
+
+        }
+        BufferedInputStream bis = null;
+        BufferedOutputStream bos = null;
+        try {
+            bis = new BufferedInputStream(is);
+            bos = new BufferedOutputStream(out);
+            byte[] buff = new byte[2048];
+            int bytesRead;
+            while (-1 != (bytesRead = bis.read(buff, 0, buff.length))) {
+                bos.write(buff, 0, bytesRead);
+            }
+        } catch (IOException e) {
+        } finally {
+            if (bis != null) {
+                try {
+                    bis.close();
+                } catch (IOException e) {
+
+                }
+            }
+            if (bos != null) {
+                try {
+                    bos.close();
+                } catch (IOException e) {
+
+                }
+            }
+        }
+    }
 
     public void downPromotOrderExcel(List<PromotOrderEntity> promotOrderEntityList, HttpServletResponse response, String excelFileName) throws FileNotFoundException, IOException {
         XSSFWorkbook workBook = new XSSFWorkbook();//一个excel文档对象
@@ -152,8 +269,6 @@ public class PoiPromotServiceImpl implements PoiPromotService {
                 }
             }
         }
-
-
     }
 
 }

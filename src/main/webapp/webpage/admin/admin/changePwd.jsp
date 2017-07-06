@@ -30,8 +30,8 @@
     <script type="text/javascript" src="/webpage/plug-in/knockoutjs/dist/knockout.js"></script>
     <script type="text/javascript" src="/webpage/admin/admin/changePwd.js"></script>
 </head>
-<body>
-<div class="main-container">
+<body >
+<div class="main-container" style="overflow-y:auto;">
     <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
         <div class="container">
             <div class="navbar-header">
@@ -164,6 +164,7 @@
                     </div>
                 </div>
             </div>
+            <div style="height: 100px;"></div>
         </div>
     </div>
     <nav class="navbar navbar-default navbar-fixed-bottom">

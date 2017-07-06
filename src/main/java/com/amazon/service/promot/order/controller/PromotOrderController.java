@@ -1,8 +1,12 @@
 package com.amazon.service.promot.order.controller;
 
+import com.amazon.admin.constant.Constants;
 import com.amazon.admin.poi.service.PoiPromotService;
+import com.amazon.service.promot.flow.entity.PromotOrderEvaluateFlowEntity;
+import com.amazon.service.promot.flow.service.PromotOrderEvaluateFlowService;
 import com.amazon.service.promot.order.entity.PromotOrderEntity;
 import com.amazon.service.promot.order.service.PromotOrderService;
+import com.amazon.service.promot.order.vo.PromotOrderEvaluateVo;
 import com.amazon.service.promot.price.entity.PromotPriceEntity;
 import com.amazon.service.promot.price.service.PromotPriceService;
 import com.amazon.service.spider.SpiderConstant;
@@ -41,6 +45,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -73,29 +78,78 @@ public class PromotOrderController extends BaseController {
     @Autowired
     private PoiPromotService poiPromotService;
 
+    @Autowired
+    private PromotOrderEvaluateFlowService promotOrderEvaluateFlowService;
+
 
     @RequestMapping(params = "goNewPromotOne")
     public String goNewPromotOne(HttpServletRequest request, HttpServletResponse response) {
-        if(userMembershipService.isMemberShipVip()){
+        if (userMembershipService.isMemberShipVip()) {
             return "pages/promot/newPromotStepOne";
-        }else{
+        } else {
             return "pages/fund/memberShip";
         }
     }
 
     @RequestMapping(params = "goNewPromotTwo")
     public String goNewPromotOneTwo(HttpServletRequest request, HttpServletResponse response) {
-        if(userMembershipService.isMemberShipVip()){
+        if (userMembershipService.isMemberShipVip()) {
             return "pages/promot/newPromotStepTwo";
-        }else{
+        } else {
             return "pages/fund/memberShip";
+        }
+    }
+
+    @RequestMapping(params = "downEvaluateExcel")
+    public void downEvaluateExcel(HttpServletRequest request, HttpServletResponse response) {
+        UserEntity userEntity = globalService.getUserEntityFromSession();
+        if (userEntity == null) {
+            return;
+        }
+        CriteriaQuery criteriaQuery = new CriteriaQuery(PromotOrderEntity.class, null, request.getParameterMap());
+        try {
+            criteriaQuery.installHqlParams();
+        } catch (Exception e) {
+            //打印日志信息
+            logger.error(e);
+        }
+        criteriaQuery.getDetachedCriteria().add(Restrictions.eq("sellerId", userEntity.getId()));
+        criteriaQuery.getDetachedCriteria().addOrder(Order.desc("id"));
+        List<PromotOrderEntity> promotOrderEntityList = promotOrderService.getListByCriteriaQuery(criteriaQuery.getDetachedCriteria());
+        List<PromotOrderEvaluateVo> promotOrderEvaluateVoList = new ArrayList<PromotOrderEvaluateVo>();
+        if (CollectionUtils.isNotEmpty(promotOrderEntityList)) {
+            for (PromotOrderEntity promotOrderEntity : promotOrderEntityList) {
+                DetachedCriteria evaluateDetachedCriteria = DetachedCriteria.forClass(PromotOrderEvaluateFlowEntity.class);
+                evaluateDetachedCriteria.add(Restrictions.eq("sellerId", promotOrderEntity.getSellerId()));
+                evaluateDetachedCriteria.add(Restrictions.eq("promotId", promotOrderEntity.getId()));
+                evaluateDetachedCriteria.add(Restrictions.eq("state", Constants.EVALUATE_STATE_REVIEW));
+                evaluateDetachedCriteria.addOrder(Order.desc("updateTime"));
+                List<PromotOrderEvaluateFlowEntity> promotOrderEvaluateFlowEntityList = promotOrderEvaluateFlowService.getListByCriteriaQuery(evaluateDetachedCriteria);
+                if (CollectionUtils.isNotEmpty(promotOrderEvaluateFlowEntityList)) {
+                    for (PromotOrderEvaluateFlowEntity promotOrderEvaluateFlowEntity : promotOrderEvaluateFlowEntityList) {
+                        PromotOrderEvaluateVo promotOrderEvaluateVo = new PromotOrderEvaluateVo();
+                        promotOrderEvaluateVo.setCashback(promotOrderEntity.getCashback());
+                        promotOrderEvaluateVo.setAmzOrderId(promotOrderEvaluateFlowEntity.getAmzOrderId());
+                        promotOrderEvaluateVo.setUpdateTime(promotOrderEvaluateFlowEntity.getUpdateTime());
+                        promotOrderEvaluateVo.setAsin(promotOrderEvaluateFlowEntity.getAsinId());
+                        promotOrderEvaluateVo.setReviewPrice(promotOrderEntity.getReviewPrice());
+                        promotOrderEvaluateVoList.add(promotOrderEvaluateVo);
+                    }
+                }
+            }
+        }
+        String excelFileNameHeader = "订单评论表" + DateUtils.getDate(new Date());
+        try {
+            poiPromotService.downEvaluateExcel(promotOrderEvaluateVoList, response, excelFileNameHeader);
+        } catch (Exception e) {
+            logger.error(e.fillInStackTrace());
         }
     }
 
     @RequestMapping(params = "downPromotOrderExcel")
     public void downPromotOrderExcel(HttpServletRequest request, HttpServletResponse response) {
         UserEntity userEntity = globalService.getUserEntityFromSession();
-        if(userEntity == null){
+        if (userEntity == null) {
             return;
         }
         CriteriaQuery criteriaQuery = new CriteriaQuery(PromotOrderEntity.class, null, request.getParameterMap());
@@ -106,12 +160,12 @@ public class PromotOrderController extends BaseController {
             logger.error(e);
         }
         criteriaQuery.getDetachedCriteria().addOrder(Order.desc("id"));
-        criteriaQuery.getDetachedCriteria().add(Restrictions.eq("sellerId",userEntity.getId()));
+        criteriaQuery.getDetachedCriteria().add(Restrictions.eq("sellerId", userEntity.getId()));
         List<PromotOrderEntity> promotOrderEntityList = promotOrderService.getListByCriteriaQuery(criteriaQuery.getDetachedCriteria());
-        String excelFileNameHeader = "平台订单表" + DateUtils.getDate(new Date()) ;
-        try{
-            poiPromotService.downPromotOrderExcel(promotOrderEntityList,response,excelFileNameHeader);
-        }catch (Exception e){
+        String excelFileNameHeader = "平台订单表" + DateUtils.getDate(new Date());
+        try {
+            poiPromotService.downPromotOrderExcel(promotOrderEntityList, response, excelFileNameHeader);
+        } catch (Exception e) {
             logger.error(e);
         }
     }
@@ -174,7 +228,6 @@ public class PromotOrderController extends BaseController {
             j.setMsg("请输入ASIN或者亚马逊商品主页链接！");
             return j;
         }
-        String asin = "";
         String url = "";
         if (RegularExpressionUtils.isHttpOrHttps(asinOrUrl)) {
             url = asinOrUrl;
@@ -192,24 +245,30 @@ public class PromotOrderController extends BaseController {
         }
         spiderService.spiderAmazonPageInfoSaveToHttpSession(url, 4);
         AmazonPageInfoPojo amazonPageInfoPojo = (AmazonPageInfoPojo) ContextHolderUtils.getSession().getAttribute(SpiderConstant.AMAZON_PAGE_INFO_POJO);
-        if(amazonPageInfoPojo == null){
+        if (amazonPageInfoPojo == null) {
             j.setSuccess(AjaxJson.CODE_FAIL);
             j.setMsg("解析网页失败，请检查输入ASIN或者URL是否准确！");
             return j;
         }
-        if(StringUtils.isEmpty(amazonPageInfoPojo.getProductTitle())){
+        if (StringUtils.isEmpty(amazonPageInfoPojo.getProductTitle())) {
             j.setSuccess(AjaxJson.CODE_FAIL);
             j.setMsg("未能获取网页中的商品标题，请确认ASIN或者URL是否准确！");
             return j;
         }
-        if(StringUtils.isEmpty(amazonPageInfoPojo.getPageUrl())){
+        if (StringUtils.isEmpty(amazonPageInfoPojo.getPageUrl())) {
             j.setSuccess(AjaxJson.CODE_FAIL);
             j.setMsg("未能获取商品网页链接，请确认ASIN或者URL是否准确！");
             return j;
         }
-        if(StringUtils.isEmpty(amazonPageInfoPojo.getAsin())){
+        if (StringUtils.isEmpty(amazonPageInfoPojo.getAsin())) {
             j.setSuccess(AjaxJson.CODE_FAIL);
             j.setMsg("未能获取商品ASIN编号，请确认ASIN或者URL是否准确！");
+            return j;
+        }
+
+        if (StringUtils.isEmpty(amazonPageInfoPojo.getPriceblockSaleprice())) {
+            j.setSuccess(AjaxJson.CODE_FAIL);
+            j.setMsg("未能获取商品价格，请联系技术客服！");
             return j;
         }
 
@@ -268,7 +327,7 @@ public class PromotOrderController extends BaseController {
             promotOrderDetachedCriteria.add(Restrictions.eq("id", promotOrderEntity.getId()));
             List<PromotOrderEntity> promotOrderEntityList = promotOrderService.getListByCriteriaQuery(promotOrderDetachedCriteria);
             if (CollectionUtils.isNotEmpty(promotOrderEntityList)) { //归还资金
-               j = promotOrderService.doClosedPromotOrderById(promotOrderEntityList.get(0));
+                j = promotOrderService.doClosedPromotOrderById(promotOrderEntityList.get(0));
             }
         } catch (Exception e) {
             j.setSuccess(AjaxJson.CODE_FAIL);

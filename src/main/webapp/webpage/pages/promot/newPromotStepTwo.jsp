@@ -53,23 +53,13 @@
                            aria-expanded="false">客服咨询<span class="caret"></span></a>
                         <ul class="dropdown-menu">
                             <li>
-                                <a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin=414068730&site=qq&menu=yes">
-                                    客服1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img border="0" src="http://wpa.qq.com/pa?p=2:414068730:51" alt="客服1" title="客服1"/>
+                                <a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin=282208271&site=qq&menu=yes">
+                                    业务客服&nbsp;<img border="0" src="http://wpa.qq.com/pa?p=2:282208271:51" alt="客服1" title="客服1"/>
                                 </a>
                             </li>
                             <li>
-                                <a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin=348759523&site=qq&menu=yes">
-                                    客服2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img border="0" src="http://wpa.qq.com/pa?p=2:348759523:51" alt="客服2" title="客服2"/>
-                                </a>
-                            </li>
-                            <li>
-                                <a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin=710535607&site=qq&menu=yes">
-                                    客服3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img border="0" src="http://wpa.qq.com/pa?p=2:710535607:51" alt="客服3" title="客服2"/>
-                                </a>
-                            </li>
-                            <li>
-                                <a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin=1005814292&site=qq&menu=yes">
-                                    技术支持&nbsp;<img border="0" src="http://wpa.qq.com/pa?p=2:1005814292:51" alt="技术支持" title="技术支持"/>
+                                <a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin=331219046&site=qq&menu=yes">
+                                    技术支持&nbsp;<img border="0" src="http://wpa.qq.com/pa?p=2:331219046:51" alt="技术支持" title="技术支持"/>
                                 </a>
                             </li>
                         </ul>
@@ -225,7 +215,7 @@
                                         <span class="input-group-addon">
                                             <div class="text-right" style="width: 80px;">结束日期</div>
                                         </span>
-                                <input class="form-control" name="finishDate" id="finishDate" size="16" type="text" value="" readonly
+                                <input class="form-control" name="finishDate" id="finishDate" placeholder="订单最少时间为三天！" size="16" type="text" value="" readonly
                                        onkeydown="if(event.keyCode==13){event.keyCode=0;event.returnValue=false;}"
                                 >
                                 <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
@@ -276,7 +266,7 @@
             todayHighlight: 1,
             startView: 2,
             minView: 2,
-            startDate: new Date(),
+            startDate: new Date(Date.parse(new Date().toString()) + 86400000*3),
             forceParse: 0
         });
         loadData();
@@ -339,16 +329,24 @@
             var m = 0,
                 s1 = this.reviewPrice().toString(),
                 s2 = this.needReviewNum().toString();
+                s3 = this.priceblockSaleprice().toString();
             s1 = s1.substring(1, s1.length);
+            s3 = s3.substring(1, s3.length);
+            console.log(s1);
+            console.log(s3);
+            console.log(Number(s1)+Number(s3));
+            s4 = (Number(s1)+Number(s3)).toString();
+
             try {
-                m += s1.split(".")[1].length
+                m += s4.split(".")[1].length
             } catch (e) {
             }
             try {
                 m += s2.split(".")[1].length
             } catch (e) {
             }
-            return "$" + Number(s1.replace(".", "")) * Number(s2.replace(".", "")) / Math.pow(10, m)
+            return "$" + (Math.ceil((Number(s4.replace(".", "")) * Number(s2.replace(".", "")) / Math.pow(10, m)) * 100)) / Math.pow(10, 2);
+
         }, this);
 
     };
@@ -380,14 +378,6 @@
             },
             error: function (jqxhr, textStatus, errorThrow) {
                 toastr.error("服务器异常,请联系管理员！");
-            },
-            statusCode: {
-                404: function () {
-                    console.log('not found');
-                },
-                500: function () {
-                    console.log('error by server');
-                },
             }
         });
     }

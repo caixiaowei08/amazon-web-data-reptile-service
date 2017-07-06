@@ -196,10 +196,12 @@ var viewModel = {
     finishDate: ko.observable(),
     guaranteeFund: ko.observable(),
     consumption: ko.observable(),
+    cashBackConsumption: ko.observable(),
     needReviewNum: ko.observable(),
     dayReviewNum: ko.observable(),
     buyerNum: ko.observable(),
     evaluateNum: ko.observable(),
+    cashback: ko.observable(),
     reviewPrice: ko.observable()
 };
 
@@ -224,10 +226,12 @@ function loadPromotOrder(promotId) {
                 viewModel.finishDate(data.content.finishDate);
                 viewModel.guaranteeFund(data.content.guaranteeFund);
                 viewModel.consumption(data.content.consumption);
+                viewModel.cashBackConsumption(data.content.cashBackConsumption);
                 viewModel.needReviewNum(data.content.needReviewNum);
                 viewModel.dayReviewNum(data.content.dayReviewNum);
                 viewModel.buyerNum(data.content.buyerNum);
                 viewModel.evaluateNum(data.content.evaluateNum);
+                viewModel.cashback(data.content.cashback);
                 viewModel.reviewPrice(data.content.reviewPrice);
             } else if (data.success === "fail") {
                 toastr.warning(data.msg);
@@ -241,13 +245,12 @@ function loadPromotOrder(promotId) {
     });
 }
 
-function downPromotOrderExcel() {
+function downEvaluateExcel() {
     var params = new Object();
     params.asinId = $("#amazon_asin").val().trim();
     params.state = $("#amazon_state").val().trim();
     params.addDate_begin = $("#addDate_begin_value").val().trim();
     params.addDate_end = $("#addDate_end_value").val().trim();
-
     if ((params.addDate_end === "") ^ (params.addDate_begin === "")) {
         toastr.warning("若填写查询时间，开始时间和结束时间需要同时填写！");
         return;
@@ -258,7 +261,7 @@ function downPromotOrderExcel() {
         success: function (data) {
             if (data.success === "success") {
                 window.open(
-                    "/promotOrderController.do?downPromotOrderExcel&asinId=" + params.asinId
+                    "/promotOrderController.do?downEvaluateExcel&asinId=" + params.asinId
                     + "&state=" + params.state
                     + "&addDate_begin=" + params.addDate_begin
                     + "&addDate_end=" + params.addDate_end
@@ -277,3 +280,5 @@ function downPromotOrderExcel() {
         }
     });
 }
+
+

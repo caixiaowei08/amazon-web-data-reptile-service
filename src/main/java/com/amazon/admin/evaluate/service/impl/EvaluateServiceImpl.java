@@ -145,15 +145,15 @@ public class EvaluateServiceImpl extends BaseServiceImpl implements EvaluateServ
             return j;
         }
         UserFundEntity userFundEntity = userFundEntityList.get(0);
-        BigDecimal reviewPrice = promotOrderEntity.getReviewPrice();
-        if (userFundEntity.getFreezeFund().compareTo(reviewPrice) < 0
-                || userFundEntity.getTotalFund().compareTo(reviewPrice) < 0) {
+        BigDecimal tatalPrice = promotOrderEntity.getReviewPrice().add(promotOrderEntity.getCashback());
+        if (userFundEntity.getFreezeFund().compareTo(tatalPrice) < 0
+                || userFundEntity.getTotalFund().compareTo(tatalPrice) < 0) {
             j.setSuccess(AjaxJson.CODE_FAIL);
             j.setMsg("账户资金不足，请核实!");
             return j;
         }
 
-        if (promotOrderEntity.getGuaranteeFund().compareTo(reviewPrice) < 0) {
+        if (promotOrderEntity.getGuaranteeFund().compareTo(tatalPrice) < 0) {
             j.setSuccess(AjaxJson.CODE_FAIL);
             j.setMsg("订单保证金不足！");
             return j;
@@ -169,14 +169,15 @@ public class EvaluateServiceImpl extends BaseServiceImpl implements EvaluateServ
         if (CollectionUtils.isNotEmpty(promotOrderExistFlowEntityList)) {
             promotOrderEvaluateFlowEntityExist = promotOrderExistFlowEntityList.get(0);
         }
-        userFundEntity.setTotalFund(userFundEntity.getTotalFund().subtract(reviewPrice));
-        userFundEntity.setFreezeFund(userFundEntity.getFreezeFund().subtract(reviewPrice));
+        userFundEntity.setTotalFund(userFundEntity.getTotalFund().subtract(promotOrderEntity.getReviewPrice()).subtract(promotOrderEntity.getCashback()));
+        userFundEntity.setFreezeFund(userFundEntity.getFreezeFund().subtract(promotOrderEntity.getReviewPrice()).subtract(promotOrderEntity.getCashback()));
         if (promotOrderEvaluateFlowEntityExist == null) {
             promotOrderEntity.setBuyerNum(promotOrderEntity.getBuyerNum() + 1);
         }
         promotOrderEntity.setEvaluateNum(promotOrderEntity.getEvaluateNum() + 1);
-        promotOrderEntity.setConsumption(promotOrderEntity.getConsumption().add(reviewPrice));
-        promotOrderEntity.setGuaranteeFund(promotOrderEntity.getGuaranteeFund().subtract(reviewPrice));
+        promotOrderEntity.setConsumption(promotOrderEntity.getConsumption().add(promotOrderEntity.getReviewPrice()));
+        promotOrderEntity.setCashBackConsumption(promotOrderEntity.getCashBackConsumption().add(promotOrderEntity.getCashback()));
+        promotOrderEntity.setGuaranteeFund(promotOrderEntity.getGuaranteeFund().subtract(promotOrderEntity.getReviewPrice()).subtract(promotOrderEntity.getCashback()));
 
         //新增设置 评价状态
         if (promotOrderEvaluateFlowEntityExist != null) {

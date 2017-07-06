@@ -48,23 +48,13 @@
                            aria-expanded="false">客服咨询<span class="caret"></span></a>
                         <ul class="dropdown-menu">
                             <li>
-                                <a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin=414068730&site=qq&menu=yes">
-                                    客服1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img border="0" src="http://wpa.qq.com/pa?p=2:414068730:51" alt="客服1" title="客服1"/>
+                                <a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin=282208271&site=qq&menu=yes">
+                                    业务客服&nbsp;<img border="0" src="http://wpa.qq.com/pa?p=2:282208271:51" alt="客服1" title="客服1"/>
                                 </a>
                             </li>
                             <li>
-                                <a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin=348759523&site=qq&menu=yes">
-                                    客服2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img border="0" src="http://wpa.qq.com/pa?p=2:348759523:51" alt="客服2" title="客服2"/>
-                                </a>
-                            </li>
-                            <li>
-                                <a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin=710535607&site=qq&menu=yes">
-                                    客服3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img border="0" src="http://wpa.qq.com/pa?p=2:710535607:51" alt="客服3" title="客服2"/>
-                                </a>
-                            </li>
-                            <li>
-                                <a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin=1005814292&site=qq&menu=yes">
-                                    技术支持&nbsp;<img border="0" src="http://wpa.qq.com/pa?p=2:1005814292:51" alt="技术支持" title="技术支持"/>
+                                <a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin=331219046&site=qq&menu=yes">
+                                    技术支持&nbsp;<img border="0" src="http://wpa.qq.com/pa?p=2:331219046:51" alt="技术支持" title="技术支持"/>
                                 </a>
                             </li>
                         </ul>

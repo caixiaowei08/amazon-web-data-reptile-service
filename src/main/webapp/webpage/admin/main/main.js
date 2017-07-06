@@ -206,12 +206,14 @@ var viewModel = {
     state: ko.observable(),
     addDate: ko.observable(),
     finishDate: ko.observable(),
+    cashBackConsumption: ko.observable(),
     guaranteeFund: ko.observable(),
     consumption: ko.observable(),
     needReviewNum: ko.observable(),
     dayReviewNum: ko.observable(),
     buyerNum: ko.observable(),
     evaluateNum: ko.observable(),
+    cashback:ko.observable(),
     reviewPrice: ko.observable()
 };
 
@@ -230,6 +232,7 @@ function loadPromotOrder(promotId) {
                 viewModel.brand(data.content.brand);
                 viewModel.landingImage(data.content.thumbnail);
                 viewModel.salePrice(data.content.salePrice);
+                viewModel.cashBackConsumption(data.content.cashBackConsumption);
                 viewModel.state(data.content.state);
                 viewModel.addDate(data.content.addDate);
                 viewModel.finishDate(data.content.finishDate);
@@ -238,6 +241,7 @@ function loadPromotOrder(promotId) {
                 viewModel.needReviewNum(data.content.needReviewNum);
                 viewModel.dayReviewNum(data.content.dayReviewNum);
                 viewModel.buyerNum(data.content.buyerNum);
+                viewModel.cashback(data.content.cashback);
                 viewModel.evaluateNum(data.content.evaluateNum);
                 viewModel.reviewPrice(data.content.reviewPrice);
             } else if (data.success === "fail") {

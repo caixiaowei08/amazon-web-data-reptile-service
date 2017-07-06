@@ -182,7 +182,7 @@
         <table id="promotListTable" class="table table-hover">
         </table>
     </div>
-    <div style="height: 20px;"></div>
+    <div style="height: 100px;"></div>
 </div>
 <nav class="navbar navbar-default navbar-fixed-bottom">
     <div class="container">
@@ -270,24 +270,39 @@
                         </div>
                         <div class="form-group">
                             <div class="input-group">
-                                <span class="input-group-addon" style="width: 80px;" id="guaranteeFund">保证金(美元)</span>
+                                <span class="input-group-addon" style="width: 160px;" id="guaranteeFund">保证金(美元)</span>
                                 <input type="text" class="form-control" data-bind="value:guaranteeFund"
                                        placeholder="保证金(美元)" readonly aria-describedby="guaranteeFund">
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="input-group">
-                                <span class="input-group-addon" style="width: 80px;" id="evaluateNum">获取评论数</span>
+                                <span class="input-group-addon" style="width: 160px;" id="evaluateNum">获取评论数</span>
                                 <input type="text" class="form-control" data-bind="value:evaluateNum"
                                        placeholder="获取评论数" readonly aria-describedby="evaluateNum">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="input-group">
+                                <span class="input-group-addon" style="width: 160px;" id="cashback">单个返现费用(美元)</span>
+                                <input type="text" class="form-control" data-bind="value:cashback"
+                                       placeholder="单个返现费用(美元)"
+                                       readonly aria-describedby="cashback">
                             </div>
                         </div>
                     </div>
                     <div class="col-sm-6">
                         <div class="form-group">
                             <div class="input-group">
-                                <span class="input-group-addon" style="width: 160px;" id="consumption">已花费(美元)</span>
-                                <input type="text" class="form-control" data-bind="value:consumption" placeholder="已花费"
+                                <span class="input-group-addon" style="width: 160px;" id="consumption">评价花费(美元)</span>
+                                <input type="text" class="form-control" data-bind="value:consumption" placeholder="评价花费(美元)"
+                                       readonly aria-describedby="consumption">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="input-group">
+                                <span class="input-group-addon" style="width: 160px;" id="cashBackConsumption">返现花费(美元)</span>
+                                <input type="text" class="form-control" data-bind="value:cashBackConsumption" placeholder="返现花费(美元)"
                                        readonly aria-describedby="consumption">
                             </div>
                         </div>
@@ -317,7 +332,7 @@
                         </div>
                         <div class="form-group">
                             <div class="input-group">
-                                <span class="input-group-addon" style="width: 160px;" id="reviewPrice">评论费用(美元)</span>
+                                <span class="input-group-addon" style="width: 160px;" id="reviewPrice">单个评论费用(美元)</span>
                                 <input type="text" class="form-control" data-bind="value:reviewPrice"
                                        placeholder="每个评论费用"
                                        readonly aria-describedby="reviewPrice">

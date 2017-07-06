@@ -2,6 +2,7 @@ package com.amazon.service.spider.service;
 
 import com.amazon.service.spider.SpiderConstant;
 import com.amazon.service.spider.pojo.AmazonPageInfoPojo;
+import org.springframework.util.StringUtils;
 import us.codecraft.webmagic.Page;
 import us.codecraft.webmagic.Site;
 import us.codecraft.webmagic.processor.PageProcessor;
@@ -22,6 +23,11 @@ public class AmazonPageProcessor implements PageProcessor {
         amazonPageInfoPojo.setBrand(page.getHtml().xpath("//div[@id='merchant-info']/a[1]/text()").toString());
         amazonPageInfoPojo.setLandingImage(page.getHtml().xpath("//img[@id='landingImage']/@src").toString());
         amazonPageInfoPojo.setAsin(page.getHtml().xpath("//div[@id='averageCustomerReviews']/@data-asin").toString());
+
+        if(StringUtils.isEmpty(amazonPageInfoPojo.getBrand())){
+            amazonPageInfoPojo.setBrand(page.getHtml().xpath("//span[@id='merchant-info']/a[1]/text()").toString());
+        }
+
         page.putField(SpiderConstant.AMAZON_PAGE_INFO_POJO,amazonPageInfoPojo);
     }
 
