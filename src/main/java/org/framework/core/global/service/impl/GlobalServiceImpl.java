@@ -2,6 +2,8 @@ package org.framework.core.global.service.impl;
 
 import com.amazon.admin.account.entity.AdminSystemEntity;
 import com.amazon.admin.constant.Constants;
+import com.amazon.buyer.account.entity.BuyerUserEntity;
+import com.amazon.buyer.utils.BuyerConstants;
 import com.amazon.service.user.entity.UserEntity;
 import com.amazon.system.Constant;
 import org.framework.core.common.pojo.EmailCodePojo;
@@ -36,6 +38,18 @@ public class GlobalServiceImpl extends BaseServiceImpl implements GlobalService 
         return true;
     }
 
+    public boolean sendEmailEmailBuyerCheckCodePojo(EmailCodePojo emailCodePojo) {
+        emailCodePojo.setSubject("点击链接重置密码！");
+        emailCodePojo.setContent("您的重置密码链接是" + emailCodePojo.getCode() + ",请在10分钟内使用该验证码完成密码修改！");
+        try {
+            MailUtils.sendEmail(emailCodePojo);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+
     public UserEntity getUserEntityFromSession() {
         UserEntity userSession = (UserEntity) ContextHolderUtils.getSession().getAttribute(Constant.USER_SESSION_CONSTANTS);
         return userSession;
@@ -55,7 +69,20 @@ public class GlobalServiceImpl extends BaseServiceImpl implements GlobalService 
     public Boolean isNotAdminLogin() {
         if (getAdminEntityFromSession() == null) {
             return true;
-        }else{
+        } else {
+            return false;
+        }
+    }
+
+    public BuyerUserEntity getBuyerUserEntityFromSession() {
+        BuyerUserEntity buyerUserEntity = (BuyerUserEntity) ContextHolderUtils.getSession().getAttribute(BuyerConstants.BUYER_USER_SESSION_CONSTANTS);
+        return buyerUserEntity;
+    }
+
+    public Boolean isNotBuyerUserLogin() {
+        if (getBuyerUserEntityFromSession() == null){
+            return true;
+        } else {
             return false;
         }
     }
