@@ -219,7 +219,6 @@ public class EvaluateServiceImpl extends BaseServiceImpl implements EvaluateServ
             j.setMsg("保存出错！");
             logger.info(e.toString());
         }
-
         return j;
     }
 

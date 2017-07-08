@@ -39,6 +39,7 @@
 	<servlet-mapping>
 		<servlet-name>springMvc</servlet-name>
 		<url-pattern>*.do</url-pattern>
+		<url-pattern>*.buyer</url-pattern>
 		<url-pattern>*.admin</url-pattern>
 	</servlet-mapping>
 	<context-param>
