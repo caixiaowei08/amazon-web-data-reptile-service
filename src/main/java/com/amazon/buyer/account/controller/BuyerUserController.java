@@ -3,8 +3,7 @@ package com.amazon.buyer.account.controller;
 import com.amazon.buyer.account.entity.BuyerUserEntity;
 import com.amazon.buyer.account.service.BuyerUserService;
 import com.amazon.buyer.utils.BuyerConstants;
-import com.amazon.service.user.entity.UserEntity;
-import com.amazon.service.user.vo.UserVo;
+import com.amazon.buyer.utils.PaymentAccountConstants;
 import com.amazon.system.Constant;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.logging.log4j.LogManager;
@@ -20,12 +19,11 @@ import org.framework.core.utils.PasswordUtil;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -43,6 +41,9 @@ import java.util.UUID;
 public class BuyerUserController extends BaseController {
 
     private static Logger logger = LogManager.getLogger(BuyerUserController.class.getName());
+
+    private String domainName = "http://localhost:8888/";
+
 
     @Autowired
     private BuyerUserService buyerUserService;
@@ -114,6 +115,7 @@ public class BuyerUserController extends BaseController {
         }
         buyerUserEntity.setState(Constant.STATE_Y);
         buyerUserEntity.setPwd(PasswordUtil.getMD5Encryp(buyerUserEntity.getPwd()));
+        buyerUserEntity.setDefaultPaymentAccount(PaymentAccountConstants.ZFB);
         buyerUserEntity.setUpdateTime(new Date());
         buyerUserEntity.setCreateTime(new Date());
         try {
@@ -146,60 +148,87 @@ public class BuyerUserController extends BaseController {
             return j;
         }
 
+        BuyerUserEntity buyerUserDb = buyerUserEntityList.get(0);
+
         String emailCode = UUID.randomUUID().toString();
         EmailCodePojo emailCodePojo = new EmailCodePojo();
-        emailCodePojo.setCode(emailCode);
-        emailCodePojo.setCreateTime(new Date());
-        emailCodePojo.setInvalidTime(DateUtils.addMinute(new Date(), 10));
+        emailCodePojo.setCode("<a href='"+domainName+
+                "buyerUserController.buyer?doLookForPwd&checkCode="+emailCode+
+                "&account="+buyerUserDb.getAccount()+"'>"+domainName+
+                "buyerUserController.buyer?doLookForPwd&checkCode="+emailCode+
+                "&account="+buyerUserDb.getAccount()+"</a>"
+        );
         emailCodePojo.setEmail(email);
-        ContextHolderUtils.getSession().setAttribute(Constant.EMAIL_CODE, emailCodePojo);
+        buyerUserDb.setCheckCode(emailCode);
+        buyerUserDb.setCheckCodeCheckTime(DateUtils.addMinute(new Date(), 10));
         try {
-            globalService.sendEmailEmailCodePojo(emailCodePojo);
+            buyerUserService.saveOrUpdate(buyerUserDb);
+            globalService.sendEmailEmailBuyerCheckCodePojo(emailCodePojo);
         } catch (Exception e) {
-
+            logger.error(e.fillInStackTrace());
+            j.setSuccess(AjaxJson.CODE_FAIL);
+            j.setMsg("该邮箱账户不存在，请直接注册！");
+            return j;
         }
+        j.setMsg("Send mail successfully!");
         return j;
     }
 
     @RequestMapping(params = "doLookForPwd")
-    @ResponseBody
-    public AjaxJson doLookForPwd(BuyerUserEntity buyerUserEntity, HttpServletRequest request) {
-        AjaxJson j = new AjaxJson();
+    public String doLookForPwd(BuyerUserEntity buyerUserEntity, HttpServletRequest request) {
         String email = buyerUserEntity.getAccount();
         if (!MailUtils.isEmail(email)) {
-            j.setSuccess(AjaxJson.CODE_FAIL);
-            j.setMsg("链接错误！");
-            return j;
+            return "buyer/user/failVerification";
         }
         DetachedCriteria detachedCriteria = DetachedCriteria.forClass(BuyerUserEntity.class);
         detachedCriteria.add(Restrictions.eq("account", email));
         List<BuyerUserEntity> buyerUserEntityList = buyerUserService.getListByCriteriaQuery(detachedCriteria);
         if (CollectionUtils.isEmpty(buyerUserEntityList)) {
-            j.setSuccess(AjaxJson.CODE_FAIL);
-            j.setMsg("该邮箱账户不存在，请确认填写是否正确！");
-            return j;
+            return "buyer/user/failVerification";
         }
-
         BuyerUserEntity buyerUserDb = buyerUserEntityList.get(0);
-
         if (buyerUserDb.getCheckCodeCheckTime().compareTo(new Date()) < 0) {
-            j.setSuccess(AjaxJson.CODE_FAIL);
-            j.setMsg("链接已经过了有效期!");
-            return j;
+            return "buyer/user/failVerification";
         }
-
         if (buyerUserDb.getAccount().equals(buyerUserEntity.getAccount()) && buyerUserDb.getCheckCode().equals(buyerUserEntity.getCheckCode())) {
-            buyerUserDb.setPwd(PasswordUtil.getMD5Encryp(buyerUserEntity.getPwd()));
-            buyerUserDb.setCheckCode(null);
-            buyerUserService.saveOrUpdate(buyerUserDb);
-            j.setSuccess(AjaxJson.CODE_SUCCESS);
-            j.setMsg("验证通过!");
-            return j;
+            ContextHolderUtils.getSession().setAttribute(BuyerConstants.CHECK_BUYER_USER_SESSION_CONSTANTS,buyerUserEntity);
+            return "buyer/user/successfulVerification";
+        }else{
+            return "buyer/user/failVerification";
         }
-        j.setSuccess(AjaxJson.CODE_FAIL);
-        j.setMsg("验证码错误！");
-        return j;
     }
 
-
+    @RequestMapping(params = "changePwdByCheckCode")
+    @ResponseBody
+    public AjaxJson changePwdByCheckCode(BuyerUserEntity buyerUserEntity, HttpServletRequest request) {
+        AjaxJson j = new AjaxJson();
+        BuyerUserEntity buyerUserEntitySession = (BuyerUserEntity)ContextHolderUtils.getSession().getAttribute(BuyerConstants.CHECK_BUYER_USER_SESSION_CONSTANTS);
+        if(buyerUserEntitySession == null){
+            j.setSuccess(AjaxJson.CODE_FAIL);
+            j.setMsg("请重试！");
+            return j;
+        }
+        DetachedCriteria detachedCriteria = DetachedCriteria.forClass(BuyerUserEntity.class);
+        detachedCriteria.add(Restrictions.eq("account", buyerUserEntitySession.getAccount()));
+        List<BuyerUserEntity> buyerUserEntityList = buyerUserService.getListByCriteriaQuery(detachedCriteria);
+        if(CollectionUtils.isEmpty(buyerUserEntityList)){
+            j.setSuccess(AjaxJson.CODE_FAIL);
+            j.setMsg("请重试！");
+            return j;
+        }
+        BuyerUserEntity buyerUserEntityDb =  buyerUserEntityList.get(0);
+        buyerUserEntityDb.setState(Constant.STATE_Y);
+        buyerUserEntityDb.setCheckCode(null);
+        buyerUserEntityDb.setCheckCodeCheckTime(null);
+        buyerUserEntityDb.setPwd(PasswordUtil.getMD5Encryp(buyerUserEntity.getPwd()));
+        buyerUserEntityDb.setUpdateTime(new Date());
+        try {
+            buyerUserService.saveOrUpdate(buyerUserEntityDb);
+        } catch (Exception e) {
+            j.setSuccess(AjaxJson.CODE_FAIL);
+            j.setMsg("修改失败！");
+        }
+        j.setMsg("successfully changed！");
+        return j;
+    }
 }

@@ -1,3 +1,6 @@
+/**
+ * Created by User on 2017/7/9.
+ */
 $(function () {
     $('#formObj').bootstrapValidator({
         framework: 'bootstrap',
@@ -7,12 +10,6 @@ $(function () {
             validating: 'glyphicon glyphicon-refresh'
         },
         fields: {
-            account: {
-                validators: {
-                    notEmpty: {
-                    }
-                }
-            },
             pwd: {
                 validators: {
                     notEmpty: {
@@ -29,26 +26,15 @@ $(function () {
         $.post(form.attr('action'),form.serialize(),function (result) {
             if (result.success === "success") {
                 toastr.success(result.msg);
-                var i = 60;
-                $("#sendEmailResetPwd").addClass('disabled');
-                var flag = setInterval(function () {
-                    $("#sendEmailResetPwd").val(i + "s");
-                    i--;
-                    if (i < 0) {
-                        $("#sendEmailResetPwd").removeClass('disabled');
-                        form.bootstrapValidator('disableSubmitButtons', false);
-                        $("#sendEmailResetPwd").val("Send Password reset email");
-                        clearInterval(flag);
-                    }
-                }, 1000);
+                setTimeout("window.location='/userPageController.buyer?login'", 500);
             } else if (result.success === "fail") {
-                toastr.error(result.msg);
+                toastr.warning(result.msg);
                 form.bootstrapValidator('disableSubmitButtons', false);
             }
         },'json');
     })
 });
 
-function sendEmailClick() {
+function resetPwdClick() {
     $('#formObj').submit();
 }

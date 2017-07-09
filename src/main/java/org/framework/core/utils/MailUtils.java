@@ -60,7 +60,7 @@ public class MailUtils {
         // 3. To: 收件人（可以增加多个收件人、抄送、密送）
         int end  = emailCodePojo.getEmail().indexOf('@');
         String emailName = emailCodePojo.getEmail().substring(0,end);
-        message.setRecipient(MimeMessage.RecipientType.TO, new InternetAddress(emailCodePojo.getEmail(), emailName+"用户", "UTF-8"));
+        message.setRecipient(MimeMessage.RecipientType.TO, new InternetAddress(emailCodePojo.getEmail(), emailName, "UTF-8"));
         // 4. Subject: 邮件主题
         message.setSubject(emailCodePojo.getSubject(), "UTF-8");
         // 5. Content: 邮件正文（可以使用html标签）

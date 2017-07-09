@@ -31,5 +31,10 @@ public class UserPageController extends BaseController{
         return "buyer/user/sendEmailResetPwd";
     }
 
+    @RequestMapping(params = "index")
+    public String index(HttpServletRequest request, HttpServletResponse response) {
+        return "buyer/main/index";
+    }
+
 
 }

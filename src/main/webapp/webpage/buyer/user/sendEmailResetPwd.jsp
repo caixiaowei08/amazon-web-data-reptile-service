@@ -9,6 +9,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0,user-scalable=no"/>
     <link rel="stylesheet" href="/webpage/plug-in/bootstrap/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="/webpage/plug-in/bootstrap/css/bootstrap-theme.min.css"/>
+    <link rel="stylesheet" href="/webpage/plug-in/toastr/toastr.css"/>
     <link rel="stylesheet" href="/webpage/buyer/user/sendEmailResetPwd.css"/>
     <!--[if lte IE 9]>
     <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
@@ -16,8 +17,9 @@
     <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
     <![endif]-->
     <script type="text/javascript" src="/webpage/plug-in/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="/webpage/plug-in/toastr/toastr.min.js"></script>
     <script type="text/javascript" src="/webpage/plug-in/bootstrapvalidator/dist/js/bootstrapValidator.min.js"></script>
-    <script type="text/javascript" src="/webpage/plug-in/bootstrapvalidator/dist/js/language/zh_CN.js"></script>
+    <script type="text/javascript" src="/webpage/plug-in/bootstrapvalidator/dist/js/language/en_US.js"></script>
     <script type="text/javascript" src="/webpage/plug-in/bootstrap/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="/webpage/buyer/user/sendEmailResetPwd.js"></script>
 </head>
@@ -31,8 +33,8 @@
                     <div class="page-header text-center text-warning">
                         <h3>Reset your password</h3>
                     </div>
-                    <form id="formObj" class="form-horizontal" onsubmit="return doAdminLogin()">
-                        <div class="form-group" style="height: 54px;">
+                    <form id="formObj" class="form-horizontal" action="/buyerUserController.buyer?sendEmailCode" onsubmit="return false;">
+                        <div class="form-group" style="height:65px;">
                             <label for="account" class="pull-left">Enter your email address and we will send you a link to reset your password.</label>
                             <div class="input-group-lg">
                                 <input type="text" name="account" placeholder="Enter your email address"
@@ -42,7 +44,7 @@
                         </div>
                         <div style="height:30px;"></div>
                         <div class="form-group">
-                            <input type="button" id="loginSubmit" onclick="loginAdmin();" value="Send Password reset email"
+                            <input type="submit" id="sendEmailResetPwd" onclick="sendEmailClick();" value="Send Password reset email"
                                    class="btn btn-block btn-success btn-lg">
                         </div>
                         <div style="height:10px;"></div>

@@ -3,6 +3,7 @@ package org.framework.core.global.service.impl;
 import com.amazon.admin.account.entity.AdminSystemEntity;
 import com.amazon.admin.constant.Constants;
 import com.amazon.buyer.account.entity.BuyerUserEntity;
+import com.amazon.buyer.account.service.BuyerUserService;
 import com.amazon.buyer.utils.BuyerConstants;
 import com.amazon.service.user.entity.UserEntity;
 import com.amazon.system.Constant;
@@ -12,6 +13,7 @@ import org.framework.core.global.service.GlobalService;
 import org.framework.core.utils.ContextHolderUtils;
 import org.framework.core.utils.MailUtils;
 import org.framework.core.utils.OrderNumberUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,8 +41,8 @@ public class GlobalServiceImpl extends BaseServiceImpl implements GlobalService 
     }
 
     public boolean sendEmailEmailBuyerCheckCodePojo(EmailCodePojo emailCodePojo) {
-        emailCodePojo.setSubject("点击链接重置密码！");
-        emailCodePojo.setContent("您的重置密码链接是" + emailCodePojo.getCode() + ",请在10分钟内使用该验证码完成密码修改！");
+        emailCodePojo.setSubject("From Seller Assistant,click the link to reset your password!");
+        emailCodePojo.setContent("The link to reset your password is " + emailCodePojo.getCode() + ",Please complete the password reset in ten minutes ");
         try {
             MailUtils.sendEmail(emailCodePojo);
         } catch (Exception e) {

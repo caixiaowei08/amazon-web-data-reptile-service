@@ -14,7 +14,7 @@ import java.util.Date;
  * Created by User on 2017/7/8.
  */
 @Entity
-@Table(name = "amazon_user_fund_table")
+@Table(name = "amazon_buyer_user_table")
 public class BuyerUserEntity extends IdEntity implements Serializable {
     /**
      * '账号'
@@ -118,7 +118,7 @@ public class BuyerUserEntity extends IdEntity implements Serializable {
         this.zfbAccount = zfbAccount;
     }
 
-    @Column(name = "pwd", nullable = true, length = 100)
+    @Column(name = "defaultPaymentAccount", nullable = true, length = 100)
     public Integer getDefaultPaymentAccount() {
         return defaultPaymentAccount;
     }
@@ -136,7 +136,7 @@ public class BuyerUserEntity extends IdEntity implements Serializable {
         this.checkCode = checkCode;
     }
 
-    @Column(name ="createTime",nullable=true,length=20)
+    @Column(name ="checkCodeCheckTime",nullable=true,length=20)
     public Date getCheckCodeCheckTime() {
         return checkCodeCheckTime;
     }
@@ -154,7 +154,7 @@ public class BuyerUserEntity extends IdEntity implements Serializable {
         this.state = state;
     }
 
-    @Column(name ="createTime",nullable=true,length=20)
+    @Column(name ="loginTime",nullable=true,length=20)
     public Date getLoginTime() {
         return loginTime;
     }
@@ -172,6 +172,7 @@ public class BuyerUserEntity extends IdEntity implements Serializable {
         this.createTime = createTime;
     }
 
+    @Column(name ="updateTime",nullable=true,length=20)
     public Date getUpdateTime() {
         return updateTime;
     }
