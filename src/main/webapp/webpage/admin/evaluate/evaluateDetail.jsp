@@ -92,8 +92,8 @@
                     <div class="col-md-4">
                         <div class="row">
                             <div class="form-group">
-                                <label class="col-xs-4 control-label amazon-label" for="amazon_asin">ASIN</label>
-                                <div class="col-xs-8">
+                                <label class="col-xs-5 control-label amazon-label" for="amazon_asin">ASIN</label>
+                                <div class="col-xs-7">
                                     <input class="form-control" id="amazon_asin" type="text"/>
                                 </div>
                             </div>
@@ -102,8 +102,8 @@
                     <div class="col-md-4">
                         <div class="row">
                             <div class="form-group">
-                                <label class="col-xs-4 control-label amazon-label" for="amazon_amzOrderId">亚马逊订单号</label>
-                                <div class="col-xs-8">
+                                <label class="col-xs-5 control-label amazon-label" for="amazon_amzOrderId">亚马逊单号</label>
+                                <div class="col-xs-7">
                                     <input class="form-control" id="amazon_amzOrderId" type="text"/>
                                 </div>
                             </div>

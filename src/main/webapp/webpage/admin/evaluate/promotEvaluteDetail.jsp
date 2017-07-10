@@ -56,7 +56,6 @@
                            aria-expanded="false">系统设置<span class="caret"></span></a>
                         <ul class="dropdown-menu">
                             <li><a href="/skipController.admin?goPriceExchange" target="_parent">价格汇率</a></li>
-                            <%--<li><a href="/skipController.admin?goQQContacts" target="_parent">联系人</a></li>--%>
                         </ul>
                     </li>
                     <li class="dropdown">

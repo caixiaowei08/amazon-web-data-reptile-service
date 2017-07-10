@@ -1,5 +1,6 @@
 package org.framework.core.utils.DateUtils;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -9,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 public class DateUtils {
+
 
     /**
      * 获取SimpleDateFormat
@@ -692,6 +694,7 @@ public class DateUtils {
 
     /**
      * 获取当天凌晨0点0分0秒Date
+     *
      * @return
      */
     public static Date getBeginOfDate() {
@@ -703,6 +706,7 @@ public class DateUtils {
 
     /**
      * 获取当天23点59分59秒Date
+     *
      * @return
      */
     public static Date getEndOfDate() {
@@ -715,6 +719,7 @@ public class DateUtils {
 
     /**
      * 获取当天23点59分59秒Date
+     *
      * @return
      */
     public static Date getEndOfDate(Date date) {
@@ -731,12 +736,25 @@ public class DateUtils {
 
     /**
      * 比较时间大小
+     *
      * @return
      */
-    public static Long compareTo(Date date1,Date date2) {
-        return  date1.getTime() - date2.getTime();
+    public static Long compareTo(Date date1, Date date2) {
+        return date1.getTime() - date2.getTime();
+    }
+
+    public static int daysBetween(Date smdate, Date bdate) throws ParseException {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        smdate = sdf.parse(sdf.format(smdate));
+        bdate = sdf.parse(sdf.format(bdate));
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(smdate);
+        long time1 = cal.getTimeInMillis();
+        cal.setTime(bdate);
+        long time2 = cal.getTimeInMillis();
+        long between_days = (time2 - time1) / (1000 * 3600 * 24);
+        return Integer.parseInt(String.valueOf(between_days));
     }
 
 
-
-}  
+}

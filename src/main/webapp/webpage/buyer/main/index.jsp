@@ -41,20 +41,10 @@
             <ul class="nav navbar-nav navbar-right">
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle " data-toggle="dropdown" role="button" aria-haspopup="true"
-                       aria-expanded="false">Customer service<span class="caret"></span></a>
+                       aria-expanded="false">My account<span class="caret"></span></a>
                     <ul class="dropdown-menu">
-                        <li>
-                            <a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin=282208271&site=qq&menu=yes">
-                                业务客服&nbsp;<img border="0" src="http://wpa.qq.com/pa?p=2:282208271:51" alt="客服1"
-                                               title="客服1"/>
-                            </a>
-                        </li>
-                        <li>
-                            <a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin=331219046&site=qq&menu=yes">
-                                技术支持&nbsp;<img border="0" src="http://wpa.qq.com/pa?p=2:331219046:51" alt="技术支持"
-                                               title="技术支持"/>
-                            </a>
-                        </li>
+                        <li><a href="/skipController.admin?goAdminChangePwd" target="_parent">Account details</a></li>
+                        <li><a href="/skipController.admin?goAdminChangePwd" target="_parent">Reset password</a></li>
                     </ul>
                 </li>
                 <li>

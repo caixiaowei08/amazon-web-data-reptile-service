@@ -235,7 +235,6 @@ public class EvaluateServiceImpl extends BaseServiceImpl implements EvaluateServ
             promotOrderEntity.setUpdateTime(new Date());
             promotOrderService.saveOrUpdate(promotOrderEntity);
             promotOrderEvaluateFlowService.delete(promotOrderEvaluateFlowEntity);
-
         } else if (promotOrderEvaluateFlowEntity.getState().equals(Constants.EVALUATE_STATE_REVIEW)) {
             //账目变动
             DetachedCriteria userFundDetachedCriteria = DetachedCriteria.forClass(UserFundEntity.class);

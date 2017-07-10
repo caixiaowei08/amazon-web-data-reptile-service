@@ -82,7 +82,7 @@ function dealWithData(rows) {
             "<span class='product-brand'>"+rows[i].brand+"</span>"+
             "</div>"+
             "<div class='amazon-info'>"+
-            "<span class='product-num'>"+rows[i].dayReviewNum+"</span>"+
+            "<span class='product-num'>"+rows[i].stockNum+"</span>"+
             "<span class='currency'>&nbsp;&nbsp;in stock,today</span>"+
             "<span class='repay-note'>just repay 1 time</span>"+
             "</div>"+
