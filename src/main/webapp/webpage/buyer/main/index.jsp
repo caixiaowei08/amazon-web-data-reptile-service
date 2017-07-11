@@ -44,11 +44,12 @@
                        aria-expanded="false">My account<span class="caret"></span></a>
                     <ul class="dropdown-menu">
                         <li><a href="/userPageController.buyer?goAccountDetails" target="_parent">Account details</a></li>
+                        <li><a href="/userPageController.buyer?goModifyPayment" target="_parent">Modify payment information</a></li>
                         <li><a href="/userPageController.buyer?goChangePwd" target="_parent">Reset password</a></li>
                     </ul>
                 </li>
                 <li>
-                    <a href="/userController.do?doLogOff" target="_parent">
+                    <a href="/buyerUserController.buyer?doLogOff" target="_parent">
                         Log off
                         <i class="fa fa-power-off" style="color: red" aria-hidden="true"></i>
                     </a>

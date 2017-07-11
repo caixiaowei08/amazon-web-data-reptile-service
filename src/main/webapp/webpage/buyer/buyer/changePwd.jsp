@@ -48,7 +48,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand font-color" href="/mainController.do?index" target="_parent">Seller Assistant</a>
+                <a class="navbar-brand font-color" href="/buyerUserController.buyer?index" target="_parent">Seller Assistant</a>
             </div>
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">
@@ -61,7 +61,7 @@
                         </ul>
                     </li>
                     <li>
-                        <a href="/userController.do?doLogOff" target="_parent">
+                        <a href="/buyerUserController.buyer?doLogOff" target="_parent">
                             Log off
                             <i class="fa fa-power-off" style="color: red" aria-hidden="true"></i>
                         </a>
@@ -90,45 +90,45 @@
                                 <form id="formObj" action="/buyerUserController.buyer?doChangePwd" onsubmit="return false;">
                                     <div class="form-group">
                                         <div class="row">
-                                            <div class="col-xs-4">
+                                            <div class="col-md-4">
                                                 <lable class="control-label" style="color:#8a6d3b;">
                                                     Email address：
                                                 </lable>
                                             </div>
-                                            <div class="col-xs-4">
+                                            <div class="col-md-4">
                                                 <span class="control-label" data-bind="text:account"></span>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <div class="row">
-                                            <div class="col-xs-4">
+                                            <div class="col-md-4">
                                                 <lable class="control-label" style="color:#8a6d3b;">
                                                     Old password ：
                                                 </lable>
                                             </div>
-                                            <div class="col-xs-4">
+                                            <div class="col-md-4">
                                                 <input type="password" class="control-label" name="oldPwd">
                                             </div>
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <div class="row">
-                                            <div class="col-xs-4">
+                                            <div class="col-md-4">
                                                 <lable class="control-label" style="color:#8a6d3b;">
                                                     New password：
                                                 </lable>
                                             </div>
-                                            <div class="col-xs-4">
-                                                <input type="password" class="control-label" name="pwd">
+                                            <div class="col-md-4">
+                                                <input type="password" class="control-label" name="newPwd">
                                             </div>
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <div class="row">
-                                            <div class="col-xs-6">
+                                            <div class="col-md-4">
                                             </div>
-                                            <div class="col-xs-6">
+                                            <div class="col-md-4">
                                                 <input type="submit" onclick="changeUserPwd();" class="btn btn-primary" value="Submit">
                                             </div>
                                         </div>
@@ -142,7 +142,7 @@
                     <div class="row">
                         <div class="col-md-2 col-md-offset-1">
                             <div class="btn-group">
-                                <a href="/mainController.do?index" class="btn btn-default">Go to homepage</a>
+                                <a href="/buyerUserController.buyer?index" class="btn btn-default">Go to homepage</a>
                             </div>
                         </div>
                     </div>

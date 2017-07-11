@@ -2,6 +2,7 @@ package com.amazon.buyer.account.controller;
 
 import com.amazon.buyer.account.entity.BuyerUserEntity;
 import com.amazon.buyer.account.service.BuyerUserService;
+import com.amazon.buyer.account.vo.BuyerUserVo;
 import com.amazon.buyer.utils.BuyerConstants;
 import com.amazon.buyer.utils.PaymentAccountConstants;
 import com.amazon.system.Constant;
@@ -111,20 +112,42 @@ public class BuyerUserController extends BaseController {
             j.setMsg("登录超时，请重新登录！");
             return j;
         } else {
+            BuyerUserEntity buyerUserDb = buyerUserService.find(BuyerUserEntity.class,buyerUserEntity.getId());
             j.setSuccess(AjaxJson.CODE_SUCCESS);
-            j.setContent(buyerUserEntity);
+            j.setContent(buyerUserDb);
             return j;
         }
     }
 
     @RequestMapping(params = "doChangePwd")
     @ResponseBody
-    public AjaxJson doChangePwd(BuyerUserEntity buyerUserEntity,HttpServletRequest request, HttpServletResponse response) {
+    public AjaxJson doChangePwd(BuyerUserVo buyerUserVo, HttpServletRequest request, HttpServletResponse response) {
         AjaxJson j = new AjaxJson();
         BuyerUserEntity buyerUserSession = globalService.getBuyerUserEntityFromSession();
-        if (buyerUserEntity == null) {
+        if (buyerUserSession == null) {
             j.setSuccess(AjaxJson.RELOGIN);
-            j.setMsg("登录超时，请重新登录！");
+            j.setMsg("Log in again !");
+            return j;
+        }
+
+        DetachedCriteria detachedCriteria = DetachedCriteria.forClass(BuyerUserEntity.class);
+        detachedCriteria.add(Restrictions.eq("account", buyerUserSession.getAccount()));
+        detachedCriteria.add(Restrictions.eq("pwd", PasswordUtil.getMD5Encryp(buyerUserVo.getOldPwd())));
+        List<BuyerUserEntity> buyerUserEntityList = buyerUserService.getListByCriteriaQuery(detachedCriteria);
+        if(CollectionUtils.isEmpty(buyerUserEntityList)){
+            j.setSuccess(AjaxJson.CODE_FAIL);
+            j.setMsg(" old password you entered is incorrect!");
+            return j;
+        }
+        BuyerUserEntity buyerUserEntity = buyerUserEntityList.get(0);
+        buyerUserEntity.setPwd(PasswordUtil.getMD5Encryp(buyerUserVo.getNewPwd()));
+        buyerUserEntity.setUpdateTime(new Date());
+        try {
+            buyerUserService.saveOrUpdate(buyerUserEntity);
+        }catch (Exception e){
+            logger.error(e.fillInStackTrace());
+            j.setSuccess(AjaxJson.CODE_FAIL);
+            j.setMsg("Failed to modify password !");
             return j;
         }
         return j;
@@ -154,6 +177,42 @@ public class BuyerUserController extends BaseController {
             j.setMsg("注册失败！");
         }
         j.setMsg("注册成功！");
+        return j;
+    }
+
+    @RequestMapping(params = "doUpdate")
+    @ResponseBody
+    public AjaxJson doUpdate(BuyerUserEntity buyerUserEntity, HttpServletRequest request, HttpServletResponse response) {
+        AjaxJson j = new AjaxJson();
+        BuyerUserEntity buyerUserSession = globalService.getBuyerUserEntityFromSession();
+        if (buyerUserSession == null) {
+            j.setSuccess(AjaxJson.RELOGIN);
+            j.setMsg("Log in again !");
+            return j;
+        }
+
+        DetachedCriteria detachedCriteria = DetachedCriteria.forClass(BuyerUserEntity.class);
+        detachedCriteria.add(Restrictions.eq("id", buyerUserSession.getId()));
+        List<BuyerUserEntity> buyerUserEntityList = buyerUserService.getListByCriteriaQuery(detachedCriteria);
+        if(CollectionUtils.isEmpty(buyerUserEntityList)){
+            j.setSuccess(AjaxJson.CODE_FAIL);
+            j.setMsg("The user has been deleted !");
+            return j;
+        }
+        BuyerUserEntity buyerUserDB = buyerUserEntityList.get(0);
+        buyerUserDB.setDefaultPaymentAccount(buyerUserEntity.getDefaultPaymentAccount());
+        buyerUserDB.setWeChatAccount(buyerUserEntity.getWeChatAccount());
+        buyerUserDB.setZfbAccount(buyerUserEntity.getZfbAccount());
+        buyerUserDB.setPaypalAccount(buyerUserEntity.getPaypalAccount());
+        buyerUserDB.setUpdateTime(new Date());
+        try {
+            buyerUserService.saveOrUpdate(buyerUserDB);
+        }catch (Exception e){
+            logger.error(e.fillInStackTrace());
+            j.setSuccess(AjaxJson.CODE_FAIL);
+            j.setMsg("Unable to change !");
+            return j;
+        }
         return j;
     }
 

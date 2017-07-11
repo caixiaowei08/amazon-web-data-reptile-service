@@ -40,4 +40,14 @@ public class UserPageController extends BaseController{
     public String goChangePwd(HttpServletRequest request, HttpServletResponse response) {
         return "buyer/buyer/changePwd";
     }
+
+    @RequestMapping(params = "goAccountDetails")
+    public String goAccountDetails(HttpServletRequest request, HttpServletResponse response) {
+        return "buyer/buyer/buyerDetail";
+    }
+
+    @RequestMapping(params = "goModifyPayment")
+    public String goModifyPayment(HttpServletRequest request, HttpServletResponse response) {
+        return "buyer/buyer/changeBuyerDetail";
+    }
 }
