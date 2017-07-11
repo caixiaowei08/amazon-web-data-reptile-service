@@ -76,7 +76,7 @@ $(function () {
                 width: "10%",//宽度
                 align: "center",//水平
                 valign: "middle"//垂直
-            }
+            },
         ]],
         queryParams: function (params) {
             params.promotId = getQueryString("promotId").trim();

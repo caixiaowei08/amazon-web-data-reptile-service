@@ -2,6 +2,34 @@
  * Created by User on 2017/6/23.
  */
 $(function () {
+    $('#formAddEvaluateUrlModel').bootstrapValidator({
+        framework: 'bootstrap',
+        icon: {
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {
+
+
+        }
+    }).on('success.form.bv', function (e) {
+        var form = $('#formAddEvaluateUrlModel');
+        $.post(form.attr('action'), form.serialize(), function (result) {
+            if (result.success === "success") {
+                toastr.success(result.msg);
+                $('#evaluateListTable').bootstrapTable("refresh");
+            } else if (result.success === "fail") {
+                toastr.warning(result.msg);
+                form.bootstrapValidator('disableSubmitButtons', false);
+            } else {
+                toastr.warning("请重新登录！");
+                setTimeout("window.location='/adminSystemController.admin?goAdminLogin'", 500);
+            }
+        }, 'json');
+    });
+
+
     $('#evaluateListTable').bootstrapTable({
         url: "/evaluateController.admin?dataGrid",
         sidePagination: "server",
@@ -19,7 +47,7 @@ $(function () {
             params.asinId = $("#amazon_asin").val().trim();
             return params;
         },
-        onLoadError:function () {
+        onLoadError: function () {
             toastr.warning("请重新登录！");
             setTimeout("window.location='/adminSystemController.admin?goAdminLogin'", 1000);
         },
@@ -62,14 +90,14 @@ $(function () {
             {
                 title: '亚马逊订单号',
                 field: "amzOrderId",
-                width: "20%",//宽度
+                width: "15%",//宽度
                 align: "center",//水平
                 valign: "middle"//垂直
             },
             {
                 title: '评价内容',
                 field: "reviewContent",
-                width: "30%",//宽度
+                width: "25%",//宽度
                 align: "center",//水平
                 valign: "middle", //垂直
                 formatter: function (value, row, index) {
@@ -90,21 +118,24 @@ $(function () {
             {
                 title: '评价时间',
                 field: "reviewDate",
-                width: "20%",//宽度
+                width: "15%",//宽度
                 align: "center",//水平
                 valign: "middle"//垂直
             },
             {
                 title: '操作',
                 field: "id",
-                width: "5%",//宽度
+                width: "10%",//宽度
                 align: "center",//水平
                 valign: "middle",//垂直
                 formatter: function (value, row, index) {
-                    if (value === undefined) {
-                        return "-"
+                    if (row.state === 1) {
+                        return "<a onclick='clickEvaluateModel(" + value + ");' title='删除评价' data-target='#deleteEvaluateModel' data-toggle='modal'><i class='fa fa-window-close'></i></a>&nbsp;&nbsp;<a onclick='clickAddEvaluateUrlModel(" + row.id + ")'; title='追加评论链接' data-target='#addEvaluateUrlModel' data-toggle='modal'><i class='fa fa-plus-square'></i></a>";
+                    } else if (row.state === 2) {
+                        return "<a onclick='clickEvaluateModel(" + value + ");' title='删除评价' data-target='#deleteEvaluateModel' data-toggle='modal'><i class='fa fa-window-close'></i></a>";
+                    } else {
+                        return "";
                     }
-                    return "<a onclick='clickEvaluateModel(" + value + ");' title='删除评价' data-target='#deleteEvaluateModel' data-toggle='modal'><i class='fa fa-window-close'></i></a>";
                 }
             }
         ]]
@@ -122,18 +153,46 @@ $(function () {
         $('#formObj').data('bootstrapValidator', null);
         formValidator();
     })
-
     formValidator();
     ko.applyBindings(viewModel);
 });
 
 var viewModel = {
-    deleteId: ko.observable()
+    deleteId: ko.observable(),
+    eid: ko.observable(),
+    asinId: ko.observable(),
+    amzOrderId: ko.observable()
 }
 
 function clickEvaluateModel(id) {
     viewModel.deleteId(id);
 }
+
+function clickAddEvaluateUrlModel(id) {
+    $.ajax({
+        url: "/evaluateController.admin?doFindComment",
+        type: 'post',
+        data: {id: id},
+        success: function (data) {
+            if (data.success === "success") {
+                viewModel.eid(data.content.id);
+                viewModel.asinId(data.content.asinId);
+                viewModel.amzOrderId(data.content.amzOrderId);
+            } else if (data.success === "fail") {
+                toastr.warning(data.msg);
+            } else {
+                window.location = '/adminSystemController.admin?goAdminLogin';
+            }
+        },
+        error: function (jqxhr, textStatus, errorThrow) {
+            toastr.success("服务器异常,请联系管理员！");
+        }
+    })
+
+
+
+}
+
 
 function beforeSend() {
     $("#deleteEvaluateByIdBtn").addClass("disabled"); // Disables visually
@@ -146,7 +205,7 @@ function SendComplete() {
 }
 
 function deleteEvaluateById() {
-    var  deleteId = $("#deleteId").val();
+    var deleteId = $("#deleteId").val();
     $.ajax({
         url: "/evaluateController.admin?doDel",
         type: 'post',
@@ -199,7 +258,7 @@ function formValidator() {
     });
 }
 
-function downEvaluateSearch(){
+function downEvaluateSearch() {
     $('#evaluateListTable').bootstrapTable("refresh");
 }
 
@@ -223,7 +282,6 @@ function doSubmitEvaluate() {
     ) {
         return;
     }
-
     $.ajax({
         url: "/evaluateController.admin?doAdd",
         type: 'post',
@@ -232,7 +290,7 @@ function doSubmitEvaluate() {
         success: function (data) {
             if (data.success === "success") {
                 toastr.success(data.msg);
-            } else if (data.success ===  "fail") {
+            } else if (data.success === "fail") {
                 toastr.warning(data.msg);
             } else {
                 window.location = '/adminSystemController.admin?goAdminLogin'

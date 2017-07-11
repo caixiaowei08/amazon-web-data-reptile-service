@@ -285,7 +285,7 @@ function downPromotOrderExcel() {
                 )
             } else if (data.success === "fail") {
                 toastr.warning(data.msg);
-                setTimeout("window.location='/adminSystemController.admin?goAdminLogin'", 1000);
+                setTimeout("window.location='/adminSystemController.admin?goAdminLogin'", 500);
                 return;
             } else {
                 window.location = '/adminSystemController.admin?goAdminLogin';

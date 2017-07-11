@@ -5,6 +5,7 @@ import com.amazon.admin.constant.Constants;
 import com.amazon.admin.evaluate.service.EvaluateService;
 import com.amazon.admin.promot.controller.AdminPromotController;
 import com.amazon.service.promot.flow.entity.PromotOrderEvaluateFlowEntity;
+import com.amazon.service.promot.flow.service.PromotOrderEvaluateFlowService;
 import com.amazon.service.promot.order.entity.PromotOrderEntity;
 import com.amazon.service.promot.order.service.PromotOrderService;
 import com.amazon.system.Constant;
@@ -46,6 +47,9 @@ public class EvaluateController extends BaseController {
 
     @Autowired
     private PromotOrderService promotOrderService;
+
+    @Autowired
+    private PromotOrderEvaluateFlowService promotOrderEvaluateFlowService;
 
     @Autowired
     private GlobalService globalService;
@@ -133,6 +137,33 @@ public class EvaluateController extends BaseController {
             return j;
         }
         j.setContent(promotOrderEntityDb);
+        return j;
+    }
+
+
+
+    @RequestMapping(params = "doFindComment")
+    @ResponseBody
+    public AjaxJson doFindComment(PromotOrderEvaluateFlowEntity promotOrderEvaluateFlowEntity, HttpServletRequest request, HttpServletResponse response) {
+        AjaxJson j = new AjaxJson();
+        if (globalService.isNotAdminLogin()) {
+            j.setSuccess(AjaxJson.RELOGIN);
+            j.setMsg("请先登录管理账号！");
+            return j;
+        }
+        Integer id = promotOrderEvaluateFlowEntity.getId();
+        if (id == null) {
+            j.setSuccess(AjaxJson.CODE_FAIL);
+            j.setMsg("请输入评价编号！");
+            return j;
+        }
+        PromotOrderEvaluateFlowEntity promotOrderEvaluateFlowEntityDb = promotOrderEvaluateFlowService.find(PromotOrderEvaluateFlowEntity.class, id);
+        if (promotOrderEvaluateFlowEntityDb == null) {
+            j.setSuccess(AjaxJson.CODE_FAIL);
+            j.setMsg("评论不存在或者被删除！");
+            return j;
+        }
+        j.setContent(promotOrderEvaluateFlowEntityDb);
         return j;
     }
 

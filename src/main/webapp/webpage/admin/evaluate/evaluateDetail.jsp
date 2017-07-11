@@ -48,7 +48,8 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand font-color" href="/skipController.admin?goToAdminMain" target="_parent">Seller Assistant管理端</a>
+            <a class="navbar-brand font-color" href="/skipController.admin?goToAdminMain" target="_parent">Seller
+                Assistant管理端</a>
         </div>
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav navbar-right">
@@ -136,7 +137,7 @@
         <div class="row">
             <div class="col-sm-8 col-sm-offset-2">
                 <div style="text-align:center;line-height: 28px;">
-                    Copyright&copy;Vascal Technology Services Ltd  All Rights Reserved&reg;鄂ICP备17013383号
+                    Copyright&copy;Vascal Technology Services Ltd All Rights Reserved&reg;鄂ICP备17013383号
                 </div>
             </div>
         </div>
@@ -167,20 +168,22 @@
                     <div class="form-group" style="height: 50px;">
                         <div class="input-group" style="width: 100%;">
                             <span class="input-group-addon" style="width:150px;" id="amzOrderId-addon">亚马逊订单号*</span>
-                            <input type="text" class="form-control" id="amzOrderId" name="amzOrderId" placeholder="亚马逊订单号"
+                            <input type="text" class="form-control" id="amzOrderId" name="amzOrderId"
+                                   placeholder="亚马逊订单号"
                                    aria-describedby="basic-addon1">
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="input-group" style="width: 100%;">
                             <span class="input-group-addon" style="width:150px;" id="reviewUrl-addon">亚马逊评论链接</span>
-                            <input type="text" class="form-control" id="reviewUrl" name="reviewUrl" placeholder="亚马逊评论链接"
+                            <input type="text" class="form-control" id="reviewUrl" name="reviewUrl"
+                                   placeholder="亚马逊评论链接"
                                    aria-describedby="basic-addon1">
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" id="btn_sub"  class="btn btn-primary">录入
+                    <button type="button" id="btn_sub" class="btn btn-primary">录入
                     </button>
                     <button type="button" class="btn btn-default" data-dismiss="modal">关闭
                     </button>
@@ -189,7 +192,8 @@
         </div>
     </div>
 </div>
-<div class="modal fade bs-example-modal-sm" id="deleteEvaluateModel" tabindex="-1" role="dialog" aria-labelledby="deleteEvaluateModel"
+<div class="modal fade bs-example-modal-sm" id="deleteEvaluateModel" tabindex="-1" role="dialog"
+     aria-labelledby="deleteEvaluateModel"
      aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -208,8 +212,61 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                <button type="button" class="btn btn-primary" id="deleteEvaluateByIdBtn" onclick="deleteEvaluateById();">确定</button>
+                <button type="button" class="btn btn-primary" id="deleteEvaluateByIdBtn"
+                        onclick="deleteEvaluateById();">确定
+                </button>
             </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="addEvaluateUrlModel" tabindex="-1" role="dialog" aria-labelledby="addEvaluateUrlModel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="formAddEvaluateUrlModel" onsubmit="return false;">
+                <div class="modal-header">
+                    <button type="button" class="close"
+                            data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                    <input type="hidden" name="id" data-bind="value:eid">
+                    <h4 class="modal-title">
+                        追加评论链接
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group" style="height: 50px;">
+                        <div class="input-group" style="width: 100%;">
+                            <span class="input-group-addon" style="width:150px;">ASIN编号*</span>
+                            <input type="text" class="form-control" readonly="readonly" data-bind="value:asinId"
+                                   placeholder="ASIN编号"
+                                   aria-describedby="basic-addon1">
+                        </div>
+                    </div>
+                    <div class="form-group" style="height: 50px;">
+                        <div class="input-group" style="width: 100%;">
+                            <span class="input-group-addon" style="width:150px;">亚马逊订单号*</span>
+                            <input type="text" class="form-control" data-bind="value:amzOrderId" placeholder="亚马逊订单号"
+                                   aria-describedby="basic-addon1">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="input-group" style="width: 100%;">
+                            <span class="input-group-addon" style="width:150px;">亚马逊评论链接</span>
+                            <input type="text" class="form-control" id="addReviewUrl" name="reviewUrl"
+                                   placeholder="亚马逊评论链接"
+                                   aria-describedby="basic-addon1">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="" onclick="" class="btn btn-primary">录入
+                    </button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
