@@ -290,6 +290,13 @@
                                        readonly aria-describedby="cashback">
                             </div>
                         </div>
+                        <div class="form-group">
+                            <div class="input-group">
+                                <span class="input-group-addon" style="width: 80px;" id="remark">备注</span>
+                                <input type="text" class="form-control" data-bind="value:remark"
+                                       readonly aria-describedby="remark">
+                            </div>
+                        </div>
                     </div>
                     <div class="col-sm-6">
                         <div class="form-group">

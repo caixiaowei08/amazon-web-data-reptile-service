@@ -202,7 +202,8 @@ var viewModel = {
     buyerNum: ko.observable(),
     evaluateNum: ko.observable(),
     cashback: ko.observable(),
-    reviewPrice: ko.observable()
+    reviewPrice: ko.observable(),
+    remark: ko.observable()
 };
 
 ko.applyBindings(viewModel);
@@ -233,6 +234,7 @@ function loadPromotOrder(promotId) {
                 viewModel.evaluateNum(data.content.evaluateNum);
                 viewModel.cashback(data.content.cashback);
                 viewModel.reviewPrice(data.content.reviewPrice);
+                viewModel.remark(data.content.remark);
             } else if (data.success === "fail") {
                 toastr.warning(data.msg);
             } else {

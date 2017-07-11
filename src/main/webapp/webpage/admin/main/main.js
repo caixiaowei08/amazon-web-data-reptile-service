@@ -162,7 +162,6 @@ $(function () {
                     } else {
                         return "";
                     }
-                   // return "<a onclick='loadPromotOrder(" + value + ")' title='查看详情' data-target='#orderDetailModal'style='cursor:pointer;' data-toggle='modal'><i class='fa fa-search'></i></a>";
                 }
             }
         ]],
@@ -214,7 +213,8 @@ var viewModel = {
     buyerNum: ko.observable(),
     evaluateNum: ko.observable(),
     cashback:ko.observable(),
-    reviewPrice: ko.observable()
+    reviewPrice: ko.observable(),
+    remark: ko.observable()
 };
 
 
@@ -244,6 +244,7 @@ function loadPromotOrder(promotId) {
                 viewModel.cashback(data.content.cashback);
                 viewModel.evaluateNum(data.content.evaluateNum);
                 viewModel.reviewPrice(data.content.reviewPrice);
+                viewModel.remark(data.content.remark);
             } else if (data.success === "fail") {
                 toastr.warning(data.msg);
             } else {
