@@ -211,6 +211,8 @@ public class UserFundServiceImpl extends BaseServiceImpl implements UserFundServ
             userRechargeFundEntity.setNotifyInfo(alipayNotifyPojo.getTrade_status());
             userRechargeFundEntity.setConfirmTime(new Date());
             userRechargeFundEntity.setState(ConstantFund.SUCCESS);
+            logger.info("---------------userFundEntity saveOrUpdate --------------"+JSON.toJSONString(userFundEntity));
+            logger.info("---------------userRechargeFundEntity saveOrUpdate --------------"+JSON.toJSONString(userRechargeFundEntity));
             userFundService.saveOrUpdate(userFundEntity);
             rechargeFundService.saveOrUpdate(userRechargeFundEntity);
         } else if (userRechargeFundEntity.getChargeType().equals(ConstantChargeType.MEMBERSHIP_FUND)) {//会员充值

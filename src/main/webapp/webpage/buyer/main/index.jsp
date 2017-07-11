@@ -43,8 +43,8 @@
                     <a href="#" class="dropdown-toggle " data-toggle="dropdown" role="button" aria-haspopup="true"
                        aria-expanded="false">My account<span class="caret"></span></a>
                     <ul class="dropdown-menu">
-                        <li><a href="/skipController.admin?goAdminChangePwd" target="_parent">Account details</a></li>
-                        <li><a href="/skipController.admin?goAdminChangePwd" target="_parent">Reset password</a></li>
+                        <li><a href="/userPageController.buyer?goAccountDetails" target="_parent">Account details</a></li>
+                        <li><a href="/userPageController.buyer?goChangePwd" target="_parent">Reset password</a></li>
                     </ul>
                 </li>
                 <li>

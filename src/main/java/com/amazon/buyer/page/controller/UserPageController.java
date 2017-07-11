@@ -36,5 +36,8 @@ public class UserPageController extends BaseController{
         return "buyer/main/index";
     }
 
-
+    @RequestMapping(params = "goChangePwd")
+    public String goChangePwd(HttpServletRequest request, HttpServletResponse response) {
+        return "buyer/buyer/changePwd";
+    }
 }

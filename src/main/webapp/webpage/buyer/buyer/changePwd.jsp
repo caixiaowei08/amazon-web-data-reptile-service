@@ -30,11 +30,11 @@
     <script type="text/javascript" src="/webpage/plug-in/jquery/jquery.min.js"></script>
     <script type="text/javascript" src="/webpage/plug-in/toastr/toastr.min.js"></script>
     <script type="text/javascript" src="/webpage/plug-in/bootstrapvalidator/dist/js/bootstrapValidator.min.js"></script>
-    <script type="text/javascript" src="/webpage/plug-in/bootstrapvalidator/dist/js/language/zh_CN.js"></script>
+    <script type="text/javascript" src="/webpage/plug-in/bootstrapvalidator/dist/js/language/en_US.js"></script>
     <script type="text/javascript" src="/webpage/plug-in/bootstrap/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="/webpage/plug-in/toastr/toastr.min.js"></script>
     <script type="text/javascript" src="/webpage/plug-in/knockoutjs/dist/knockout.js"></script>
-    <script type="text/javascript" src="/webpage/pages/user/changePwd.js"></script>
+    <script type="text/javascript" src="/webpage/buyer/buyer/changePwd.js"></script>
 </head>
 <body style="overflow-y:auto;">
 <div class="main-container">
@@ -54,42 +54,15 @@
                 <ul class="nav navbar-nav navbar-right">
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle " data-toggle="dropdown" role="button" aria-haspopup="true"
-                           aria-expanded="false">客服咨询<span class="caret"></span></a>
+                           aria-expanded="false">My account<span class="caret"></span></a>
                         <ul class="dropdown-menu">
-                            <li>
-                                <a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin=282208271&site=qq&menu=yes">
-                                    业务客服&nbsp;<img border="0" src="http://wpa.qq.com/pa?p=2:282208271:51" alt="客服1" title="客服1"/>
-                                </a>
-                            </li>
-                            <li>
-                                <a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin=331219046&site=qq&menu=yes">
-                                    技术支持&nbsp;<img border="0" src="http://wpa.qq.com/pa?p=2:331219046:51" alt="技术支持" title="技术支持"/>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li><a href="/promotOrderController.do?goNewPromotOne" target="_parent">新建推广活动</a></li>
-                    <li><a href="/redirectionController.do?goManagePromot" target="_parent">推广活动管理</a></li>
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle " data-toggle="dropdown" role="button" aria-haspopup="true"
-                           aria-expanded="false">账户充值<span class="caret"></span></a>
-                        <ul class="dropdown-menu">
-                            <li><a href="/redirectionController.do?goToChargeFund" target="_parent">余额充值</a></li>
-                            <li><a href="/redirectionController.do?goToChargeMemberShip" target="_parent">购买会员</a></li>
-                            <li><a href="/redirectionController.do?chargeFundFlow" target="_parent">充值记录</a></li>
-                        </ul>
-                    </li>
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle " data-toggle="dropdown" role="button" aria-haspopup="true"
-                           aria-expanded="false">我的账户<span class="caret"></span></a>
-                        <ul class="dropdown-menu">
-                            <li><a href="redirectionController.do?goUserDetailInfo" target="_parent">账户详情</a></li>
-                            <li><a href="redirectionController.do?goUserChangePwd" target="_parent">修改密码</a></li>
+                            <li><a href="/userPageController.buyer?goAccountDetails" target="_parent">Account details</a></li>
+                            <li><a href="/userPageController.buyer?goChangePwd" target="_parent">Reset password</a></li>
                         </ul>
                     </li>
                     <li>
                         <a href="/userController.do?doLogOff" target="_parent">
-                            退出
+                            Log off
                             <i class="fa fa-power-off" style="color: red" aria-hidden="true"></i>
                         </a>
                     </li>
@@ -102,51 +75,51 @@
             <div style="height: 20px;"></div>
             <div class="panel panel-warning">
                 <div class="panel-heading">
-                    <h3 class="panel-title">密码修改</h3>
+                    <h3 class="panel-title">Reset password</h3>
                 </div>
                 <div class="panel-body">
                     <div class="row">
                         <div class="col-md-2 col-md-offset-2">
                             <div style="height: 30px;"></div>
                             <a href="#" class="thumbnail">
-                                <img src="/webpage/plug-in/imgs/profile-pic.jpg" alt="头像">
+                                <img src="/webpage/plug-in/imgs/profile-pic.jpg" alt="thumbnail">
                             </a>
                         </div>
                         <div class="col-md-6">
                             <div class="jumbotron">
-                                <form id="formobj" action="/userController.do?doChangeUserPwdByPwd" onsubmit="return false;">
+                                <form id="formObj" action="/buyerUserController.buyer?doChangePwd" onsubmit="return false;">
                                     <div class="form-group">
                                         <div class="row">
-                                            <div class="col-xs-6">
+                                            <div class="col-xs-4">
                                                 <lable class="control-label" style="color:#8a6d3b;">
-                                                    账户名称：
+                                                    Email address：
                                                 </lable>
                                             </div>
-                                            <div class="col-xs-6">
+                                            <div class="col-xs-4">
                                                 <span class="control-label" data-bind="text:account"></span>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <div class="row">
-                                            <div class="col-xs-6">
+                                            <div class="col-xs-4">
                                                 <lable class="control-label" style="color:#8a6d3b;">
-                                                    输入原始密码：
+                                                    Old password ：
                                                 </lable>
                                             </div>
-                                            <div class="col-xs-6">
+                                            <div class="col-xs-4">
                                                 <input type="password" class="control-label" name="oldPwd">
                                             </div>
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <div class="row">
-                                            <div class="col-xs-6">
+                                            <div class="col-xs-4">
                                                 <lable class="control-label" style="color:#8a6d3b;">
-                                                    输入新密码：
+                                                    New password：
                                                 </lable>
                                             </div>
-                                            <div class="col-xs-6">
+                                            <div class="col-xs-4">
                                                 <input type="password" class="control-label" name="pwd">
                                             </div>
                                         </div>
@@ -154,21 +127,9 @@
                                     <div class="form-group">
                                         <div class="row">
                                             <div class="col-xs-6">
-                                                <lable class="control-label" style="color:#8a6d3b;">
-                                                    重新输入新密码：
-                                                </lable>
                                             </div>
                                             <div class="col-xs-6">
-                                                <input type="password" class="control-label" name="reRwd" id="reRwd">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <div class="row">
-                                            <div class="col-xs-6">
-                                            </div>
-                                            <div class="col-xs-6">
-                                                <input type="submit" onclick="changeUserPwd();" class="btn btn-primary" value="确认修改">
+                                                <input type="submit" onclick="changeUserPwd();" class="btn btn-primary" value="Submit">
                                             </div>
                                         </div>
                                     </div>
@@ -181,7 +142,7 @@
                     <div class="row">
                         <div class="col-md-2 col-md-offset-1">
                             <div class="btn-group">
-                                <a href="/mainController.do?index" class="btn btn-default">返回主页</a>
+                                <a href="/mainController.do?index" class="btn btn-default">Go to homepage</a>
                             </div>
                         </div>
                     </div>

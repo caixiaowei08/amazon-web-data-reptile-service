@@ -64,7 +64,7 @@ public class BuyerUserController extends BaseController {
             sessionBuyerUser.setLoginTime(new Date());
             buyerUserService.saveOrUpdate(sessionBuyerUser);
             sessionBuyerUser.setPwd("");//session不能暴露密码
-            ContextHolderUtils.getSession().setAttribute(BuyerConstants.BUYER_USER_SESSION_CONSTANTS, buyerUserService);
+            ContextHolderUtils.getSession().setAttribute(BuyerConstants.BUYER_USER_SESSION_CONSTANTS, sessionBuyerUser);
             //更新登录时间
             j.setSuccess(AjaxJson.CODE_SUCCESS);
             j.setMsg("登录成功！");
@@ -99,6 +99,35 @@ public class BuyerUserController extends BaseController {
         } else {
             return j;
         }
+    }
+
+    @RequestMapping(params = "doGet")
+    @ResponseBody
+    public AjaxJson doGet(HttpServletRequest request, HttpServletResponse response) {
+        AjaxJson j = new AjaxJson();
+        BuyerUserEntity buyerUserEntity = globalService.getBuyerUserEntityFromSession();
+        if (buyerUserEntity == null) {
+            j.setSuccess(AjaxJson.RELOGIN);
+            j.setMsg("登录超时，请重新登录！");
+            return j;
+        } else {
+            j.setSuccess(AjaxJson.CODE_SUCCESS);
+            j.setContent(buyerUserEntity);
+            return j;
+        }
+    }
+
+    @RequestMapping(params = "doChangePwd")
+    @ResponseBody
+    public AjaxJson doChangePwd(BuyerUserEntity buyerUserEntity,HttpServletRequest request, HttpServletResponse response) {
+        AjaxJson j = new AjaxJson();
+        BuyerUserEntity buyerUserSession = globalService.getBuyerUserEntityFromSession();
+        if (buyerUserEntity == null) {
+            j.setSuccess(AjaxJson.RELOGIN);
+            j.setMsg("登录超时，请重新登录！");
+            return j;
+        }
+        return j;
     }
 
     @RequestMapping(params = "doRegister")
