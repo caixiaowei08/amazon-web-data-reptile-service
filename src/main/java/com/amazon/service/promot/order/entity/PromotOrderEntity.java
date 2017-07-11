@@ -16,7 +16,6 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "amazon_promot_order_table")
-@SuppressWarnings("serial")
 public class PromotOrderEntity extends IdEntity implements Serializable {
 
     /**
@@ -117,6 +116,11 @@ public class PromotOrderEntity extends IdEntity implements Serializable {
      * 返现扣款
      */
     private BigDecimal cashback;
+
+    /***
+     * 备注
+     */
+    private String remark;
 
     /**
      * 创建时间
@@ -318,5 +322,14 @@ public class PromotOrderEntity extends IdEntity implements Serializable {
 
     public void setCashback(BigDecimal cashback) {
         this.cashback = cashback;
+    }
+
+    @Column(name = "remark", nullable = true)
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
     }
 }

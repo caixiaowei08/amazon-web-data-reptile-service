@@ -24,7 +24,6 @@ $(function () {
             }
         }
     });
-
 });
 
 var ViewModel = function (account, totalFund, usableFund, freezeFund, exchangeRate, chargeFund) {
@@ -38,8 +37,6 @@ var ViewModel = function (account, totalFund, usableFund, freezeFund, exchangeRa
         var m = 0,
             s1 = this.chargeFund().toString(),
             s2 = this.exchangeRate().toString();
-        console.log(s1);
-        console.log(s2);
         try {
             m += s1.split(".")[1].length
         } catch (e) {

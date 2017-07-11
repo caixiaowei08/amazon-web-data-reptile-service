@@ -28,6 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -61,7 +62,6 @@ public class PromotOrderServiceImpl extends BaseServiceImpl implements PromotOrd
 
     public AjaxJson doAddNewPromot(UserEntity userEntity, AmazonPageInfoPojo amazonPageInfoPojo, PromotOrderEntity promotOrderEntity) {
         AjaxJson j = new AjaxJson();
-        //获取账户资金信息
         DetachedCriteria userFundDetachedCriteria = DetachedCriteria.forClass(UserFundEntity.class);
         userFundDetachedCriteria.add(Restrictions.eq("sellerId", userEntity.getId()));
         List<UserFundEntity> userFundEntityList = userFundService.getListByCriteriaQuery(userFundDetachedCriteria);
@@ -94,7 +94,6 @@ public class PromotOrderServiceImpl extends BaseServiceImpl implements PromotOrd
         }
         DetachedCriteria promotPriceEntityDetachedCriteria = DetachedCriteria.forClass(PromotPriceEntity.class);
         List<PromotPriceEntity> promotPriceEntityList = promotPriceService.getListByCriteriaQuery(promotPriceEntityDetachedCriteria);
-
         if (CollectionUtils.isEmpty(promotPriceEntityList)) {
             j.setSuccess(AjaxJson.CODE_FAIL);
             j.setMsg("未设置价格信息，请联系管理员！");
@@ -106,14 +105,27 @@ public class PromotOrderServiceImpl extends BaseServiceImpl implements PromotOrd
         //好评价
         BigDecimal reviewPrice = promotPriceEntity.getReviewPrice();
         String cashback = promotOrderEntity.getSalePrice().trim();
-        if(StringUtils.hasText(cashback)){
-            promotOrderEntity.setCashback(new BigDecimal(cashback.substring(1,cashback.length())));
+        try {
+            if (StringUtils.hasText(cashback)) {
+                promotOrderEntity.setCashback(new BigDecimal(cashback.substring(1, cashback.length())));
+            } else {
+                j.setSuccess(AjaxJson.CODE_FAIL);
+                j.setMsg("未能获取商品价格，请联系客服！");
+                return j;
+            }
+
+        } catch (Exception e) {
+            logger.error(e.fillInStackTrace());
+            j.setSuccess(AjaxJson.CODE_FAIL);
+            j.setMsg("商品价格解析有误，请联系客服！");
+            return j;
         }
+
         //总价
         BigDecimal totalPrice = (new BigDecimal(needReviewNum)).multiply(reviewPrice.add(promotOrderEntity.getCashback()));
         if (totalPrice.compareTo(userFundEntity.getUsableFund()) > 0) {
             j.setSuccess(AjaxJson.CODE_FAIL);
-            j.setMsg("可用余额不足，请充值！");
+            j.setMsg("可用余额不足，请先充值" + new DecimalFormat("#.00").format(totalPrice.subtract(userFundEntity.getUsableFund())) + "美元");
             return j;
         }
 
@@ -139,6 +151,7 @@ public class PromotOrderServiceImpl extends BaseServiceImpl implements PromotOrd
         promotOrderEntity.setDayReviewNum(promotOrderEntity.getDayReviewNum());
         promotOrderEntity.setBuyerNum(0);
         promotOrderEntity.setEvaluateNum(0);
+        promotOrderEntity.setRemark(promotOrderEntity.getRemark().trim());
         promotOrderEntity.setCreateTime(new Date());
         promotOrderEntity.setUpdateTime(new Date());
         promotOrderService.save(promotOrderEntity);
@@ -158,17 +171,6 @@ public class PromotOrderServiceImpl extends BaseServiceImpl implements PromotOrd
         if (t.getState().equals(Constant.STATE_N)) {
             j.setSuccess(AjaxJson.CODE_FAIL);
             j.setMsg("订单已经关闭！");
-            return j;
-        }
-
-        DetachedCriteria promotOrderEvaluateDetachedCriteria = DetachedCriteria.forClass(PromotOrderEvaluateFlowEntity.class);
-        promotOrderEvaluateDetachedCriteria.add(Restrictions.eq("sellerId", t.getSellerId()));
-        promotOrderEvaluateDetachedCriteria.add(Restrictions.eq("promotId", t.getId()));
-        promotOrderEvaluateDetachedCriteria.add(Restrictions.eq("state", Constants.EVALUATE_STATE_PENDING));
-        List<PromotOrderEvaluateFlowEntity> promotOrderEvaluateFlowEntityList = promotOrderEvaluateFlowService.getListByCriteriaQuery(promotOrderEvaluateDetachedCriteria);
-        if(CollectionUtils.isNotEmpty(promotOrderEvaluateFlowEntityList)){
-            j.setSuccess(AjaxJson.CODE_FAIL);
-            j.setMsg("该订单有pending状态的评价，不能关闭！");
             return j;
         }
         DetachedCriteria userFundDetachedCriteria = DetachedCriteria.forClass(UserFundEntity.class);

@@ -170,7 +170,7 @@
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <form action="/userFundController/doAlipayTradePagePay.do" id="formObj">
+                                <form action="/userFundController/doAlipayTradePagePay.do" target="_blank" id="formObj">
                                     <div class="form-group">
                                         <div class="input-group">
                                             <span class="input-group-addon">

@@ -110,8 +110,7 @@ public class PromotOrderController extends BaseController {
         try {
             criteriaQuery.installHqlParams();
         } catch (Exception e) {
-            //打印日志信息
-            logger.error(e);
+            logger.error(e.fillInStackTrace());
         }
         criteriaQuery.getDetachedCriteria().add(Restrictions.eq("sellerId", userEntity.getId()));
         criteriaQuery.getDetachedCriteria().addOrder(Order.desc("id"));
@@ -268,10 +267,9 @@ public class PromotOrderController extends BaseController {
 
         if (StringUtils.isEmpty(amazonPageInfoPojo.getPriceblockSaleprice())) {
             j.setSuccess(AjaxJson.CODE_FAIL);
-            j.setMsg("未能获取商品价格，请联系技术客服！");
+            j.setMsg("未能获取商品价格，请联系客服！");
             return j;
         }
-
         amazonPageInfoPojo.setReviewPrice("$" + promotPriceEntityList.get(0).getReviewPrice().toString());
         ContextHolderUtils.getSession().setAttribute(SpiderConstant.AMAZON_PAGE_INFO_POJO, amazonPageInfoPojo);
         return j;
@@ -291,49 +289,10 @@ public class PromotOrderController extends BaseController {
         AmazonPageInfoPojo amazonPageInfoPojo = (AmazonPageInfoPojo) ContextHolderUtils.getSession().getAttribute(SpiderConstant.AMAZON_PAGE_INFO_POJO);
         if (amazonPageInfoPojo == null) {
             j.setSuccess(AjaxJson.CODE_FAIL);
-            j.setMsg("请重新建推广活动订单！");
+            j.setMsg("登录超时，请重新建推广活动订单！");
             return j;
         }
-
-        DetachedCriteria promotOrderDetachedCriteria = DetachedCriteria.forClass(PromotOrderEntity.class);
-        promotOrderDetachedCriteria.add(Restrictions.eq("asinId", amazonPageInfoPojo.getAsin()));
-        promotOrderDetachedCriteria.add(Restrictions.eq("state", Constant.STATE_Y));
-        List<PromotOrderEntity> promotOrderEntityList = promotOrderService.getListByCriteriaQuery(promotOrderDetachedCriteria);
-        if (CollectionUtils.isNotEmpty(promotOrderEntityList)) {
-            j.setSuccess(AjaxJson.CODE_FAIL);
-            j.setMsg("不能重复建立ASIN编号相同且处于开启状态的活动！");
-            return j;
-        }
-
         j = promotOrderService.doAddNewPromot(userEntity, amazonPageInfoPojo, promotOrderEntity);
-
-        return j;
-    }
-
-    //@RequestMapping(params = "doCloseById")
-    //@ResponseBody
-    public AjaxJson doCloseById(PromotOrderEntity promotOrderEntity, HttpServletRequest request) {
-        AjaxJson j = new AjaxJson();
-        //安全校验
-        UserEntity userEntity = (UserEntity) ContextHolderUtils.getSession().getAttribute(Constant.USER_SESSION_CONSTANTS);
-        if (userEntity == null) {
-            j.setSuccess(AjaxJson.CODE_FAIL);
-            j.setMsg("请重新登录！");
-            return j;
-        }
-        try {
-            DetachedCriteria promotOrderDetachedCriteria = DetachedCriteria.forClass(PromotOrderEntity.class);
-            promotOrderDetachedCriteria.add(Restrictions.eq("sellerId", userEntity.getId()));
-            promotOrderDetachedCriteria.add(Restrictions.eq("id", promotOrderEntity.getId()));
-            List<PromotOrderEntity> promotOrderEntityList = promotOrderService.getListByCriteriaQuery(promotOrderDetachedCriteria);
-            if (CollectionUtils.isNotEmpty(promotOrderEntityList)) { //归还资金
-                j = promotOrderService.doClosedPromotOrderById(promotOrderEntityList.get(0));
-            }
-        } catch (Exception e) {
-            j.setSuccess(AjaxJson.CODE_FAIL);
-            j.setMsg("关闭失败！");
-            return j;
-        }
         return j;
     }
 

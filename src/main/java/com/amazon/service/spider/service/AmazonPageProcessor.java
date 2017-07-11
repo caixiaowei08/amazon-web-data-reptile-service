@@ -19,7 +19,7 @@ public class AmazonPageProcessor implements PageProcessor {
         AmazonPageInfoPojo amazonPageInfoPojo = new AmazonPageInfoPojo();
         amazonPageInfoPojo.setPageUrl(page.getRequest().getUrl());
         amazonPageInfoPojo.setProductTitle(page.getHtml().xpath("//span[@id='productTitle']/tidyText()").toString());
-        amazonPageInfoPojo.setPriceblockSaleprice(page.getHtml().xpath("//span[@class='a-size-medium a-color-price']/tidyText()").toString());
+        amazonPageInfoPojo.setPriceblockSaleprice(page.getHtml().xpath("//span[@id='priceblock_dealprice']/text()").toString());
         amazonPageInfoPojo.setBrand(page.getHtml().xpath("//div[@id='merchant-info']/a[1]/text()").toString());
         amazonPageInfoPojo.setLandingImage(page.getHtml().xpath("//img[@id='landingImage']/@src").toString());
         amazonPageInfoPojo.setAsin(page.getHtml().xpath("//div[@id='averageCustomerReviews']/@data-asin").toString());
@@ -27,6 +27,16 @@ public class AmazonPageProcessor implements PageProcessor {
         if(StringUtils.isEmpty(amazonPageInfoPojo.getBrand())){
             amazonPageInfoPojo.setBrand(page.getHtml().xpath("//span[@id='merchant-info']/a[1]/text()").toString());
         }
+
+        if(StringUtils.isEmpty(amazonPageInfoPojo.getPriceblockSaleprice())){
+            amazonPageInfoPojo.setPriceblockSaleprice(page.getHtml().xpath("//span[@id='priceblock_saleprice']/text()").toString());
+        }
+
+        if(StringUtils.isEmpty(amazonPageInfoPojo.getPriceblockSaleprice())){
+            amazonPageInfoPojo.setPriceblockSaleprice(page.getHtml().xpath("//span[@id='priceblock_ourprice']/text()").toString());
+        }
+
+
 
         page.putField(SpiderConstant.AMAZON_PAGE_INFO_POJO,amazonPageInfoPojo);
     }

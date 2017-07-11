@@ -197,7 +197,6 @@
                             <div class="col-xs-5">
                                 <img src="" data-bind="attr:{src:landingImage}" alt="产品主图" style="height:230px; " class="img-responsive center-block">
                             </div>
-                            <%--landingImage--%>
                         </div>
                         <div class="form-group">
                             <div class="input-group">
@@ -222,6 +221,16 @@
                                 <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                             </div>
                             <input type="hidden" id="dtp_input2" value=""/><br/>
+                        </div>
+                        <div class="form-group">
+                            <div class="input-group">
+                                <span class="input-group-addon" id="remark-addon">
+                                    <div class="text-right" style="width: 80px; ">备注：</div>
+                                </span>
+                                <input type="text"  name = "remark" class="form-control"  placeholder="写下您的备注信息！"
+                                       id="remark"
+                                       aria-describedby="guaranteeFund-addon">
+                            </div>
                         </div>
                     </form>
                 </div>
@@ -335,6 +344,8 @@
             console.log(s1);
             console.log(s3);
             console.log(Number(s1)+Number(s3));
+
+
             s4 = (Number(s1)+Number(s3)).toString();
 
             try {

@@ -38,6 +38,7 @@ public class AlipayServiceImpl implements AlipayService {
         }catch (AlipayApiException e){
             logger.error(e);
         }
+
         httpResponse.setContentType("text/html;charset=" + AlipayConfig.CHARSET);
         httpResponse.getWriter().write(form);//直接将完整的表单html输出到页面
         httpResponse.getWriter().flush();

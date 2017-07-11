@@ -281,4 +281,42 @@ function downEvaluateExcel() {
     });
 }
 
+function downPromotOrderExcel() {
+    var params = new Object();
+    params.asinId = $("#amazon_asin").val().trim();
+    params.state = $("#amazon_state").val().trim();
+    params.addDate_begin = $("#addDate_begin_value").val().trim();
+    params.addDate_end = $("#addDate_end_value").val().trim();
+    if ((params.addDate_end === "") ^ (params.addDate_begin === "")) {
+        toastr.warning("若填写查询时间，开始时间和结束时间需要同时填写！");
+        return;
+    }
+    $.ajax({
+        url: "/userController.do?doCheckLogin",
+        type: 'post',
+        success: function (data) {
+            if (data.success === "success") {
+                window.open(
+                    "/promotOrderController.do?downPromotOrderExcel&asinId=" + params.asinId
+                    + "&state=" + params.state
+                    + "&addDate_begin=" + params.addDate_begin
+                    + "&addDate_end=" + params.addDate_end
+                )
+            } else if (data.success === "fail") {
+                toastr.warning(data.msg);
+                setTimeout("window.location='/loginController.do?login'", 1000);
+                return;
+            } else {
+                window.location = '/loginController.do?login';
+                return;
+            }
+        },
+        error: function (jqxhr, textStatus, errorThrow) {
+            toastr.success("服务器异常,请联系管理员！");
+        }
+    });
+}
+
+
+
 

@@ -153,13 +153,13 @@ public class PoiPromotServiceImpl implements PoiPromotService {
                 "订单编号", "客户账号", "ASIN", "商品亚马逊链接",
                 "商品标题", "商品店家", "亚马逊价格", "订单状态",
                 "下单日期", "结束日期", "订单目标好评", "每日目标好评",
-                "已联系买家数", "已获取的好评数"
+                "已联系买家数", "已获取的好评数","订单备注"
         };
         int[] columnsColumnWidth = {
                 4000, 4000, 4000, 4500,
                 4000, 4000, 4000, 4000,
                 4000, 4000, 4000, 4000,
-                4000, 4000
+                4000, 4000, 8000
         };
 
         CellStyle headStyle = workBook.createCellStyle();
@@ -217,6 +217,8 @@ public class PoiPromotServiceImpl implements PoiPromotService {
                 cell.setCellValue(promotOrderEntity.getBuyerNum());
                 cell = row.createCell(13);
                 cell.setCellValue(promotOrderEntity.getEvaluateNum());
+                cell = row.createCell(14);
+                cell.setCellValue(promotOrderEntity.getRemark());
             }
         }
 

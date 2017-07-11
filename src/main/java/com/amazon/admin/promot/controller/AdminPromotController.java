@@ -93,8 +93,7 @@ public class AdminPromotController extends BaseController {
         try {
             criteriaQuery.installHqlParams();
         } catch (Exception e) {
-            //打印日志信息
-            logger.error(e);
+            logger.error(e.fillInStackTrace());
         }
         String account = request.getParameter("account").trim();
         if (StringUtils.hasText(account)) {

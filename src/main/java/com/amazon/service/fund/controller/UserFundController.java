@@ -46,16 +46,11 @@ public class UserFundController extends BaseController {
     @RequestMapping(params = "getUserFundInfo")
     @ResponseBody
     public AjaxJson getUserFundInfo(HttpServletRequest request, HttpServletResponse response) {
-
-
-
         return userFundService.getUserFundInfo();
     }
 
     @RequestMapping("/doAlipayTradePagePay")
     public void doAlipayTradePagePay(HttpServletRequest request, HttpServletResponse response) {
-
-
         userFundService.goChargeFund(request, response);
     }
 
