@@ -38,8 +38,8 @@ $(function () {
         dataType: "json",
         search: false,
         pageNumber: 1,
-        pageSize: 20,
-        sortName: "updateTime",
+        pageSize: 10,
+        sortName: "addDate",
         sortOrder: 'desc',
         pageList: [10, 20, 30, 50, 100],
         pagination: true,
@@ -94,13 +94,6 @@ $(function () {
                 }
             },
             {
-                title: '联系买家',
-                field: "buyerNum",
-                width: "8%",//宽度
-                align: "center",//水平
-                valign: "middle"//垂直
-            },
-            {
                 title: '目标评论',
                 field: "needReviewNum",
                 width: "8%",//宽度
@@ -110,6 +103,13 @@ $(function () {
             {
                 title: '每日评论',
                 field: "dayReviewNum",
+                width: "8%",//宽度
+                align: "center",//水平
+                valign: "middle"//垂直
+            },
+            {
+                title: '已下订单',
+                field: "buyerNum",
                 width: "8%",//宽度
                 align: "center",//水平
                 valign: "middle"//垂直

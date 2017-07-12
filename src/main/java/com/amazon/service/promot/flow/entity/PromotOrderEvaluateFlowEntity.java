@@ -46,7 +46,7 @@ public class PromotOrderEvaluateFlowEntity extends IdEntity implements Serializa
     /**
      * 买家ID号
      */
-    private String buyerId;
+    private Integer buyerId;
     /**
      * 亚马逊订单号
      */
@@ -114,12 +114,12 @@ public class PromotOrderEvaluateFlowEntity extends IdEntity implements Serializa
         this.asinId = asinId;
     }
 
-    @Column(name = "buyerId", nullable = true, length = 100)
-    public String getBuyerId() {
+    @Column(name = "buyerId", nullable = true, length = 20)
+    public Integer getBuyerId() {
         return buyerId;
     }
 
-    public void setBuyerId(String buyerId) {
+    public void setBuyerId(Integer buyerId) {
         this.buyerId = buyerId;
     }
 

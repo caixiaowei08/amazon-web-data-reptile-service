@@ -155,10 +155,9 @@ public class PromotOrderController extends BaseController {
         try {
             criteriaQuery.installHqlParams();
         } catch (Exception e) {
-            //打印日志信息
-            logger.error(e);
+            logger.error(e.fillInStackTrace());
         }
-        criteriaQuery.getDetachedCriteria().addOrder(Order.desc("id"));
+        criteriaQuery.getDetachedCriteria().addOrder(Order.desc("addDate"));
         criteriaQuery.getDetachedCriteria().add(Restrictions.eq("sellerId", userEntity.getId()));
         List<PromotOrderEntity> promotOrderEntityList = promotOrderService.getListByCriteriaQuery(criteriaQuery.getDetachedCriteria());
         String excelFileNameHeader = "平台订单表" + DateUtils.getDate(new Date());
@@ -292,7 +291,14 @@ public class PromotOrderController extends BaseController {
             j.setMsg("登录超时，请重新建推广活动订单！");
             return j;
         }
-        j = promotOrderService.doAddNewPromot(userEntity, amazonPageInfoPojo, promotOrderEntity);
+        try {
+            j = promotOrderService.doAddNewPromot(userEntity, amazonPageInfoPojo, promotOrderEntity);
+        }catch (Exception e){
+            j.setSuccess(AjaxJson.CODE_FAIL);
+            j.setMsg("订单提交错误，联系客服！");
+            logger.error(e.fillInStackTrace());
+        }
+
         return j;
     }
 

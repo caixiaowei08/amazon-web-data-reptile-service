@@ -107,7 +107,7 @@ public class AdminPromotController extends BaseController {
             }
         }
 
-        criteriaQuery.getDetachedCriteria().addOrder(Order.desc("id"));
+        criteriaQuery.getDetachedCriteria().addOrder(Order.desc("addDate"));
         List<PromotOrderEntity> promotOrderEntityList = adminPromotService.getListByCriteriaQuery(criteriaQuery.getDetachedCriteria());
         String excelFileNameHeader = "平台订单表" + DateUtils.getDate(new Date());
         try {

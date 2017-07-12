@@ -153,7 +153,7 @@ public class PoiPromotServiceImpl implements PoiPromotService {
                 "订单编号", "客户账号", "ASIN", "商品亚马逊链接",
                 "商品标题", "商品店家", "亚马逊价格", "订单状态",
                 "下单日期", "结束日期", "订单目标好评", "每日目标好评",
-                "已联系买家数", "已获取的好评数","订单备注"
+                "已下订单", "已获取的好评数","订单备注"
         };
         int[] columnsColumnWidth = {
                 4000, 4000, 4000, 4500,

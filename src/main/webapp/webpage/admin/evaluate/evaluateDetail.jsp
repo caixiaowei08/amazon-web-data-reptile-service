@@ -224,7 +224,7 @@
      aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form id="formAddEvaluateUrlModel" onsubmit="return false;">
+            <form id="formAddEvaluateUrlModel" action="/evaluateController.admin?doAddReviewUrl" onsubmit="return false;">
                 <div class="modal-header">
                     <button type="button" class="close"
                             data-dismiss="modal" aria-hidden="true">
@@ -238,7 +238,7 @@
                 <div class="modal-body">
                     <div class="form-group" style="height: 50px;">
                         <div class="input-group" style="width: 100%;">
-                            <span class="input-group-addon" style="width:150px;">ASIN编号*</span>
+                            <span class="input-group-addon" style="width:150px;">ASIN编号</span>
                             <input type="text" class="form-control" readonly="readonly" data-bind="value:asinId"
                                    placeholder="ASIN编号"
                                    aria-describedby="basic-addon1">
@@ -246,22 +246,23 @@
                     </div>
                     <div class="form-group" style="height: 50px;">
                         <div class="input-group" style="width: 100%;">
-                            <span class="input-group-addon" style="width:150px;">亚马逊订单号*</span>
-                            <input type="text" class="form-control" data-bind="value:amzOrderId" placeholder="亚马逊订单号"
+                            <span class="input-group-addon" style="width:150px;">亚马逊订单号</span>
+                            <input type="text" class="form-control" readonly="readonly" data-bind="value:amzOrderId" placeholder="亚马逊订单号"
                                    aria-describedby="basic-addon1">
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="input-group" style="width: 100%;">
-                            <span class="input-group-addon" style="width:150px;">亚马逊评论链接</span>
+                            <span class="input-group-addon" style="width:150px;">亚马逊评论链接*</span>
                             <input type="text" class="form-control" id="addReviewUrl" name="reviewUrl"
+                                   data-bind="value:reviewUrl"
                                    placeholder="亚马逊评论链接"
                                    aria-describedby="basic-addon1">
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" id="" onclick="" class="btn btn-primary">录入
+                    <button type="submit" onclick="submitAddReviewUrl();" class="btn btn-primary">录入
                     </button>
                     <button type="button" class="btn btn-default" data-dismiss="modal">关闭
                     </button>

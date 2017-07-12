@@ -11,12 +11,12 @@ public class Constant {
     public static final String USER_SESSION_CONSTANTS = "USER_SESSION_NAME";
 
     /**
-     * 1-激活
+     *  订单状态 1-激活
      */
     public static final Integer STATE_Y = 1;
 
     /**
-     *2-禁止
+     * 订单状态 2-禁止
      */
     public static final Integer STATE_N = 2;
 

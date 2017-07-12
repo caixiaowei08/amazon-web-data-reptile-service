@@ -10,20 +10,28 @@ $(function () {
             validating: 'glyphicon glyphicon-refresh'
         },
         fields: {
-
-
+            reviewUrl: {
+                validators: {
+                    notEmpty: {
+                        message: '评价链接不能为空！'
+                    }
+                }
+            }
         }
     }).on('success.form.bv', function (e) {
         var form = $('#formAddEvaluateUrlModel');
         $.post(form.attr('action'), form.serialize(), function (result) {
             if (result.success === "success") {
                 toastr.success(result.msg);
+                $('#addEvaluateUrlModel').modal('hide');
                 $('#evaluateListTable').bootstrapTable("refresh");
             } else if (result.success === "fail") {
                 toastr.warning(result.msg);
+                $('#addEvaluateUrlModel').modal('hide');
                 form.bootstrapValidator('disableSubmitButtons', false);
             } else {
                 toastr.warning("请重新登录！");
+                $('#addEvaluateUrlModel').modal('hide');
                 setTimeout("window.location='/adminSystemController.admin?goAdminLogin'", 500);
             }
         }, 'json');
@@ -161,11 +169,16 @@ var viewModel = {
     deleteId: ko.observable(),
     eid: ko.observable(),
     asinId: ko.observable(),
-    amzOrderId: ko.observable()
+    amzOrderId: ko.observable(),
+    reviewUrl: ko.observable()
 }
 
 function clickEvaluateModel(id) {
     viewModel.deleteId(id);
+}
+
+function submitAddReviewUrl(){
+    $('#formAddEvaluateUrlModel').submit();
 }
 
 function clickAddEvaluateUrlModel(id) {
@@ -178,6 +191,7 @@ function clickAddEvaluateUrlModel(id) {
                 viewModel.eid(data.content.id);
                 viewModel.asinId(data.content.asinId);
                 viewModel.amzOrderId(data.content.amzOrderId);
+                viewModel.reviewUrl("");
             } else if (data.success === "fail") {
                 toastr.warning(data.msg);
             } else {
@@ -188,9 +202,6 @@ function clickAddEvaluateUrlModel(id) {
             toastr.success("服务器异常,请联系管理员！");
         }
     })
-
-
-
 }
 
 

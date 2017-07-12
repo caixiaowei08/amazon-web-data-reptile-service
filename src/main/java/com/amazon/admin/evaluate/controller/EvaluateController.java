@@ -20,6 +20,7 @@ import org.framework.core.common.controller.BaseController;
 import org.framework.core.common.model.json.AjaxJson;
 import org.framework.core.global.service.GlobalService;
 import org.framework.core.utils.ContextHolderUtils;
+import org.framework.core.utils.RegularExpressionUtils;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -92,7 +93,50 @@ public class EvaluateController extends BaseController {
         } catch (Exception e) {
             j.setSuccess(AjaxJson.CODE_FAIL);
             j.setMsg("添加评论失败！");
-            logger.error(e.toString());
+            logger.error(e.fillInStackTrace());
+            return j;
+        }
+        return j;
+    }
+
+    @RequestMapping(params = "doAddReviewUrl")
+    @ResponseBody
+    public AjaxJson doAddReviewUrl(PromotOrderEvaluateFlowEntity promotOrderEvaluateFlowEntity, HttpServletRequest request, HttpServletResponse response) {
+        AjaxJson j = new AjaxJson();
+        logger.info("----evaluateController----doAddReviewUrl---start----");
+        if (globalService.isNotAdminLogin()) {
+            j.setSuccess(AjaxJson.RELOGIN);
+            j.setMsg("请用管理员账户登录！");
+            return j;
+        }
+
+        if (StringUtils.isEmpty(promotOrderEvaluateFlowEntity.getReviewUrl())
+                || !RegularExpressionUtils.isHttpOrHttps(promotOrderEvaluateFlowEntity.getReviewUrl())) {
+            j.setSuccess(AjaxJson.CODE_FAIL);
+            j.setMsg("请输入评价链接或者有效的评价链接！");
+            return j;
+        }
+
+        PromotOrderEvaluateFlowEntity promotOrderEvaluateFlowDb = promotOrderEvaluateFlowService.find(PromotOrderEvaluateFlowEntity.class, promotOrderEvaluateFlowEntity.getId());
+
+        if (promotOrderEvaluateFlowDb == null) {
+            j.setSuccess(AjaxJson.RELOGIN);
+            j.setMsg("评论已被删除！");
+            return j;
+        }
+
+        if (promotOrderEvaluateFlowDb.getState().equals(Constants.EVALUATE_STATE_REVIEW)) {
+            j.setSuccess(AjaxJson.CODE_FAIL);
+            j.setMsg("评论链接已被追加，处于review状态！");
+            return j;
+        }
+
+        try {
+            j = evaluateService.doAddReviewUrl(promotOrderEvaluateFlowEntity, promotOrderEvaluateFlowDb);
+        } catch (Exception e) {
+            j.setSuccess(AjaxJson.CODE_FAIL);
+            j.setMsg("追加评论失败！");
+            logger.error(e.fillInStackTrace());
             return j;
         }
         return j;
@@ -107,7 +151,7 @@ public class EvaluateController extends BaseController {
         try {
             criteriaQuery.installHqlParams();
         } catch (Exception e) {
-            logger.error(e);
+            logger.error(e.fillInStackTrace());
         }
         DataGridReturn dataGridReturn = evaluateService.getDataGridReturn(criteriaQuery);
         DatagridJsonUtils.listToObj(dataGridReturn, PromotOrderEntity.class, dataGrid.getField());
@@ -139,7 +183,6 @@ public class EvaluateController extends BaseController {
         j.setContent(promotOrderEntityDb);
         return j;
     }
-
 
 
     @RequestMapping(params = "doFindComment")
@@ -184,7 +227,7 @@ public class EvaluateController extends BaseController {
         }
 
         try {
-                j = evaluateService.doDelPromotOrderEvaluate(promotOrderEvaluateFlowDb);
+            j = evaluateService.doDelPromotOrderEvaluate(promotOrderEvaluateFlowDb);
         } catch (Exception e) {
             logger.error(e.fillInStackTrace());
             j.setSuccess(AjaxJson.CODE_FAIL);

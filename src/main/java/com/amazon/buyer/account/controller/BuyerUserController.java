@@ -43,7 +43,7 @@ public class BuyerUserController extends BaseController {
 
     private static Logger logger = LogManager.getLogger(BuyerUserController.class.getName());
 
-    private String domainName = "http://localhost:8888/";
+    private String domainName = "http://www.amreviewtracker.com/";
 
 
     @Autowired

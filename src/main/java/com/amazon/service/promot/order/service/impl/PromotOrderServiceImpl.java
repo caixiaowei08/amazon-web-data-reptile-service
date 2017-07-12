@@ -1,5 +1,6 @@
 package com.amazon.service.promot.order.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.amazon.admin.constant.Constants;
 import com.amazon.service.fund.entity.UserFundEntity;
 import com.amazon.service.fund.service.UserFundService;
@@ -61,6 +62,9 @@ public class PromotOrderServiceImpl extends BaseServiceImpl implements PromotOrd
 
 
     public AjaxJson doAddNewPromot(UserEntity userEntity, AmazonPageInfoPojo amazonPageInfoPojo, PromotOrderEntity promotOrderEntity) {
+        logger.info("----创建订单开始-promotOrderEntity---"+ JSON.toJSONString(promotOrderEntity));
+        logger.info("----创建订单开始-userEntity---"+ JSON.toJSONString(userEntity));
+        logger.info("----创建订单开始-amazonPageInfoPojo---"+ JSON.toJSONString(amazonPageInfoPojo));
         AjaxJson j = new AjaxJson();
         DetachedCriteria userFundDetachedCriteria = DetachedCriteria.forClass(UserFundEntity.class);
         userFundDetachedCriteria.add(Restrictions.eq("sellerId", userEntity.getId()));
@@ -131,6 +135,7 @@ public class PromotOrderServiceImpl extends BaseServiceImpl implements PromotOrd
 
         userFundEntity.setUsableFund(userFundEntity.getUsableFund().subtract(totalPrice));
         userFundEntity.setFreezeFund(userFundEntity.getFreezeFund().add(totalPrice));
+        userFundEntity.setUpdateTime(new Date());
         userFundService.saveOrUpdate(userFundEntity);
         //检查资金情况
         promotOrderEntity.setSellerId(userEntity.getId());

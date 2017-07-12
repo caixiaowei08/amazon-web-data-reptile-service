@@ -161,7 +161,7 @@
                 </div>
                 <div class="panel-footer">
                     <div class="row">
-                        <div class="col-sm-4 col-sm-offset-8">
+                        <div class="col-sm-6 col-sm-offset-6">
                             <div class="btn-group" role="group">
                                 <a  onclick="downEvaluateExcel();" class="btn btn-default" style="width: 104px;">评论导出
                                 </a>

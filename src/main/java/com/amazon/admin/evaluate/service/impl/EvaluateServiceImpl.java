@@ -30,6 +30,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
+import sun.security.krb5.JavaxSecurityAuthKerberosAccess;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -286,6 +287,104 @@ public class EvaluateServiceImpl extends BaseServiceImpl implements EvaluateServ
             userFundService.saveOrUpdate(userFundEntity);
             promotOrderService.saveOrUpdate(promotOrderEntity);
             promotOrderEvaluateFlowService.delete(promotOrderEvaluateFlowEntity);
+        }
+        return j;
+    }
+
+
+    public AjaxJson doAddReviewUrl(PromotOrderEvaluateFlowEntity promotOrderEvaluateFlowEntity, PromotOrderEvaluateFlowEntity promotOrderEvaluateFlowDb) {
+        AjaxJson j = new AjaxJson();
+        logger.info("----------PromotOrderEvaluateFlowEntity--start--------" + JSON.toJSONString(promotOrderEvaluateFlowEntity));
+        logger.info("----------promotOrderEvaluateFlowDb--start--------" + JSON.toJSONString(promotOrderEvaluateFlowDb));
+        PromotOrderEntity promotOrderEntity = promotOrderService.find(PromotOrderEntity.class, promotOrderEvaluateFlowDb.getPromotId());
+        if (promotOrderEntity == null) {
+            j.setSuccess(AjaxJson.CODE_FAIL);
+            j.setSuccess("订单已被删除或不存在!");
+            return j;
+        }
+        if (promotOrderEntity.getState().equals(Constant.STATE_N)) {
+            j.setSuccess(AjaxJson.CODE_FAIL);
+            j.setSuccess("订单已被关闭，不能追加评论链接！");
+            return j;
+        }
+
+        AmazonEvaluateReviewPojo amazonEvaluateReviewPojo = spiderService.spiderAmazonEvaluateReviewPojo(promotOrderEvaluateFlowEntity.getReviewUrl(), 4);
+        logger.info("----------doAddEvaluateWithReviewUrl--amazonEvaluateReviewPojo--------" + JSON.toJSONString(amazonEvaluateReviewPojo));
+        if (StringUtils.isEmpty(amazonEvaluateReviewPojo.getReviewContent()) ||
+                StringUtils.isEmpty(amazonEvaluateReviewPojo.getReviewStar()) ||
+                StringUtils.isEmpty(amazonEvaluateReviewPojo.getReviewDate())) {
+            j.setSuccess(AjaxJson.CODE_FAIL);
+            j.setMsg("请确认给定的评价链接是否正确！");
+            return j;
+        }
+        //开始校验 订单评价是否已经被使用
+        DetachedCriteria promotOrderEvaluateDetachedCriteria = DetachedCriteria.forClass(PromotOrderEvaluateFlowEntity.class);
+        promotOrderEvaluateDetachedCriteria.add(Restrictions.eq("reviewCode", amazonEvaluateReviewPojo.getReviewCode()));
+        List<PromotOrderEvaluateFlowEntity> promotOrderEvaluateFlowEntityList = promotOrderService.getListByCriteriaQuery(promotOrderEvaluateDetachedCriteria);
+        if (CollectionUtils.isNotEmpty(promotOrderEvaluateFlowEntityList)) {
+            j.setSuccess(AjaxJson.CODE_FAIL);
+            j.setMsg("该评价已经被使用，请核对！");
+            logger.log(Level.ERROR, "该评价已经被使用，请核对！----reviewCode:" + amazonEvaluateReviewPojo.getReviewCode());
+            return j;
+        }
+        //ASIN 是否正确
+        if (!promotOrderEntity.getAsinId().equals(amazonEvaluateReviewPojo.getAsin())) {
+            j.setSuccess(AjaxJson.CODE_FAIL);
+            j.setMsg("评价ASIN编号和商品ASIN不匹配！");
+            return j;
+        }
+        //账目变动
+        DetachedCriteria userFundDetachedCriteria = DetachedCriteria.forClass(UserFundEntity.class);
+        userFundDetachedCriteria.add(Restrictions.eq("sellerId", promotOrderEntity.getSellerId()));
+        List<UserFundEntity> userFundEntityList = userFundService.getListByCriteriaQuery(userFundDetachedCriteria);
+        logger.info("----------doAddEvaluateWithReviewUrl--userFundEntityList--------" + JSON.toJSONString(userFundEntityList));
+        if (CollectionUtils.isEmpty(userFundEntityList)) {
+            j.setSuccess(AjaxJson.CODE_FAIL);
+            j.setMsg("无法找到资金账户，请联系管理员！");
+            return j;
+        }
+        UserFundEntity userFundEntity = userFundEntityList.get(0);
+        BigDecimal totalPrice = promotOrderEntity.getReviewPrice().add(promotOrderEntity.getCashback());
+        if (promotOrderEntity.getGuaranteeFund().compareTo(totalPrice) < 0) {
+            j.setSuccess(AjaxJson.CODE_FAIL);
+            j.setMsg("订单保证金不足！");
+            return j;
+        }
+
+        //资金变动
+        userFundEntity.setFreezeFund(userFundEntity.getFreezeFund().subtract(totalPrice));
+        userFundEntity.setTotalFund(userFundEntity.getTotalFund().subtract(totalPrice));
+        userFundEntity.setUpdateTime(new Date());
+        //订单变动
+        promotOrderEntity.setEvaluateNum(promotOrderEntity.getEvaluateNum() + 1);
+        promotOrderEntity.setConsumption(promotOrderEntity.getConsumption().add(promotOrderEntity.getReviewPrice()));
+        promotOrderEntity.setCashBackConsumption(promotOrderEntity.getCashBackConsumption().add(promotOrderEntity.getCashback()));
+        promotOrderEntity.setGuaranteeFund(promotOrderEntity.getGuaranteeFund().subtract(totalPrice));
+        promotOrderEntity.setUpdateTime(new Date());
+
+        if (promotOrderEntity.getNeedReviewNum().intValue() <= (promotOrderEntity.getEvaluateNum().intValue())) {
+            promotOrderEntity.setState(Constant.STATE_N);
+        }
+        //评价新增
+        promotOrderEvaluateFlowDb.setState(Constants.EVALUATE_STATE_REVIEW);
+        promotOrderEvaluateFlowDb.setReviewCode(amazonEvaluateReviewPojo.getReviewCode());
+        promotOrderEvaluateFlowDb.setReviewContent(amazonEvaluateReviewPojo.getReviewContent());
+        promotOrderEvaluateFlowDb.setReviewUrl(amazonEvaluateReviewPojo.getReviewUrl());
+        promotOrderEvaluateFlowDb.setReviewStar(Double.parseDouble(amazonEvaluateReviewPojo.getReviewStar().trim().substring(0, 2)));
+        promotOrderEvaluateFlowDb.setReviewDate(amazonEvaluateReviewPojo.getReviewDate());
+        promotOrderEvaluateFlowDb.setComplaint(ComplaintConstant.COMPLAINT_ZERO);
+        promotOrderEvaluateFlowDb.setUpdateTime(new Date());
+        try {
+            logger.info("------userFundEntity-----"+JSON.toJSONString(userFundEntity));
+            logger.info("------promotOrderEvaluateFlowEntity-----"+JSON.toJSONString(promotOrderEvaluateFlowEntity));
+            logger.info("------promotOrderEntity-----"+JSON.toJSONString(promotOrderEntity));
+            userFundService.saveOrUpdate(userFundEntity);
+            promotOrderEvaluateFlowService.saveOrUpdate(promotOrderEvaluateFlowDb);
+            promotOrderService.saveOrUpdate(promotOrderEntity);
+        } catch (Exception e) {
+            j.setSuccess(AjaxJson.CODE_FAIL);
+            j.setMsg("保存出错！");
+            logger.error(e.fillInStackTrace());
         }
         return j;
     }

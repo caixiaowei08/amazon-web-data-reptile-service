@@ -104,14 +104,6 @@ $(function () {
             return params;
         }
     });
-   /* $(window).resize(function () {
-        $('#evaluateDetailListTable').bootstrapTable('resetView', {
-            height: tableHeight()
-        })
-    })
-    function tableHeight() {
-        return $(window).height() - 350;
-    }*/
 
     loadData();
 

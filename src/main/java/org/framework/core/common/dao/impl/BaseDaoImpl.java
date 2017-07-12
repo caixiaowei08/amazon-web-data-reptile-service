@@ -47,7 +47,7 @@ public class BaseDaoImpl implements BaseDao {
             }
             return id;
         } catch (RuntimeException e) {
-            logger.error("保存实体异常", e);
+            logger.error("保存实体异常", e.fillInStackTrace());
             throw e;
         }
     }
@@ -67,7 +67,7 @@ public class BaseDaoImpl implements BaseDao {
                 logger.debug("添加或更新成功," + entity.getClass().getName());
             }
         } catch (RuntimeException e) {
-            logger.error("添加或更新异常", e);
+            logger.error("添加或更新异常", e.fillInStackTrace());
             throw e;
         }
     }
