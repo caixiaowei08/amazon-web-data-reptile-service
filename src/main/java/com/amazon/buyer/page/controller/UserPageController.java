@@ -15,8 +15,8 @@ import javax.servlet.http.HttpServletResponse;
 @Controller
 @RequestMapping("/userPageController")
 public class UserPageController extends BaseController{
-
-    @RequestMapping(params = "login")
+/** 暂且屏蔽 TODO 二期开发 放开
+   @RequestMapping(params = "login")
     public String login(HttpServletRequest request, HttpServletResponse response) {
         return "buyer/user/login";
     }
@@ -50,4 +50,5 @@ public class UserPageController extends BaseController{
     public String goModifyPayment(HttpServletRequest request, HttpServletResponse response) {
         return "buyer/buyer/changeBuyerDetail";
     }
+    */
 }
