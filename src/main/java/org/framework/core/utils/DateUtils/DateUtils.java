@@ -19,7 +19,7 @@ public class DateUtils {
      * @return SimpleDateFormat对象
      * @throws RuntimeException 异常：非法日期格式
      */
-    private static SimpleDateFormat getDateFormat(String parttern) throws RuntimeException {
+    public static SimpleDateFormat getDateFormat(String parttern) throws RuntimeException {
         return new SimpleDateFormat(parttern);
     }
 

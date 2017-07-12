@@ -11,10 +11,13 @@
     <link rel="stylesheet" href="/webpage/plug-in/bootstrap/css/bootstrap-theme.min.css"/>
     <link rel="stylesheet" href="/webpage/plug-in/font-awesome/css/font-awesome.min.css"/>
     <link rel="stylesheet" href="/webpage/plug-in/bootstrapvalidator/dist/css/bootstrapValidator.min.css"/>
+    <link rel="stylesheet" href="/webpage/plug-in/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css"/>
     <link rel="stylesheet" href="/webpage/plug-in/bootstrap-table/dist/bootstrap-table.min.css"/>
     <link rel="stylesheet" href="/webpage/plug-in/toastr/toastr.css"/>
     <link rel="stylesheet" href="/webpage/plug-in/ace/css/ace.css"/>
     <link rel="stylesheet" href="/webpage/pages/main/index.css"/>
+    <link rel="stylesheet" href="/webpage/pages/fund/chargeFundFlow.css"/>
+
     <!--[if lte IE 9]>
     <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
     <script src="https://cdn.bootcss.com/html5shiv/r29/html5.js"></script>
@@ -29,6 +32,8 @@
     <script type="text/javascript" src="/webpage/plug-in/bootstrap-table/dist/bootstrap-table.min.js"></script>
     <script type="text/javascript" src="/webpage/plug-in/bootstrap-table/dist/bootstrap-table-locale-all.min.js"></script>
     <script type="text/javascript" src="/webpage/plug-in/bootstrap-table/dist/locale/bootstrap-table-zh-CN.js"></script>
+    <script type="text/javascript" src="/webpage/plug-in/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
+    <script type="text/javascript" src="/webpage/plug-in/bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js"></script>
     <script type="text/javascript" src="/webpage/pages/fund/chargeFundFlow.js"></script>
 </head>
 <body style="overflow-y:auto;">
@@ -98,6 +103,95 @@
             <div class="panel panel-warning">
                 <div class="panel-heading">
                     <h3 class="panel-title">充值流水信息</h3>
+                </div>
+                <div class="panel panel-body">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <label class="col-xs-3 control-label amazon-label" for="amazon_state">
+                                    <nobr>充值类型:</nobr>
+                                </label>
+                                <div class="col-xs-8">
+                                    <select id="amazon_chargeType" class="form-control">
+                                        <option value="">--选择--</option>
+                                        <option value="1">会员充值</option>
+                                        <option value="2">余额充值</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <label class="col-xs-3 control-label amazon-label" for="amazon_state">
+                                    <nobr>支付方式:</nobr>
+                                </label>
+                                <div class="col-xs-8">
+                                    <select id="amazon_chargeSource" class="form-control">
+                                        <option value="">--选择--</option>
+                                        <option value="1">支付宝</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <label class="col-xs-3 control-label amazon-label" for="amazon_state">
+                                    <nobr>状态:</nobr>
+                                </label>
+                                <div class="col-xs-8">
+                                    <select id="amazon_state" class="form-control">
+                                        <option value="">--选择--</option>
+                                        <option value="1">未支付</option>
+                                        <option value="2">成功</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label class="col-xs-2 control-label amazon-label">
+                                    <nobr>创建时间：</nobr>
+                                </label>
+                                <div class="col-xs-5">
+                                    <div class="input-group date form_date" id="startTime_begin"
+                                         data-date-format="yyyy-mm-dd"
+                                         data-link-field="addDate_begin_input" data-link-format="yyyy-mm-dd">
+                                        <input class="form-control" name="startTime_begin" id="startTime_begin_value"
+                                               size="16" type="text" value="" readonly placeholder="开始时间">
+                                        <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                                        <span class="input-group-addon"><span
+                                                class="glyphicon glyphicon-calendar"></span></span>
+                                    </div>
+                                    <input type="hidden" id="addDate_begin_input" value=""/>
+                                </div>
+                                <div class="col-xs-5">
+                                    <div class="input-group date form_date" id="startTime_end"
+                                         data-date-format="yyyy-mm-dd"
+                                         data-link-field="addDate_end_input" data-link-format="yyyy-mm-dd">
+                                        <input class="form-control" name="startTime_end" id="startTime_end_value" size="16"
+                                               type="text" value="" readonly placeholder="结束时间">
+                                        <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                                        <span class="input-group-addon"><span
+                                                class="glyphicon glyphicon-calendar"></span></span>
+                                    </div>
+                                    <input type="hidden" id="addDate_end_input" value=""/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-footer">
+                    <div class="row">
+                        <div class="col-sm-4 col-sm-offset-8">
+                            <div class="btn-group" role="group">
+                                <a  onclick="downChargeFundFlowExcel();" class="btn btn-default" style="width: 104px;">导出
+                                </a>
+                                <button type="button" onclick="doChargeFundFlowSearch();" class="btn btn-default"
+                                        style="width: 104px;">查询
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <table id="chargeFundFlowListTable" class="table table-hover">

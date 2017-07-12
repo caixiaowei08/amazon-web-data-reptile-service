@@ -1,5 +1,6 @@
 package com.amazon.service.recharge.controller;
 
+import com.amazon.admin.poi.service.PoiPromotService;
 import com.amazon.service.promot.order.entity.PromotOrderEntity;
 import com.amazon.service.recharge.entity.UserRechargeFundEntity;
 import com.amazon.service.recharge.service.UserRechargeFundService;
@@ -16,6 +17,8 @@ import org.framework.core.common.model.json.AjaxJson;
 import org.framework.core.global.service.GlobalService;
 import org.framework.core.utils.BeanUtils;
 import org.framework.core.utils.ContextHolderUtils;
+import org.framework.core.utils.DateUtils.DateUtils;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -28,6 +31,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by User on 2017/6/10.
@@ -41,6 +45,9 @@ public class UserRechargeFundController extends BaseController {
 
     @Autowired
     private UserRechargeFundService userRechargeFundService;
+
+    @Autowired
+    private PoiPromotService poiPromotService;
 
     @Autowired
     private GlobalService globalService;
@@ -63,4 +70,29 @@ public class UserRechargeFundController extends BaseController {
         DatagridJsonUtils.listToObj(dataGridReturn, PromotOrderEntity.class, dataGrid.getField());
         DatagridJsonUtils.datagrid(response, dataGridReturn);
     }
+
+    @RequestMapping(params = "downChargeFundFlowExcel")
+    public void downChargeFundFlowExcel(DataGrid dataGrid, HttpServletRequest request, HttpServletResponse response) {
+        UserEntity userEntity = globalService.getUserEntityFromSession();
+        if (userEntity == null) {
+            return;
+        }
+        CriteriaQuery criteriaQuery = new CriteriaQuery(UserRechargeFundEntity.class, null, request.getParameterMap());
+        try {
+            criteriaQuery.installHqlParams();
+        } catch (Exception e) {
+            logger.error(e.fillInStackTrace());
+        }
+        criteriaQuery.getDetachedCriteria().addOrder(Order.desc("createTime"));
+        criteriaQuery.getDetachedCriteria().add(Restrictions.eq("sellerId", userEntity.getId()));
+        List<UserRechargeFundEntity> userRechargeFundEntityList = userRechargeFundService.getListByCriteriaQuery(criteriaQuery.getDetachedCriteria());
+        String excelFileNameHeader = "充值记录报表" + DateUtils.getDate(new Date());
+        try {
+            poiPromotService.downChargeFundFlowExcel(userRechargeFundEntityList, response, excelFileNameHeader);
+        } catch (Exception e) {
+            logger.error(e.fillInStackTrace());
+        }
+    }
+
+
 }
