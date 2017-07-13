@@ -55,15 +55,13 @@ public class PromotOrderEvaluateFlowController extends BaseController {
     public void dataGrid(DataGrid dataGrid, HttpServletRequest request, HttpServletResponse response) {
         CriteriaQuery criteriaQuery = new CriteriaQuery(PromotOrderEvaluateFlowEntity.class, dataGrid, request.getParameterMap());
         UserEntity userEntity = globalService.getUserEntityFromSession();
-
         if (userEntity == null) {
             return;
         }
-
         try {
             criteriaQuery.installHqlParams();
         } catch (Exception e) {
-            logger.info("组装查询出错！", e);
+            logger.error(e.fillInStackTrace());
         }
         criteriaQuery.getDetachedCriteria().add(Restrictions.eq("sellerId", userEntity.getId()));//加上用户
         DataGridReturn dataGridReturn = promotOrderEvaluateFlowService.getDataGridReturn(criteriaQuery);
@@ -107,10 +105,11 @@ public class PromotOrderEvaluateFlowController extends BaseController {
             t.setRemark(promotOrderEvaluateFlowEntity.getRemark());
             promotOrderEvaluateFlowService.saveOrUpdate(t);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.fillInStackTrace());
             j.setSuccess(AjaxJson.CODE_FAIL);
             j.setMsg("投诉失败");
         }
+        j.setSuccess(AjaxJson.CODE_SUCCESS);
         j.setContent("投诉成功！");
         return j;
     }

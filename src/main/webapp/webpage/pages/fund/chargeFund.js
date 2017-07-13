@@ -55,6 +55,11 @@ function loadData() {
         type: 'post',
         success: function (data) {
             if (data.success === "success") {
+                var chargeFund = 100;
+                var chargeFundUrl = getQueryString("chargeFund").trim();
+                if( chargeFundUrl !== null && chargeFundUrl !== undefined && chargeFundUrl !== ''){
+                    chargeFund = chargeFundUrl;
+                }
                 ko.applyBindings(
                     new ViewModel(
                         data.content.account,
@@ -62,11 +67,11 @@ function loadData() {
                         data.content.usableFund,
                         data.content.freezeFund,
                         data.content.exchangeRate,
-                        100
+                        chargeFund
                     )
                 );
             } else if (data.success === "fail") {
-                toastr.warning(data.msg);
+                toastr.error(data.msg);
             } else {
                 window.location = '/loginController.do?login';
             }
@@ -75,4 +80,11 @@ function loadData() {
             toastr.warning("服务器异常,请联系管理员！");
         }
     });
+}
+
+function getQueryString(name) {
+    var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+    var r = window.location.search.substr(1).match(reg);
+    if (r != null) return unescape(r[2]);
+    return null;
 }

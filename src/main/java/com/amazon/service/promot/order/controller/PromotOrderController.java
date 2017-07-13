@@ -127,11 +127,14 @@ public class PromotOrderController extends BaseController {
                 if (CollectionUtils.isNotEmpty(promotOrderEvaluateFlowEntityList)) {
                     for (PromotOrderEvaluateFlowEntity promotOrderEvaluateFlowEntity : promotOrderEvaluateFlowEntityList) {
                         PromotOrderEvaluateVo promotOrderEvaluateVo = new PromotOrderEvaluateVo();
+                        promotOrderEvaluateVo.setPromotId(promotOrderEvaluateFlowEntity.getPromotId());
                         promotOrderEvaluateVo.setCashback(promotOrderEntity.getCashback());
                         promotOrderEvaluateVo.setAmzOrderId(promotOrderEvaluateFlowEntity.getAmzOrderId());
                         promotOrderEvaluateVo.setUpdateTime(promotOrderEvaluateFlowEntity.getUpdateTime());
                         promotOrderEvaluateVo.setAsin(promotOrderEvaluateFlowEntity.getAsinId());
                         promotOrderEvaluateVo.setReviewPrice(promotOrderEntity.getReviewPrice());
+                        promotOrderEvaluateVo.setIsComment(promotOrderEntity.getState());
+                        promotOrderEvaluateVo.setRemark(promotOrderEntity.getRemark());
                         promotOrderEvaluateVoList.add(promotOrderEvaluateVo);
                     }
                 }
@@ -298,7 +301,6 @@ public class PromotOrderController extends BaseController {
             j.setMsg("订单提交错误，联系客服！");
             logger.error(e.fillInStackTrace());
         }
-
         return j;
     }
 

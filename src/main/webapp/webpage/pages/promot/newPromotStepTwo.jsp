@@ -54,12 +54,14 @@
                         <ul class="dropdown-menu">
                             <li>
                                 <a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin=282208271&site=qq&menu=yes">
-                                    客服1&nbsp;<img border="0" src="http://wpa.qq.com/pa?p=2:282208271:51" alt="客服1" title="客服1"/>
+                                    客服1&nbsp;<img border="0" src="http://wpa.qq.com/pa?p=2:282208271:51" alt="客服1"
+                                                  title="客服1"/>
                                 </a>
                             </li>
                             <li>
                                 <a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin=3170047818&site=qq&menu=yes">
-                                    客服2&nbsp;<img border="0" src="http://wpa.qq.com/pa?p=2:3170047818:51" alt="客服2" title="客服2"/>
+                                    客服2&nbsp;<img border="0" src="http://wpa.qq.com/pa?p=2:3170047818:51" alt="客服2"
+                                                  title="客服2"/>
                                 </a>
                             </li>
                         </ul>
@@ -122,7 +124,8 @@
                         <span class="input-group-addon" id="asin-addon">
                             <div class="text-right" style="width: 80px;">ASIN编码</div>
                         </span>
-                                <input data-bind="value: asin" type="text" readonly="readonly" class="form-control" id="asin"
+                                <input data-bind="value: asin" type="text" readonly="readonly" class="form-control"
+                                       id="asin"
                                        name="asinId"
                                        aria-describedby="asin-addon">
                             </div>
@@ -132,7 +135,8 @@
                         <span class="input-group-addon" id="productTitle-addon">
                             <div class="text-right" style="width: 80px;">商品标题</div>
                         </span>
-                                <input data-bind="value: productTitle" type="text" readonly="readonly" class="form-control"
+                                <input data-bind="value: productTitle" type="text" readonly="readonly"
+                                       class="form-control"
                                        id="productTitle"
                                        name="productTitle" aria-describedby="productTitle-addon">
                             </div>
@@ -146,7 +150,8 @@
                                 </span>
                                         <input data-bind="value: priceblockSaleprice" type="text" readonly="readonly"
                                                class="form-control"
-                                               id="priceblockSaleprice" name="salePrice" placeholder="请输入亚马逊ASIN或者商品主页链接！"
+                                               id="priceblockSaleprice" name="salePrice"
+                                               placeholder="亚马逊价格"
                                                aria-describedby="priceblockSaleprice-addon">
                                     </div>
                                 </div>
@@ -155,7 +160,8 @@
                                         <span class="input-group-addon" id="brand-addon">
                                             <div class="text-right" style="width: 80px; ">店铺名称</div>
                                         </span>
-                                        <input data-bind="value:brand" type="text" readonly="readonly" class="form-control" id="brand"
+                                        <input data-bind="value:brand" type="text" readonly="readonly"
+                                               class="form-control" id="brand"
                                                name="brand"
                                                aria-describedby="brand-addon">
                                     </div>
@@ -165,7 +171,8 @@
                                         <span class="input-group-addon" id="needReviewNum-addon">
                                             <div class="text-right" style="width: 80px; ">目标好评数</div>
                                         </span>
-                                        <input type="number" data-bind="value:needReviewNum" class="form-control" id="needReviewNum"
+                                        <input type="number" data-bind="value:needReviewNum" class="form-control"
+                                               id="needReviewNum"
                                                onkeydown="if(event.keyCode==13){event.keyCode=0;event.returnValue=false;}"
                                                name="needReviewNum"
                                                placeholder="请输入目标好评数！"
@@ -177,7 +184,8 @@
                                         <span class="input-group-addon" id="reviewPrice-addon">
                                             <div class="text-right" style="width: 80px; ">评价扣现单价</div>
                                         </span>
-                                        <input type="text" data-bind="value:reviewPrice" class="form-control" id="reviewPrice"
+                                        <input type="text" data-bind="value:reviewPrice" class="form-control"
+                                               id="reviewPrice"
                                                readonly="readonly" aria-describedby="reviewPrice-addon">
                                     </div>
                                 </div>
@@ -195,7 +203,8 @@
                                 </div>
                             </div>
                             <div class="col-xs-5">
-                                <img src="" data-bind="attr:{src:landingImage}" alt="产品主图" style="height:230px; " class="img-responsive center-block">
+                                <img src="" data-bind="attr:{src:landingImage}" alt="产品主图" style="height:230px; "
+                                     class="img-responsive center-block">
                             </div>
                         </div>
                         <div class="form-group">
@@ -203,7 +212,8 @@
                                 <span class="input-group-addon" id="guaranteeFund-addon">
                                     <div class="text-right" style="width: 80px; ">所需保证金</div>
                                 </span>
-                                <input type="text" data-bind='value: guaranteeFund' class="form-control" readonly="readonly"
+                                <input type="text" data-bind='value: guaranteeFund' class="form-control"
+                                       readonly="readonly"
                                        id="guaranteeFund"
                                        aria-describedby="guaranteeFund-addon">
                             </div>
@@ -214,11 +224,13 @@
                                         <span class="input-group-addon">
                                             <div class="text-right" style="width: 80px;">结束日期</div>
                                         </span>
-                                <input class="form-control" name="finishDate" id="finishDate" placeholder="订单最少时间为三天！" size="16" type="text" value="" readonly
+                                <input class="form-control" name="finishDate" id="finishDate" placeholder="订单最少时间为三天！"
+                                       size="16" type="text" value="" readonly
                                        onkeydown="if(event.keyCode==13){event.keyCode=0;event.returnValue=false;}"
                                 >
                                 <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
-                                <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                                <span class="input-group-addon"><span
+                                        class="glyphicon glyphicon-calendar"></span></span>
                             </div>
                             <input type="hidden" id="dtp_input2" value=""/><br/>
                         </div>
@@ -227,7 +239,7 @@
                                 <span class="input-group-addon" id="remark-addon">
                                     <div class="text-right" style="width: 80px; ">备注：</div>
                                 </span>
-                                <input type="text"  name = "remark" class="form-control"  placeholder="写下您的备注信息！"
+                                <input type="text" name="remark" class="form-control" placeholder="写下您的备注信息！"
                                        id="remark"
                                        aria-describedby="guaranteeFund-addon">
                             </div>
@@ -251,14 +263,40 @@
         </div>
         <div style="height: 100px;"></div>
     </div>
-
+    <div class="modal fade bs-example-modal-sm" id="chargeFundModel" tabindex="-1" role="dialog"
+         aria-labelledby="chargeFundModel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close"
+                            data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                    <h4 class="modal-title">
+                        提示：可用余额不足，请充值！
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="chargeFund" 那么="chargeFund" >
+                    请先补充余额差额<span id="chargeFundShow"></span>美元，并重新提交订单！
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button type="button" class="btn btn-primary" id="deleteEvaluateByIdBtn"
+                            onclick="chargeFundNow();">马上充值
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 <nav class="navbar navbar-default navbar-fixed-bottom">
     <div class="container">
         <div class="row">
             <div class="col-sm-8 col-sm-offset-2">
                 <div style="text-align:center;line-height: 28px;">
-                    Copyright&copy;Vascal Technology Services Ltd  All Rights Reserved&reg;鄂ICP备17013383号
+                    Copyright&copy;Vascal Technology Services Ltd All Rights Reserved&reg;鄂ICP备17013383号
                 </div>
             </div>
         </div>
@@ -275,7 +313,7 @@
             todayHighlight: 1,
             startView: 2,
             minView: 2,
-            startDate: new Date(Date.parse(new Date().toString()) + 86400000*3),
+            startDate: new Date(Date.parse(new Date().toString()) + 86400000 * 3),
             forceParse: 0
         });
         loadData();
@@ -338,16 +376,13 @@
             var m = 0,
                 s1 = this.reviewPrice().toString(),
                 s2 = this.needReviewNum().toString();
-                s3 = this.priceblockSaleprice().toString();
+            s3 = this.priceblockSaleprice().toString();
             s1 = s1.substring(1, s1.length);
             s3 = s3.substring(1, s3.length);
             console.log(s1);
             console.log(s3);
-            console.log(Number(s1)+Number(s3));
-
-
-            s4 = (Number(s1)+Number(s3)).toString();
-
+            console.log(Number(s1) + Number(s3));
+            s4 = (Number(s1) + Number(s3)).toString();
             try {
                 m += s4.split(".")[1].length
             } catch (e) {
@@ -357,16 +392,12 @@
             } catch (e) {
             }
             return "$" + (Math.ceil((Number(s4.replace(".", "")) * Number(s2.replace(".", "")) / Math.pow(10, m)) * 100)) / Math.pow(10, 2);
-
         }, this);
-
     };
-
     function loadData() {
         $.ajax({
             url: "/promotOrderController.do?doGetPromotOrderTemp",
             type: 'post',
-            data: $('#formObj').serialize(),
             success: function (data) {
                 if (data.success === "success") {
                     ko.applyBindings(
@@ -383,7 +414,7 @@
                     );
                 } else if (data.success === "fail") {
                     toastr.error(data.msg);
-                } else if (data.success === "RELOGIN") {
+                } else {
                     window.location = '/loginController.do?login';
                 }
             },
@@ -392,12 +423,10 @@
             }
         });
     }
-
     function beforeSend() {
         $("#btn_sub").addClass("disabled"); // Disables visually
         $("#btn_sub").prop("disabled", true); // Disables visually + functionally
     }
-
     function SendComplete() {
         $("#btn_sub").removeClass("disabled"); // Disables visually
         $("#btn_sub").prop("disabled", false); // Disables visually + functionally
@@ -408,33 +437,43 @@
         var needReviewNum = $("#needReviewNum").val();
         var finishDate = $("#finishDate").val();
         if (
-            dayReviewNum === null || dayReviewNum === undefined || dayReviewNum === ''||
-            needReviewNum === null || needReviewNum === undefined || needReviewNum === ''||
+            dayReviewNum === null || dayReviewNum === undefined || dayReviewNum === '' ||
+            needReviewNum === null || needReviewNum === undefined || needReviewNum === '' ||
             finishDate === null || finishDate === undefined || finishDate === ''
         ) {
             return;
         }
 
         $.ajax({
-            url:"/promotOrderController.do?doAdd",
-            type:'post',
-            beforeSend:beforeSend,
-            data:$('#formObj').serialize(),
-            success:function(data){
-                if(data.success === "success"){
-                    window.location='/redirectionController.do?goManagePromot'
-                }else if (data.success == "fail") {
-                    toastr.warning(data.msg);
+            url: "/promotOrderController.do?doAdd",
+            type: 'post',
+            beforeSend: beforeSend,
+            data: $('#formObj').serialize(),
+            success: function (data) {
+                if (data.success === "success") {
+                    window.location = '/redirectionController.do?goManagePromot'
+                } else if (data.success === "fail") {
+                    toastr.error(data.msg);
+                } else if (data.success === "charge") {
+                    console.log(data.content);
+                    $("#chargeFund").val(data.content);
+                    $("#chargeFundShow").text(data.content);
+                    $('#chargeFundModel').modal('show');
                 } else {
-                    window.location='/loginController.do?login';
+                    window.location = '/loginController.do?login';
                 }
             },
-            error:function(jqxhr,textStatus,errorThrow){
+            error: function (jqxhr, textStatus, errorThrow) {
                 toastr.error("服务器异常,请联系管理员！");
             },
-            complete:function () {
+            complete: function () {
                 SendComplete();
             }
         });
+    }
+    
+    function chargeFundNow() {
+        window.open('/redirectionController.do?goToChargeFund&chargeFund='+$("#chargeFund").val());
+        $('#chargeFundModel').modal('hide');
     }
 </script>

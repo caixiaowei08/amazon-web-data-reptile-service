@@ -1,5 +1,6 @@
 package com.amazon.admin.poi.service.impl;
 
+import com.amazon.admin.constant.Constants;
 import com.amazon.admin.poi.service.PoiPromotService;
 import com.amazon.service.fund.ConstantChargeType;
 import com.amazon.service.fund.ConstantFund;
@@ -41,10 +42,10 @@ public class PoiPromotServiceImpl implements PoiPromotService {
         XSSFWorkbook workBook = new XSSFWorkbook();//一个excel文档对象
         XSSFSheet sheet = workBook.createSheet();// 创建一个工作薄对象
         String[] columns = {
-                "日期", "ASIN", "订单号", "刷单单价(USD)", "刷单佣金(USD)"
+                "订单编号", "日期", "ASIN", "订单号", "刷单单价(USD)", "刷单佣金(USD)", "是否上评", "备注"
         };
         int[] columnsColumnWidth = {
-                4000, 4000, 4000, 4500, 4000
+                4000, 4000, 4000, 8000, 4500, 4000, 4000, 8000
         };
 
         CellStyle headStyle = workBook.createCellStyle();
@@ -77,25 +78,31 @@ public class PoiPromotServiceImpl implements PoiPromotService {
                 PromotOrderEvaluateVo promotOrderEvaluateVo = promotOrderEvaluateVoList.get(i);
                 row = sheet.createRow(i + 1);
                 cell = row.createCell(0);
-                cell.setCellValue(simpleDateFormat.format(promotOrderEvaluateVo.getUpdateTime()));
+                cell.setCellValue(promotOrderEvaluateVo.getPromotId());
                 cell = row.createCell(1);
-                cell.setCellValue(promotOrderEvaluateVo.getAsin());
+                cell.setCellValue(simpleDateFormat.format(promotOrderEvaluateVo.getUpdateTime()));
                 cell = row.createCell(2);
-                cell.setCellValue(promotOrderEvaluateVo.getAmzOrderId().trim());
+                cell.setCellValue(promotOrderEvaluateVo.getAsin());
                 cell = row.createCell(3);
-                cell.setCellType(CellType.NUMERIC);
-                cell.setCellValue(Double.parseDouble(promotOrderEvaluateVo.getCashback().toString()));
+                cell.setCellValue(promotOrderEvaluateVo.getAmzOrderId().trim());
                 cell = row.createCell(4);
                 cell.setCellType(CellType.NUMERIC);
+                cell.setCellValue(Double.parseDouble(promotOrderEvaluateVo.getCashback().toString()));
+                cell = row.createCell(5);
+                cell.setCellType(CellType.NUMERIC);
                 cell.setCellValue(Double.parseDouble(promotOrderEvaluateVo.getReviewPrice().toString()));
+                cell = row.createCell(6);
+                cell.setCellValue(promotOrderEvaluateVo.getIsComment().equals(Constants.EVALUATE_STATE_REVIEW)? "是" : "否");
+                cell = row.createCell(7);
+                cell.setCellValue(promotOrderEvaluateVo.getRemark());
                 totalCashback = totalCashback.add(promotOrderEvaluateVo.getCashback());
                 totalReviewPrice = totalReviewPrice.add(promotOrderEvaluateVo.getReviewPrice());
             }
             row = sheet.createRow(promotOrderEvaluateVoList.size() + 1);
-            cell = row.createCell(3);
+            cell = row.createCell(4);
             cell.setCellType(CellType.NUMERIC);
             cell.setCellValue(Double.parseDouble(totalCashback.toString()));
-            cell = row.createCell(4);
+            cell = row.createCell(5);
             cell.setCellType(CellType.NUMERIC);
             cell.setCellValue(Double.parseDouble(totalReviewPrice.toString()));
         }

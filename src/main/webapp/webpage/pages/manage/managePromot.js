@@ -116,7 +116,10 @@ $(function () {
                 title: '已下订单',
                 field: "buyerNum",
                 align: "center",//水平
-                valign: "middle"//垂直
+                valign: "middle",//垂直
+                formatter: function (value, row, index) {
+                    return "<a href='/redirectionController.do?goToEvaluateDetail&promotId=" + row.id + "' target='_parent' title='查看评价详情'>" + value + "</a>";
+                }
             },
             {
                 title: '获得评论',

@@ -128,8 +128,9 @@ public class PromotOrderServiceImpl extends BaseServiceImpl implements PromotOrd
         //总价
         BigDecimal totalPrice = (new BigDecimal(needReviewNum)).multiply(reviewPrice.add(promotOrderEntity.getCashback()));
         if (totalPrice.compareTo(userFundEntity.getUsableFund()) > 0) {
-            j.setSuccess(AjaxJson.CODE_FAIL);
+            j.setSuccess(AjaxJson.CODE_RECHARGE);
             j.setMsg("可用余额不足，请先充值" + new DecimalFormat("#.00").format(totalPrice.subtract(userFundEntity.getUsableFund())) + "美元");
+            j.setContent(new DecimalFormat("#.00").format(totalPrice.subtract(userFundEntity.getUsableFund())));
             return j;
         }
 

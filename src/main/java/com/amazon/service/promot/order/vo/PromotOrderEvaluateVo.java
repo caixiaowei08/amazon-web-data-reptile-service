@@ -9,6 +9,8 @@ import java.util.Date;
  */
 public class PromotOrderEvaluateVo implements Serializable{
 
+    private Integer promotId;
+
     private Date updateTime;
 
     private String asin;
@@ -18,6 +20,18 @@ public class PromotOrderEvaluateVo implements Serializable{
     private BigDecimal reviewPrice;
 
     private BigDecimal cashback;
+
+    private Integer isComment;
+
+    private String remark;
+
+    public Integer getPromotId() {
+        return promotId;
+    }
+
+    public void setPromotId(Integer promotId) {
+        this.promotId = promotId;
+    }
 
     public Date getUpdateTime() {
         return updateTime;
@@ -57,5 +71,21 @@ public class PromotOrderEvaluateVo implements Serializable{
 
     public void setCashback(BigDecimal cashback) {
         this.cashback = cashback;
+    }
+
+    public Integer getIsComment() {
+        return isComment;
+    }
+
+    public void setIsComment(Integer isComment) {
+        this.isComment = isComment;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
     }
 }

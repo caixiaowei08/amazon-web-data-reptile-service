@@ -22,6 +22,11 @@ public class AjaxJson implements Serializable {
     /**
      * 成功标识
      */
+    public static final String CODE_RECHARGE = "charge";
+
+    /**
+     * 成功标识
+     */
     public static final String RELOGIN = "RELOGIN";
 
     /**

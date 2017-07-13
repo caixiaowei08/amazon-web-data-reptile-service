@@ -301,6 +301,12 @@ function doSubmitEvaluate() {
         success: function (data) {
             if (data.success === "success") {
                 toastr.success(data.msg);
+                $("#asinId").val("");
+                $("#amzOrderId").val("");
+                $("#reviewUrl").val("");
+                $("#formObj").data('bootstrapValidator').destroy();
+                $('#formObj').data('bootstrapValidator', null);
+                formValidator();
             } else if (data.success === "fail") {
                 toastr.warning(data.msg);
             } else {
@@ -311,7 +317,7 @@ function doSubmitEvaluate() {
             toastr.success("服务器异常,请联系管理员！");
         },
         complete: function () {
-            $('#addNewReview').modal('hide');
+            //$('#addNewReview').modal('hide');
             $('#evaluateListTable').bootstrapTable("refresh");
             SendComplete();
         }
