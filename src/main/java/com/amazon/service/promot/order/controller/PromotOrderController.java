@@ -121,19 +121,20 @@ public class PromotOrderController extends BaseController {
                 DetachedCriteria evaluateDetachedCriteria = DetachedCriteria.forClass(PromotOrderEvaluateFlowEntity.class);
                 evaluateDetachedCriteria.add(Restrictions.eq("sellerId", promotOrderEntity.getSellerId()));
                 evaluateDetachedCriteria.add(Restrictions.eq("promotId", promotOrderEntity.getId()));
-                evaluateDetachedCriteria.add(Restrictions.eq("state", Constants.EVALUATE_STATE_REVIEW));
-                evaluateDetachedCriteria.addOrder(Order.desc("updateTime"));
+                evaluateDetachedCriteria.addOrder(Order.desc("createTime"));
                 List<PromotOrderEvaluateFlowEntity> promotOrderEvaluateFlowEntityList = promotOrderEvaluateFlowService.getListByCriteriaQuery(evaluateDetachedCriteria);
                 if (CollectionUtils.isNotEmpty(promotOrderEvaluateFlowEntityList)) {
                     for (PromotOrderEvaluateFlowEntity promotOrderEvaluateFlowEntity : promotOrderEvaluateFlowEntityList) {
                         PromotOrderEvaluateVo promotOrderEvaluateVo = new PromotOrderEvaluateVo();
                         promotOrderEvaluateVo.setPromotId(promotOrderEvaluateFlowEntity.getPromotId());
-                        promotOrderEvaluateVo.setCashback(promotOrderEntity.getCashback());
                         promotOrderEvaluateVo.setAmzOrderId(promotOrderEvaluateFlowEntity.getAmzOrderId());
                         promotOrderEvaluateVo.setUpdateTime(promotOrderEvaluateFlowEntity.getUpdateTime());
                         promotOrderEvaluateVo.setAsin(promotOrderEvaluateFlowEntity.getAsinId());
-                        promotOrderEvaluateVo.setReviewPrice(promotOrderEntity.getReviewPrice());
-                        promotOrderEvaluateVo.setIsComment(promotOrderEntity.getState());
+                        if(promotOrderEvaluateFlowEntity.getState().equals(Constants.EVALUATE_STATE_REVIEW)){
+                            promotOrderEvaluateVo.setCashback(promotOrderEntity.getCashback());
+                            promotOrderEvaluateVo.setReviewPrice(promotOrderEntity.getReviewPrice());
+                        }
+                        promotOrderEvaluateVo.setIsComment(promotOrderEvaluateFlowEntity.getState());
                         promotOrderEvaluateVo.setRemark(promotOrderEntity.getRemark());
                         promotOrderEvaluateVoList.add(promotOrderEvaluateVo);
                     }

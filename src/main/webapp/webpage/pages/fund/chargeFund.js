@@ -56,9 +56,9 @@ function loadData() {
         success: function (data) {
             if (data.success === "success") {
                 var chargeFund = 100;
-                var chargeFundUrl = getQueryString("chargeFund").trim();
+                var chargeFundUrl = getQueryString("chargeFund");
                 if( chargeFundUrl !== null && chargeFundUrl !== undefined && chargeFundUrl !== ''){
-                    chargeFund = chargeFundUrl;
+                    chargeFund = chargeFundUrl.trim();
                 }
                 ko.applyBindings(
                     new ViewModel(

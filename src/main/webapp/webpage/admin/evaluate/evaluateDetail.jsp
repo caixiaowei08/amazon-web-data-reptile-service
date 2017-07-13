@@ -93,7 +93,7 @@
                     <div class="col-md-4">
                         <div class="row">
                             <div class="form-group">
-                                <label class="col-xs-5 control-label amazon-label" for="amazon_asin">ASIN</label>
+                                <label class="col-xs-3 control-label amazon-label" for="amazon_asin">ASIN</label>
                                 <div class="col-xs-7">
                                     <input class="form-control" id="amazon_asin" type="text"/>
                                 </div>
@@ -106,6 +106,20 @@
                                 <label class="col-xs-5 control-label amazon-label" for="amazon_amzOrderId">亚马逊单号</label>
                                 <div class="col-xs-7">
                                     <input class="form-control" id="amazon_amzOrderId" type="text"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="row">
+                            <div class="form-group">
+                                <label class="col-xs-3 control-label amazon-label" for="amazon_asin">状态</label>
+                                <div class="col-xs-7">
+                                    <select id="amazon_state" class="form-control">
+                                        <option value="">--选择--</option>
+                                        <option value="1">pending</option>
+                                        <option value="2">review</option>
+                                    </select>
                                 </div>
                             </div>
                         </div>

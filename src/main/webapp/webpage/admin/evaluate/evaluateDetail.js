@@ -45,7 +45,7 @@ $(function () {
         search: false,
         pageNumber: 1,
         pageSize: 20,
-        sortName: "updateTime",
+        sortName: "createTime",
         sortOrder: 'desc',
         pageList: [10, 20, 30, 50, 100],
         pagination: true,
@@ -53,6 +53,7 @@ $(function () {
         queryParams: function (params) {
             params.amzOrderId = $("#amazon_amzOrderId").val().trim();
             params.asinId = $("#amazon_asin").val().trim();
+            params.state = $("#amazon_state").val().trim();
             return params;
         },
         onLoadError: function () {
@@ -261,8 +262,13 @@ function formValidator() {
             amzOrderId: {
                 validators: {
                     notEmpty: {
-                        message: '请输入亚马逊订单ID!'
+                        message: '请输入亚马逊订单号!'
+                    },
+                    regexp: {
+                        regexp:  /^[\d-]*$/,
+                        message: '亚马逊订单号不能包含字母！'
                     }
+
                 }
             }
         }

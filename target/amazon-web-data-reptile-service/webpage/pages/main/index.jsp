@@ -125,7 +125,7 @@
                                 </div>
                                 <div class="infobox-data">
                                     <span class="infobox-data-number" data-bind="text:buyerNum">0</span>
-                                    <lable class="infobox-content">联系买家</lable>
+                                    <lable class="infobox-content">已下订单</lable>
                                 </div>
                             </div>
                             <div class="infobox infobox-red">

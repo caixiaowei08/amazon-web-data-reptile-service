@@ -42,7 +42,7 @@ public class PoiPromotServiceImpl implements PoiPromotService {
         XSSFWorkbook workBook = new XSSFWorkbook();//一个excel文档对象
         XSSFSheet sheet = workBook.createSheet();// 创建一个工作薄对象
         String[] columns = {
-                "订单编号", "日期", "ASIN", "订单号", "刷单单价(USD)", "刷单佣金(USD)", "是否上评", "备注"
+                "推广订单编号", "日期", "ASIN", "亚马逊订单号", "刷单单价(USD)", "刷单佣金(USD)", "是否已上评", "备注"
         };
         int[] columnsColumnWidth = {
                 4000, 4000, 4000, 8000, 4500, 4000, 4000, 8000
@@ -87,16 +87,18 @@ public class PoiPromotServiceImpl implements PoiPromotService {
                 cell.setCellValue(promotOrderEvaluateVo.getAmzOrderId().trim());
                 cell = row.createCell(4);
                 cell.setCellType(CellType.NUMERIC);
-                cell.setCellValue(Double.parseDouble(promotOrderEvaluateVo.getCashback().toString()));
+                cell.setCellValue(promotOrderEvaluateVo.getCashback() == null ? 0 : Double.parseDouble(promotOrderEvaluateVo.getCashback().toString()));
                 cell = row.createCell(5);
                 cell.setCellType(CellType.NUMERIC);
-                cell.setCellValue(Double.parseDouble(promotOrderEvaluateVo.getReviewPrice().toString()));
+                cell.setCellValue(promotOrderEvaluateVo.getReviewPrice() == null ? 0 : Double.parseDouble(promotOrderEvaluateVo.getReviewPrice().toString()));
                 cell = row.createCell(6);
-                cell.setCellValue(promotOrderEvaluateVo.getIsComment().equals(Constants.EVALUATE_STATE_REVIEW)? "是" : "否");
+                cell.setCellValue(promotOrderEvaluateVo.getIsComment().equals(Constants.EVALUATE_STATE_REVIEW) ? "是" : "否");
                 cell = row.createCell(7);
                 cell.setCellValue(promotOrderEvaluateVo.getRemark());
-                totalCashback = totalCashback.add(promotOrderEvaluateVo.getCashback());
-                totalReviewPrice = totalReviewPrice.add(promotOrderEvaluateVo.getReviewPrice());
+                if (promotOrderEvaluateVo.getIsComment().equals(Constants.EVALUATE_STATE_REVIEW)) {
+                    totalCashback = totalCashback.add(promotOrderEvaluateVo.getCashback());
+                    totalReviewPrice = totalReviewPrice.add(promotOrderEvaluateVo.getReviewPrice());
+                }
             }
             row = sheet.createRow(promotOrderEvaluateVoList.size() + 1);
             cell = row.createCell(4);
