@@ -2,7 +2,7 @@
 <%@include file="/webpage/context/baseTags.jsp" %>
 <!DOCTYPE html>
 <head>
-    <title>Seller Assistant</title>
+    <title>Review Tracker</title>
     <meta charset="utf-8"/>
     <link rel="shortcut icon" type="image/x-icon" href="/webpage/plug-in/imgs/favicon.ico" media="screen"/>
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -33,7 +33,7 @@
     <div class="col-lg-4 col-lg-offset-4" >
         <div class="thumbnail">
             <div class="page-header text-center text-primary">
-                <h3>Seller Assistant后台管理登录</h3>
+                <h3>Review Tracker后台管理登录</h3>
             </div>
             <p>&nbsp;</p>
             <form id="formObj" class="form-horizontal" onsubmit="return doAdminLogin()">

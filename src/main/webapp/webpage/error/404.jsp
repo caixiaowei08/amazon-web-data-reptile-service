@@ -2,7 +2,7 @@
 <%@include file="/webpage/context/baseTags.jsp" %>
 <html>
 <head>
-    <title>Seller Assistant</title>
+    <title>Review Tracker</title>
     <meta charset="utf-8"/>
     <link rel="shortcut icon" type="image/x-icon" href="/webpage/plug-in/imgs/favicon.ico" media="screen"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>

@@ -29,7 +29,7 @@ public class GlobalServiceImpl extends BaseServiceImpl implements GlobalService 
     }
 
     public boolean sendEmailEmailCodePojo(EmailCodePojo emailCodePojo) {
-        emailCodePojo.setSubject("Seller Assistant找回密码，发送验证码！");
+        emailCodePojo.setSubject("Review Tracker找回密码，发送验证码！");
         emailCodePojo.setContent("您的验证码是" + emailCodePojo.getCode() + ",请在10分钟内使用该验证码完成密码修改！");
         try {
             MailUtils.sendEmail(emailCodePojo);
@@ -41,7 +41,7 @@ public class GlobalServiceImpl extends BaseServiceImpl implements GlobalService 
     }
 
     public boolean sendEmailEmailBuyerCheckCodePojo(EmailCodePojo emailCodePojo) {
-        emailCodePojo.setSubject("From Seller Assistant,click the link to reset your password!");
+        emailCodePojo.setSubject("From Review Tracker,click the link to reset your password!");
         emailCodePojo.setContent("The link to reset your password is " + emailCodePojo.getCode() + ",Please complete the password reset in ten minutes ");
         try {
             MailUtils.sendEmail(emailCodePojo);

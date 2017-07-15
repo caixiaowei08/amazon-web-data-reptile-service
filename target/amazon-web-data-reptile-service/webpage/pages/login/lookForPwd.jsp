@@ -2,7 +2,7 @@
 <%@include file="/webpage/context/baseTags.jsp" %>
 <html>
 <head>
-    <title>Seller Assistant</title>
+    <title>Review Tracker</title>
     <meta charset="utf-8"/>
     <link rel="shortcut icon" type="image/x-icon" href="/webpage/plug-in/imgs/favicon.ico" media="screen"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
@@ -33,7 +33,7 @@
         <div class="col-lg-10 col-lg-offset-1">
             <div class="row">
                 <div class="col-md-4 col-md-offset-1">
-                    <h2>欢迎使用Seller Assistant</h2>
+                    <h2>欢迎使用Review Tracker</h2>
                     <p>&nbsp;</p>
                     <p class="sign-left">这是一个精心设计的亚马逊产品测评平台，为您提供专业、高效的测评服务。</p>
                     <p class="sign-left">现在就开始行动，加入我们打造您的亚马逊爆款吧！</p>
@@ -41,7 +41,7 @@
                 <div class="col-md-5 col-md-offset-1">
                     <div class="thumbnail">
                         <div class="page-header text-center text-primary">
-                            <h3>找回密码Seller Assistant</h3>
+                            <h3>找回密码Review Tracker</h3>
                         </div>
                         <p>&nbsp;</p>
                         <form id="formobj" class="form-horizontal" action="userController.do?doLookForPwd"
@@ -107,7 +107,7 @@
             <div class="row">
                 <div class="col-sm-8 col-sm-offset-2">
                     <div style="text-align:center;line-height: 28px;">
-                        Copyright&copy;Vascal Technology Services Ltd  All Rights Reserved&reg;鄂ICP备17013383号
+                        Copyright&copy;Viscal Technology Services Ltd  All Rights Reserved&reg;鄂ICP备17013383号
                     </div>
                 </div>
             </div>

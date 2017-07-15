@@ -2,7 +2,7 @@
 <%@include file="/webpage/context/baseTags.jsp" %>
 <!DOCTYPE html>
 <head>
-    <title>Seller Assistant</title>
+    <title>Review Tracker</title>
     <meta charset="utf-8"/>
     <link rel="shortcut icon" type="image/x-icon" href="/webpage/plug-in/imgs/favicon.ico" media="screen"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
@@ -31,7 +31,7 @@
             <div class="col-md-4 col-md-offset-4">
                 <div class="panel-login">
                     <div class="page-header text-center text-warning">
-                        <h3>Sign in to Seller Assistant</h3>
+                        <h3>Sign in to Review Tracker</h3>
                     </div>
                     <form id="formObj" class="form-horizontal" action="/buyerUserController.buyer?doLogin" onsubmit="return false;" >
                         <div class="form-group" style="height: 65px;">
@@ -63,7 +63,7 @@
                         <div style="height: 10px;"></div>
                         <div class="container-fluid">
                             <div class="text-center">
-                                <label>New to Seller Assistant?</label>
+                                <label>New to Review Tracker?</label>
                                 <a href="/userPageController.buyer?register" target="_parent" class="">Create an
                                     account.</a>
                             </div>

@@ -2,7 +2,7 @@
 <%@include file="/webpage/context/baseTags.jsp" %>
 <!DOCTYPE html>
 <head>
-    <title>Seller Assistant</title>
+    <title>Review Tracker</title>
     <meta charset="utf-8"/>
     <link rel="shortcut icon" type="image/x-icon" href="/webpage/plug-in/imgs/favicon.ico" media="screen"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
@@ -43,12 +43,12 @@
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
                         data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-                    <span class="sr-only">Seller Assistant</span>
+                    <span class="sr-only">Review Tracker</span>
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand font-color" href="/mainController.do?index" target="_parent">Seller Assistant</a>
+                <a class="navbar-brand font-color" href="/mainController.do?index" target="_parent">Review Tracker</a>
             </div>
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">
@@ -204,7 +204,7 @@
             <div class="row">
                 <div class="col-sm-8 col-sm-offset-2">
                     <div style="text-align:center;line-height: 28px;">
-                        Copyright&copy;Vascal Technology Services Ltd  All Rights Reserved&reg;鄂ICP备17013383号
+                        Copyright&copy;Viscal Technology Services Ltd  All Rights Reserved&reg;鄂ICP备17013383号
                     </div>
                 </div>
             </div>

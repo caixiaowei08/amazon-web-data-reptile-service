@@ -1,15 +1,8 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: User
-  Date: 2017/6/28
-  Time: 21:36
-  To change this template use File | Settings | File Templates.
---%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/webpage/context/baseTags.jsp" %>
 <html>
 <head>
-    <title>Seller Assistant</title>
+    <title>Review Tracker</title>
     <meta charset="utf-8"/>
     <link rel="shortcut icon" type="image/x-icon" href="/webpage/plug-in/imgs/favicon.ico" media="screen"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0,user-scalable=no"/>
@@ -43,12 +36,12 @@
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
                         data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-                    <span class="sr-only">Seller Assistant</span>
+                    <span class="sr-only">Review Tracker</span>
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand font-color" href="/buyerUserController.buyer?index" target="_parent">Seller Assistant</a>
+                <a class="navbar-brand font-color" href="/buyerUserController.buyer?index" target="_parent">Review Tracker</a>
             </div>
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">
@@ -163,5 +156,4 @@
         </div>
     </nav>
 </div>
-
 </body>

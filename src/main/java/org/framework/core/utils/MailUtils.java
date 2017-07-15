@@ -56,7 +56,7 @@ public class MailUtils {
         // 1. 创建一封邮件
         MimeMessage message = new MimeMessage(session);
         // 2. From: 发件人
-        message.setFrom(new InternetAddress(sendMail, "Seller Assistant", "UTF-8"));
+        message.setFrom(new InternetAddress(sendMail, "Review Tracker", "UTF-8"));
         // 3. To: 收件人（可以增加多个收件人、抄送、密送）
         int end  = emailCodePojo.getEmail().indexOf('@');
         String emailName = emailCodePojo.getEmail().substring(0,end);

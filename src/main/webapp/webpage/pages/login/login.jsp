@@ -2,7 +2,7 @@
 <%@include file="/webpage/context/baseTags.jsp" %>
 <html>
 <head>
-    <title>Seller Assistant</title>
+    <title>Review Tracker</title>
     <meta charset="utf-8"/>
     <link rel="shortcut icon" type="image/x-icon" href="/webpage/plug-in/imgs/favicon.ico" media="screen"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
@@ -23,7 +23,6 @@
     <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
     <![endif]-->
     <script type="text/javascript" src="/webpage/plug-in/jquery/jquery.min.js"></script>
-    <%--<script type="text/javascript" src="/webpage/plug-in/validform/js/Validform_v5.3.1_min_zh-cn.js"></script>--%>
     <script type="text/javascript" src="/webpage/plug-in/toastr/toastr.min.js"></script>
     <script type="text/javascript" src="/webpage/plug-in/bootstrapvalidator/dist/js/bootstrapValidator.min.js"></script>
     <script type="text/javascript" src="/webpage/plug-in/bootstrapvalidator/dist/js/language/zh_CN.js"></script>
@@ -35,7 +34,7 @@
         <div class="col-lg-10 col-lg-offset-1">
             <div class="row">
                 <div class="col-md-4 col-md-offset-1">
-                    <h2>欢迎使用Seller Assistant</h2>
+                    <h2>欢迎使用Review Tracker</h2>
                     <p>&nbsp;</p>
                     <p class="sign-left">这是一个精心设计的亚马逊产品测评平台，为您提供专业、高效的测评服务。</p>
                     <p class="sign-left">现在就开始行动，加入我们打造您的亚马逊爆款吧！</p>
@@ -43,7 +42,7 @@
                 <div class="col-md-4 col-md-offset-1">
                     <div class="thumbnail">
                         <div class="page-header text-center text-primary">
-                            <h3>欢迎登录Seller Assistant</h3>
+                            <h3>欢迎登录Review Tracker</h3>
                         </div>
                         <p>&nbsp;</p>
                         <form id="formobj" class="form-horizontal" action="/userController.do?doLogin" onsubmit="return false;">
