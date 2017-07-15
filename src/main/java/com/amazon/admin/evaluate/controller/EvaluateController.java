@@ -84,6 +84,14 @@ public class EvaluateController extends BaseController {
 
         try {
             if (StringUtils.hasText(reviewUrl)) {
+                //解决 电脑评价 和 手机网站评价不一致问题----》 统一转换为 PC端 评价链接
+                //https://www.amazon.com/gp/aw/review/B01CJ6SO6O/R27F2QIMFNUZLS?ref_=glimp_1rv_cl
+                if (reviewUrl.contains(Constant.AMAZON_URL_PRODUCT_COMMENT_PHONE_FLAG)) {//手机网站
+                    promotOrderEvaluateFlowEntity.setReviewUrl(
+                            Constant.AMAZON_URL_PRODUCT_COMMENT.replace("#",
+                                    reviewUrl.substring(reviewUrl.lastIndexOf("/") + 1, reviewUrl.lastIndexOf("?")))
+                    );
+                }
                 logger.info("----evaluateController----doAddEvaluateWithReviewUrl---start----");
                 j = evaluateService.doAddEvaluateWithReviewUrl(promotOrderEvaluateFlowEntity);
             } else {
@@ -131,7 +139,14 @@ public class EvaluateController extends BaseController {
             return j;
         }
 
+        String reviewUrl = promotOrderEvaluateFlowEntity.getReviewUrl();
         try {
+            if (reviewUrl.contains(Constant.AMAZON_URL_PRODUCT_COMMENT_PHONE_FLAG)) {//手机网站
+                promotOrderEvaluateFlowEntity.setReviewUrl(
+                        Constant.AMAZON_URL_PRODUCT_COMMENT.replace("#",
+                                reviewUrl.substring(reviewUrl.lastIndexOf("/") + 1, reviewUrl.lastIndexOf("?")))
+                );
+            }
             j = evaluateService.doAddReviewUrl(promotOrderEvaluateFlowEntity, promotOrderEvaluateFlowDb);
         } catch (Exception e) {
             j.setSuccess(AjaxJson.CODE_FAIL);

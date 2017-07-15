@@ -30,4 +30,11 @@ public class Constant {
      */
     public static final String AMAZON_URL_PRODUCT = "https://www.amazon.com/dp/#";
 
+    /**
+     * 亚马逊产品模板链接
+     */
+    public static final String AMAZON_URL_PRODUCT_COMMENT = "https://www.amazon.com/gp/customer-reviews/#/";
+
+    public static final String AMAZON_URL_PRODUCT_COMMENT_PHONE_FLAG = "/gp/aw/review/";
+
 }
