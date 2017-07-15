@@ -224,7 +224,7 @@
                                         <span class="input-group-addon">
                                             <div class="text-right" style="width: 80px;">结束日期</div>
                                         </span>
-                                <input class="form-control" name="finishDate" id="finishDate" placeholder="订单最少时间为三天！"
+                                <input class="form-control" name="finishDate" data-bind="value:finishDate" id="finishDate" placeholder="订单最少时间为三天！"
                                        size="16" type="text" value="" readonly
                                        onkeydown="if(event.keyCode==13){event.keyCode=0;event.returnValue=false;}"
                                 >
@@ -239,9 +239,9 @@
                                 <span class="input-group-addon" id="remark-addon">
                                     <div class="text-right" style="width: 80px; ">备注：</div>
                                 </span>
-                                <input type="text" name="remark" class="form-control" placeholder="写下您的备注信息！"
+                                <input type="text" name="remark" class="form-control" data-bind="value:remark" placeholder="写下您的备注信息！"
                                        id="remark"
-                                       aria-describedby="guaranteeFund-addon">
+                                       aria-describedby="remark-addon">
                             </div>
                         </div>
                     </form>
@@ -278,7 +278,7 @@
                     </h4>
                 </div>
                 <div class="modal-body">
-                    <input type="hidden" id="chargeFund" 那么="chargeFund" >
+                    <input type="hidden" id="chargeFund" name="chargeFund" >
                     请先补充余额差额<span id="chargeFundShow"></span>美元，并重新提交订单！
                 </div>
                 <div class="modal-footer">
@@ -362,7 +362,7 @@
         $('#formObj').submit();
     });
 
-    var ViewModel = function (pageUrl, asin, productTitle, priceblockSaleprice, brand, reviewPrice, needReviewNum,landingImage,dayReviewNum) {
+    var ViewModel = function (pageUrl, asin, productTitle, priceblockSaleprice, brand, reviewPrice, needReviewNum,landingImage,dayReviewNum,finishDate,remark) {
         this.pageUrl = ko.observable(pageUrl);
         this.asin = ko.observable(asin);
         this.productTitle = ko.observable(productTitle);
@@ -371,7 +371,9 @@
         this.reviewPrice = ko.observable(reviewPrice);
         this.needReviewNum = ko.observable(needReviewNum);
         this.dayReviewNum = ko.observable(dayReviewNum);
-        this.landingImage = ko.observable(landingImage)
+        this.landingImage = ko.observable(landingImage);
+        this.finishDate = ko.observable(finishDate);
+        this.remark = ko.observable(remark);
         this.guaranteeFund = ko.computed(function () {
             var m = 0,
                 s1 = this.reviewPrice().toString(),
@@ -407,13 +409,15 @@
                             data.content.priceblockSaleprice,
                             data.content.brand,
                             data.content.reviewPrice,
-                            1,
+                            data.content.needReviewNum,
                             data.content.landingImage,
-                            1
+                            data.content.dayReviewNum,
+                            data.content.finishDate,
+                            data.content.remark
                         )
                     );
                 } else if (data.success === "fail") {
-                    toastr.error(data.msg);
+                    window.location = '/mainController.do?index';
                 } else {
                     window.location = '/loginController.do?login';
                 }
@@ -473,7 +477,7 @@
     }
     
     function chargeFundNow() {
-        window.open('/redirectionController.do?goToChargeFund&chargeFund='+$("#chargeFund").val());
-        $('#chargeFundModel').modal('hide');
+        window.location = '/redirectionController.do?goToChargeFund&chargeFund='+$("#chargeFund").val();
+        //$('#chargeFundModel').modal('hide');
     }
 </script>

@@ -164,7 +164,7 @@
                             </div>
                         </div>
                         <div class="col-md-6">
-                            <form action="/userMembershipController/goToMemberShipCharge.do" id="formObj" target="_blank">
+                            <form action="/userMembershipController/goToMemberShipCharge.do" id="formObj" target="_parent">
                                 <div class="form-group">
                                     <div class="input-group">
                                             <span class="input-group-addon">

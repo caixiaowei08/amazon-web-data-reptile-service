@@ -1,6 +1,9 @@
 package com.amazon.service.spider.pojo;
 
+import com.alibaba.fastjson.annotation.JSONField;
+
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * Created by User on 2017/6/14.
@@ -41,6 +44,18 @@ public class AmazonPageInfoPojo implements Serializable{
      * 商品主图
      */
     private String landingImage;
+
+    /**
+     * 结束时间
+     */
+    @JSONField(format="yyyy-MM-dd")
+    private Date finishDate;
+
+    private Integer needReviewNum = 1;
+
+    private Integer dayReviewNum = 1;
+
+    private String remark;
 
     public String getPageUrl() {
         return pageUrl;
@@ -96,5 +111,37 @@ public class AmazonPageInfoPojo implements Serializable{
 
     public void setLandingImage(String landingImage) {
         this.landingImage = landingImage;
+    }
+
+    public Date getFinishDate() {
+        return finishDate;
+    }
+
+    public void setFinishDate(Date finishDate) {
+        this.finishDate = finishDate;
+    }
+
+    public Integer getNeedReviewNum() {
+        return needReviewNum;
+    }
+
+    public void setNeedReviewNum(Integer needReviewNum) {
+        this.needReviewNum = needReviewNum;
+    }
+
+    public Integer getDayReviewNum() {
+        return dayReviewNum;
+    }
+
+    public void setDayReviewNum(Integer dayReviewNum) {
+        this.dayReviewNum = dayReviewNum;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
     }
 }

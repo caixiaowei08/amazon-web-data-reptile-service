@@ -41,8 +41,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -282,19 +284,28 @@ public class PromotOrderController extends BaseController {
     @ResponseBody
     public AjaxJson doAdd(PromotOrderEntity promotOrderEntity, HttpServletRequest request, HttpServletResponse response) {
         AjaxJson j = new AjaxJson();
+        HttpSession session = ContextHolderUtils.getSession();
+        Cookie cookie = new Cookie("JSESSIONID", session.getId());
+        cookie.setMaxAge(10 * 60);
+        cookie.setPath("/");
+        response.addCookie(cookie);//点击添加保存cookie
         UserEntity userEntity = globalService.getUserEntityFromSession();
         if (userEntity == null) {
             j.setSuccess(AjaxJson.RELOGIN);
             j.setMsg("请重新登录！");
             return j;
         }
-
         AmazonPageInfoPojo amazonPageInfoPojo = (AmazonPageInfoPojo) ContextHolderUtils.getSession().getAttribute(SpiderConstant.AMAZON_PAGE_INFO_POJO);
         if (amazonPageInfoPojo == null) {
             j.setSuccess(AjaxJson.CODE_FAIL);
             j.setMsg("登录超时，请重新建推广活动订单！");
             return j;
         }
+        amazonPageInfoPojo.setNeedReviewNum(promotOrderEntity.getNeedReviewNum());
+        amazonPageInfoPojo.setDayReviewNum(promotOrderEntity.getDayReviewNum());
+        amazonPageInfoPojo.setFinishDate(promotOrderEntity.getFinishDate());
+        amazonPageInfoPojo.setRemark(promotOrderEntity.getRemark());
+        ContextHolderUtils.getSession().setAttribute(SpiderConstant.AMAZON_PAGE_INFO_POJO,amazonPageInfoPojo);
         try {
             j = promotOrderService.doAddNewPromot(userEntity, amazonPageInfoPojo, promotOrderEntity);
         } catch (Exception e) {

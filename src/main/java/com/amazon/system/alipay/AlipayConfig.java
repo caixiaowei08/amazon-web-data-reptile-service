@@ -53,7 +53,10 @@ public class AlipayConfig {
     public static String SIGN_TYPE = "RSA2";
 
     // 页面跳转同步通知页面路径 需http://格式的完整路径，不能加?id=123这类自定义参数，必须外网可以正常访问
-    public static String RETURN_URL = "http://www.amreviewtracker.com/mainController.do?index";
+   public static String RETURN_URL = "http://www.amreviewtracker.com/mainController.do?index";
+
+    public static String RETURN_URL_ORDER = "http://www.amreviewtracker.com/promotOrderController.do?goNewPromotTwo";
+    //public static String RETURN_URL_ORDER = "http://localhost:8888/promotOrderController.do?goNewPromotTwo";
     //public static String RETURN_URL = "http://localhost:8888/mainController.do?index";
 
     // 服务器异步通知页面路径  需http://格式的完整路径，不能加?id=123这类自定义参数，必须外网可以正常访问

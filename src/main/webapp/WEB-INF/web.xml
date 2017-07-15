@@ -73,9 +73,9 @@
 		<filter-name>admin-login-filter</filter-name>
 		<url-pattern>*.admin</url-pattern>
 	</filter-mapping>
-	<!--session超时30分钟-->
+	<!--session超时10分钟-->
 	<session-config>
-		<session-timeout>30</session-timeout>
+		<session-timeout>10</session-timeout>
 	</session-config>
 	<welcome-file-list>
 		<welcome-file>/webpage/pages/login/login.jsp</welcome-file>

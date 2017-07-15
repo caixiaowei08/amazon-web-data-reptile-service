@@ -13,6 +13,7 @@ import org.framework.core.common.controller.BaseController;
 import org.framework.core.common.model.json.AjaxJson;
 import org.framework.core.global.service.GlobalService;
 import org.framework.core.utils.BeanUtils;
+import org.framework.core.utils.ContextHolderUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -20,8 +21,10 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
@@ -51,6 +54,11 @@ public class UserFundController extends BaseController {
 
     @RequestMapping("/doAlipayTradePagePay")
     public void doAlipayTradePagePay(HttpServletRequest request, HttpServletResponse response) {
+        HttpSession session = ContextHolderUtils.getSession();
+        Cookie cookie = new Cookie("JSESSIONID", session.getId());
+        cookie.setPath("/");
+        cookie.setMaxAge(10 * 60);
+        response.addCookie(cookie);//点击添加保存cookie
         userFundService.goChargeFund(request, response);
     }
 
