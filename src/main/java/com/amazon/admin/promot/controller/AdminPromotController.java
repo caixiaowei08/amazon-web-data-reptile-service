@@ -113,7 +113,7 @@ public class AdminPromotController extends BaseController {
         try {
             poiPromotService.downPromotOrderExcel(promotOrderEntityList, response, excelFileNameHeader);
         } catch (Exception e) {
-            logger.error(e);
+            logger.error(e.fillInStackTrace());
         }
     }
 

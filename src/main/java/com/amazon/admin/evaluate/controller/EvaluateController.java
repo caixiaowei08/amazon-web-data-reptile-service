@@ -3,16 +3,20 @@ package com.amazon.admin.evaluate.controller;
 import com.amazon.admin.account.entity.AdminSystemEntity;
 import com.amazon.admin.constant.Constants;
 import com.amazon.admin.evaluate.service.EvaluateService;
+import com.amazon.admin.poi.service.PoiPromotService;
 import com.amazon.admin.promot.controller.AdminPromotController;
 import com.amazon.service.promot.flow.entity.PromotOrderEvaluateFlowEntity;
 import com.amazon.service.promot.flow.service.PromotOrderEvaluateFlowService;
 import com.amazon.service.promot.order.entity.PromotOrderEntity;
 import com.amazon.service.promot.order.service.PromotOrderService;
+import com.amazon.service.promot.order.vo.PromotOrderEvaluateVo;
+import com.amazon.service.user.entity.UserEntity;
 import com.amazon.system.Constant;
 import com.amazon.system.system.bootstrap.hibernate.CriteriaQuery;
 import com.amazon.system.system.bootstrap.json.DataGrid;
 import com.amazon.system.system.bootstrap.json.DataGridReturn;
 import com.amazon.system.system.bootstrap.utils.DatagridJsonUtils;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -20,7 +24,10 @@ import org.framework.core.common.controller.BaseController;
 import org.framework.core.common.model.json.AjaxJson;
 import org.framework.core.global.service.GlobalService;
 import org.framework.core.utils.ContextHolderUtils;
+import org.framework.core.utils.DateUtils.DateUtils;
 import org.framework.core.utils.RegularExpressionUtils;
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -32,6 +39,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.GenericServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
  * Created by User on 2017/6/23.
@@ -54,6 +64,9 @@ public class EvaluateController extends BaseController {
 
     @Autowired
     private GlobalService globalService;
+
+    @Autowired
+    private PoiPromotService poiPromotService;
 
     @RequestMapping(params = "goEvaluateDetail")
     public String goAdminPageIndex(HttpServletRequest request, HttpServletResponse response) {
@@ -169,8 +182,49 @@ public class EvaluateController extends BaseController {
             logger.error(e.fillInStackTrace());
         }
         DataGridReturn dataGridReturn = evaluateService.getDataGridReturn(criteriaQuery);
-        DatagridJsonUtils.listToObj(dataGridReturn, PromotOrderEntity.class, dataGrid.getField());
+        DatagridJsonUtils.listToObj(dataGridReturn, PromotOrderEvaluateFlowEntity.class, dataGrid.getField());
         DatagridJsonUtils.datagrid(response, dataGridReturn);
+    }
+
+    @RequestMapping(params = "downEvaluateExcel")
+    public void downEvaluateExcel(DataGrid dataGrid, HttpServletRequest request, HttpServletResponse response) {
+        if (globalService.isNotAdminLogin()) {
+            return;
+        }
+        CriteriaQuery criteriaQuery = new CriteriaQuery(PromotOrderEvaluateFlowEntity.class, null, request.getParameterMap());
+        try {
+            criteriaQuery.installHqlParams();
+        } catch (Exception e) {
+            logger.error(e.fillInStackTrace());
+        }
+        criteriaQuery.getDetachedCriteria().addOrder(Order.desc("promotId"));
+        List<PromotOrderEvaluateFlowEntity> promotOrderEvaluateFlowEntityList = promotOrderEvaluateFlowService.getListByCriteriaQuery(criteriaQuery.getDetachedCriteria());
+        List<PromotOrderEvaluateVo> promotOrderEvaluateVoList = new ArrayList<PromotOrderEvaluateVo>();
+        PromotOrderEntity promotOrderEntity = null;
+        if (CollectionUtils.isNotEmpty(promotOrderEvaluateFlowEntityList)) {
+            for (PromotOrderEvaluateFlowEntity promotOrderEvaluateFlowEntity : promotOrderEvaluateFlowEntityList) {
+                if (promotOrderEntity == null || !promotOrderEvaluateFlowEntity.getPromotId().equals(promotOrderEntity.getId())) {
+                    promotOrderEntity = promotOrderService.find(PromotOrderEntity.class, promotOrderEvaluateFlowEntity.getPromotId());
+                }
+                PromotOrderEvaluateVo promotOrderEvaluateVo = new PromotOrderEvaluateVo();
+                promotOrderEvaluateVo.setPromotId(promotOrderEvaluateFlowEntity.getPromotId());
+                promotOrderEvaluateVo.setAmzOrderId(promotOrderEvaluateFlowEntity.getAmzOrderId());
+                promotOrderEvaluateVo.setUpdateTime(promotOrderEvaluateFlowEntity.getUpdateTime());
+                promotOrderEvaluateVo.setAsin(promotOrderEvaluateFlowEntity.getAsinId());
+                promotOrderEvaluateVo.setCashback(promotOrderEntity.getCashback());
+                promotOrderEvaluateVo.setReviewPrice(promotOrderEntity.getReviewPrice());
+                promotOrderEvaluateVo.setIsComment(promotOrderEvaluateFlowEntity.getState());
+                promotOrderEvaluateVo.setRemark(promotOrderEntity.getRemark());
+                promotOrderEvaluateVoList.add(promotOrderEvaluateVo);
+            }
+        }
+
+        String excelFileNameHeader = "评论导出(管理端)" + DateUtils.getDate(new Date());
+        try {
+            poiPromotService.downEvaluateExcel(promotOrderEvaluateVoList, response, excelFileNameHeader);
+        } catch (Exception e) {
+            logger.error(e.fillInStackTrace());
+        }
     }
 
     @RequestMapping(params = "doGet")

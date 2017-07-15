@@ -2,6 +2,36 @@
  * Created by User on 2017/6/23.
  */
 $(function () {
+    $('#createTime_begin').datetimepicker({
+        weekStart: 1,
+        todayBtn: 1,
+        autoclose: 1,
+        todayHighlight: 1,
+        startView: 2,
+        minView: 2,
+        endDate: new Date(),
+        forceParse: 0
+    }).on('changeDate', function (ev) {
+        var startTime = $("#createTime_begin_value").val();
+        $("#createTime_end").datetimepicker('setStartDate', startTime);
+        $('#createTime_begin').datetimepicker('hide');
+    });
+
+    $('#createTime_end').datetimepicker({
+        weekStart: 1,
+        todayBtn: 1,
+        autoclose: 1,
+        todayHighlight: 1,
+        startView: 2,
+        minView: 2,
+        endDate: new Date(),
+        forceParse: 0
+    }).on('changeDate', function (ev) {
+        var endTime = $("#createTime_end_value").val();
+        $("#createTime_begin").datetimepicker('setEndDate', endTime);
+        $('#createTime_end').datetimepicker('hide');
+    });
+
     $('#formAddEvaluateUrlModel').bootstrapValidator({
         framework: 'bootstrap',
         icon: {
@@ -54,6 +84,8 @@ $(function () {
             params.amzOrderId = $("#amazon_amzOrderId").val().trim();
             params.asinId = $("#amazon_asin").val().trim();
             params.state = $("#amazon_state").val().trim();
+            params.createTime_begin = $("#createTime_begin_value").val().trim();
+            params.createTime_end = $("#createTime_end_value").val().trim();
             return params;
         },
         onLoadError: function () {
@@ -70,14 +102,14 @@ $(function () {
             {
                 title: "评论编号",
                 field: "id",
-                width: "10%",//宽度
+                width: "8%",//宽度
                 align: "center",//水平
                 valign: "middle"//垂直
             },
             {
                 title: "状态",
                 field: "state",
-                width: "10%",//宽度
+                width: "7%",//宽度
                 align: "center",//水平
                 valign: "middle",
                 formatter: function (value, row, index) {
@@ -92,7 +124,7 @@ $(function () {
             {
                 title: 'ASIN',
                 field: "asinId",
-                width: "10%",//宽度
+                width: "8%",//宽度
                 align: "center",//水平
                 valign: "middle"//垂直
             },
@@ -104,9 +136,20 @@ $(function () {
                 valign: "middle"//垂直
             },
             {
+                title: '单号提交时间',
+                field: "createTime",
+                width: "10%",//宽度
+                align: "center",//水平
+                valign: "middle",//垂直
+                formatter: function (value, row, index) {
+                    var html =('<span>'+value.substr(0,10)+'</span>');
+                    return html;
+                }
+            },
+            {
                 title: '评价内容',
                 field: "reviewContent",
-                width: "25%",//宽度
+                width: "20%",//宽度
                 align: "center",//水平
                 valign: "middle", //垂直
                 formatter: function (value, row, index) {
@@ -120,14 +163,14 @@ $(function () {
                 title: '评价星级',
                 field: "reviewStar",
                 sortable: true,
-                width: "10%",//宽度
+                width: "5%",//宽度
                 align: "center",//水平
                 valign: "middle"//垂直
             },
             {
                 title: '评价时间',
                 field: "reviewDate",
-                width: "15%",//宽度
+                width: "10%",//宽度
                 align: "center",//水平
                 valign: "middle"//垂直
             },
@@ -326,6 +369,43 @@ function doSubmitEvaluate() {
             //$('#addNewReview').modal('hide');
             $('#evaluateListTable').bootstrapTable("refresh");
             SendComplete();
+        }
+    });
+}
+
+function downEvaluateExcel() {
+    var params = new Object();
+    params.amzOrderId = $("#amazon_amzOrderId").val().trim();
+    params.asinId = $("#amazon_asin").val().trim();
+    params.state = $("#amazon_state").val().trim();
+    params.createTime_begin = $("#createTime_begin_value").val().trim();
+    params.createTime_end = $("#createTime_end_value").val().trim();
+    if ((params.createTime_end === "") ^ (params.createTime_begin === "")) {
+        toastr.warning("若填写查询时间，开始时间和结束时间需要同时填写！");
+        return;
+    }
+    $.ajax({
+        url: "/adminSystemController.admin?doCheckLogin",
+        type: 'post',
+        success: function (data) {
+            if (data.success === "success") {
+                window.open(
+                    "/evaluateController.admin?downEvaluateExcel&asinId=" + params.asinId
+                    + "&state=" + params.state
+                    + "&amzOrderId=" + params.amzOrderId
+                    + "&createTime_begin=" + params.createTime_begin
+                    + "&createTime_end=" + params.createTime_end
+                )
+            } else if (data.success === "fail") {
+                toastr.warning(data.msg);
+                return;
+            } else {
+                setTimeout("window.location='/adminSystemController.admin?goAdminLogin'", 1000);
+                return;
+            }
+        },
+        error: function (jqxhr, textStatus, errorThrow) {
+            toastr.success("服务器异常,请联系管理员！");
         }
     });
 }

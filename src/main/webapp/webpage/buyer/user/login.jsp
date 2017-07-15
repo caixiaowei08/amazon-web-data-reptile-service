@@ -74,6 +74,17 @@
         </div>
     </div>
     <div style="height:50px;"></div>
+    <nav class="navbar navbar-default navbar-fixed-bottom">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-8 col-sm-offset-2">
+                    <div style="text-align:center;line-height: 28px;">
+                        Copyright&copy;Viscal Technology Services Ltd All Rights Reserved&reg;鄂ICP备17013383号
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
 </div>
 </body>
 </html>

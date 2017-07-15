@@ -95,10 +95,10 @@ public class PoiPromotServiceImpl implements PoiPromotService {
                 cell.setCellValue(promotOrderEvaluateVo.getIsComment().equals(Constants.EVALUATE_STATE_REVIEW) ? "是" : "否");
                 cell = row.createCell(7);
                 cell.setCellValue(promotOrderEvaluateVo.getRemark());
-                if (promotOrderEvaluateVo.getIsComment().equals(Constants.EVALUATE_STATE_REVIEW)) {
+                //if (promotOrderEvaluateVo.getIsComment().equals(Constants.EVALUATE_STATE_REVIEW)) {
                     totalCashback = totalCashback.add(promotOrderEvaluateVo.getCashback());
                     totalReviewPrice = totalReviewPrice.add(promotOrderEvaluateVo.getReviewPrice());
-                }
+                //}
             }
             row = sheet.createRow(promotOrderEvaluateVoList.size() + 1);
             cell = row.createCell(4);

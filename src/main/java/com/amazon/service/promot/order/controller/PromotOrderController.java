@@ -130,10 +130,10 @@ public class PromotOrderController extends BaseController {
                         promotOrderEvaluateVo.setAmzOrderId(promotOrderEvaluateFlowEntity.getAmzOrderId());
                         promotOrderEvaluateVo.setUpdateTime(promotOrderEvaluateFlowEntity.getUpdateTime());
                         promotOrderEvaluateVo.setAsin(promotOrderEvaluateFlowEntity.getAsinId());
-                        if(promotOrderEvaluateFlowEntity.getState().equals(Constants.EVALUATE_STATE_REVIEW)){
-                            promotOrderEvaluateVo.setCashback(promotOrderEntity.getCashback());
-                            promotOrderEvaluateVo.setReviewPrice(promotOrderEntity.getReviewPrice());
-                        }
+                        //if(promotOrderEvaluateFlowEntity.getState().equals(Constants.EVALUATE_STATE_REVIEW)){
+                        promotOrderEvaluateVo.setCashback(promotOrderEntity.getCashback());
+                        promotOrderEvaluateVo.setReviewPrice(promotOrderEntity.getReviewPrice());
+                        //}
                         promotOrderEvaluateVo.setIsComment(promotOrderEvaluateFlowEntity.getState());
                         promotOrderEvaluateVo.setRemark(promotOrderEntity.getRemark());
                         promotOrderEvaluateVoList.add(promotOrderEvaluateVo);
@@ -297,7 +297,7 @@ public class PromotOrderController extends BaseController {
         }
         try {
             j = promotOrderService.doAddNewPromot(userEntity, amazonPageInfoPojo, promotOrderEntity);
-        }catch (Exception e){
+        } catch (Exception e) {
             j.setSuccess(AjaxJson.CODE_FAIL);
             j.setMsg("订单提交错误，联系客服！");
             logger.error(e.fillInStackTrace());
