@@ -41,7 +41,14 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand font-color" href="/mainController.do?index" target="_parent">Review Tracker</a>
+                <a href="/mainController.do?index" target="_parent">
+                    <div class="pull-left " style="width: 50px;height: 50px;margin:3px 6px; ">
+                        <img alt="Brand"  class="img-responsive img-rounded" src="/webpage/plug-in/imgs/logo.jpg">
+                    </div>
+                    <div class="navbar-brand font-color">
+                        Review Tracker
+                    </div>
+                </a>
             </div>
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">

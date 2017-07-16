@@ -34,7 +34,7 @@
         <div class="col-lg-10 col-lg-offset-1">
             <div class="row">
                 <div class="col-md-4 col-md-offset-1">
-                    <h2>欢迎使用Review Tracker</h2>
+                    <h2>欢迎使用 AM Review Tracker</h2>
                     <p>&nbsp;</p>
                     <p class="sign-left">这是一个精心设计的亚马逊产品测评平台，为您提供专业、高效的测评服务。</p>
                     <p class="sign-left">现在就开始行动，加入我们打造您的亚马逊爆款吧！</p>

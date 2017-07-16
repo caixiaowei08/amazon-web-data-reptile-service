@@ -81,27 +81,15 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
         promotOrderDetachedCriteria.add(Restrictions.eq("state", Constant.STATE_Y));
         userBaseInfoVo.setActiveOrderNum(promotOrderService.getRowCount(promotOrderDetachedCriteria));
         //今日的评论个数
-        DetachedCriteria promotOrderDetachedCriteriaDetail = DetachedCriteria.forClass(PromotOrderEntity.class);
-        promotOrderDetachedCriteriaDetail.add(Restrictions.eq("sellerId", userEntity.getId()));
-        promotOrderDetachedCriteriaDetail.add(Restrictions.eq("state", Constant.STATE_Y));
-        List<PromotOrderEntity> promotOrderEntityList = promotOrderService.getListByCriteriaQuery(promotOrderDetachedCriteriaDetail);
-        if (CollectionUtils.isNotEmpty(promotOrderEntityList)) {
-            DetachedCriteria promotOrderEvaluateFlowDetachedCriteria = DetachedCriteria.forClass(PromotOrderEvaluateFlowEntity.class);
-            List<Integer> params = new ArrayList<Integer>();
-            for (PromotOrderEntity promotOrderEntity : promotOrderEntityList) {
-                params.add(promotOrderEntity.getId());
-            }
-            promotOrderEvaluateFlowDetachedCriteria.add(Restrictions.in("promotId", params));
-            promotOrderEvaluateFlowDetachedCriteria.add(Restrictions.eq("state", Constants.EVALUATE_STATE_REVIEW));
-            promotOrderEvaluateFlowDetachedCriteria.add(Restrictions.ge("createTime", DateUtils.getBeginOfDate()));
-            userBaseInfoVo.setTodayEvaluateNum(promotOrderEvaluateFlowService.getRowCount(promotOrderEvaluateFlowDetachedCriteria));
-        } else {
-            userBaseInfoVo.setTodayEvaluateNum(0);
-        }
+        DetachedCriteria promotOrderEvaluateFlowDetachedCriteria = DetachedCriteria.forClass(PromotOrderEvaluateFlowEntity.class);
+        promotOrderEvaluateFlowDetachedCriteria.add(Restrictions.eq("sellerId",userEntity.getId()));
+        promotOrderEvaluateFlowDetachedCriteria.add(Restrictions.eq("state", Constants.EVALUATE_STATE_REVIEW));
+        promotOrderEvaluateFlowDetachedCriteria.add(Restrictions.ge("updateTime", DateUtils.getBeginOfDate()));
+        userBaseInfoVo.setTodayEvaluateNum(promotOrderEvaluateFlowService.getRowCount(promotOrderEvaluateFlowDetachedCriteria));
         //求和联系人数
         DetachedCriteria promotOrderDetachedCriteriaBuyerNum = DetachedCriteria.forClass(PromotOrderEntity.class);
         promotOrderDetachedCriteriaBuyerNum.add(Restrictions.eq("sellerId", userEntity.getId()));
-        promotOrderDetachedCriteriaBuyerNum.add(Restrictions.eq("state", Constant.STATE_Y));
+        //promotOrderDetachedCriteriaBuyerNum.add(Restrictions.eq("state", Constant.STATE_Y));
         promotOrderDetachedCriteriaBuyerNum.setProjection(Projections.sum("buyerNum"));
         userBaseInfoVo.setBuyerNum(promotOrderService.getRowSum(promotOrderDetachedCriteriaBuyerNum));
         //求和总好评数
