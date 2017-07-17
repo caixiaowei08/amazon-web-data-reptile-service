@@ -267,7 +267,6 @@
         </div>
     </div>
 </div>
-
 <div class="modal fade" id="addEvaluateUrlModel" tabindex="-1" role="dialog" aria-labelledby="addEvaluateUrlModel"
      aria-hidden="true">
     <div class="modal-dialog">
@@ -313,6 +312,60 @@
                 </div>
                 <div class="modal-footer">
                     <button type="submit" onclick="submitAddReviewUrl();" class="btn btn-primary">录入
+                    </button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modifyAmOrderNoModel" tabindex="-1" role="dialog" aria-labelledby="modifyAmOrderNoModel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="formModifyAmOrderNoModel" action="/evaluateController.admin?doOrderNoUpdate"
+                  onsubmit="return false;">
+                <div class="modal-header">
+                    <button type="button" class="close"
+                            data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                    <input type="hidden" name="id" data-bind="value:eid">
+                    <h4 class="modal-title">
+                        评论亚马逊订单号修改
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group" style="height: 50px;">
+                        <div class="input-group" style="width: 100%;">
+                            <span class="input-group-addon" style="width:150px;">ASIN编号</span>
+                            <input type="text" class="form-control" readonly="readonly" data-bind="value:asinId"
+                                   placeholder="ASIN编号"
+                                   aria-describedby="basic-addon1">
+                        </div>
+                    </div>
+                    <div class="form-group" style="height: 50px;">
+                        <div class="input-group" style="width: 100%;">
+                            <span class="input-group-addon" style="width:150px;">亚马逊订单号</span>
+                            <input type="text" class="form-control" name="amzOrderId" data-bind="value:amzOrderId"
+                                   placeholder="亚马逊订单号"
+                                   aria-describedby="basic-addon1">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="input-group" style="width: 100%;">
+                            <span class="input-group-addon" style="width:150px;">亚马逊评论链接*</span>
+                            <input type="text" class="form-control" readonly="readonly" name="reviewUrl"
+                                   data-bind="value:reviewUrl"
+                                   placeholder="亚马逊评论链接"
+                                   aria-describedby="basic-addon1">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" onclick="submitModifyAmOrderNo();" class="btn btn-primary">修改订单编号
                     </button>
                     <button type="button" class="btn btn-default" data-dismiss="modal">关闭
                     </button>

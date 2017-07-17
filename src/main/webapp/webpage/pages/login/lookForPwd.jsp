@@ -41,7 +41,7 @@
                 <div class="col-md-5 col-md-offset-1">
                     <div class="thumbnail">
                         <div class="page-header text-center text-primary">
-                            <h3>找回密码Review Tracker</h3>
+                            <h3>找回密码AM Review Tracker</h3>
                         </div>
                         <p>&nbsp;</p>
                         <form id="formobj" class="form-horizontal" action="userController.do?doLookForPwd"
@@ -76,7 +76,7 @@
                             <div class="form-group" style="height: 54px;">
                                 <label for="reRwd"
                                        class="col-sm-3 control-label">再次输入密码:</label>
-                                <div class="col-sm-7">
+                                <div class="col-sm-6">
                                     <input type="password" id="reRwd" name="reRwd"
                                            onkeydown="if(event.keyCode==13){event.keyCode=0;event.returnValue=false;}"
                                            class="form-control" placeholder="请再次输入密码！">

@@ -1,5 +1,6 @@
 package com.amazon.service.user.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.amazon.service.user.entity.UserEntity;
 import com.amazon.service.user.service.UserService;
 import com.amazon.service.user.vo.UserBaseInfoVo;
@@ -128,7 +129,7 @@ public class UserController extends BaseController {
     @ResponseBody
     public AjaxJson sendEmailCode(UserEntity userEntity, HttpServletRequest request) {
         AjaxJson j = new AjaxJson();
-
+        logger.info("发送邮件："+ JSON.toJSONString(userEntity));
         String email = userEntity.getAccount();
         if (!MailUtils.isEmail(email)) {
             j.setSuccess(AjaxJson.CODE_FAIL);
@@ -140,6 +141,7 @@ public class UserController extends BaseController {
         detachedCriteria.add(Restrictions.eq("account", email));
         List<UserEntity> userEntityList = userService.getListByCriteriaQuery(detachedCriteria);
         if (CollectionUtils.isEmpty(userEntityList)) {
+            logger.info("发送邮件-----该邮箱账户不存在："+ JSON.toJSONString(userEntity));
             j.setSuccess(AjaxJson.CODE_FAIL);
             j.setMsg("该邮箱账户不存在，请直接注册！");
             return j;
@@ -155,7 +157,9 @@ public class UserController extends BaseController {
         try {
             globalService.sendEmailEmailCodePojo(emailCodePojo);
         } catch (Exception e) {
-            //@TODO 邮件发送失败处理
+            j.setSuccess(AjaxJson.CODE_FAIL);
+            j.setMsg("发送邮件失败！");
+            logger.info("发送邮件-----发送失败："+ e.fillInStackTrace());
         }
         return j;
     }

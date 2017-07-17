@@ -26,13 +26,17 @@ public class MailUtils {
     // 网易163邮箱的 SMTP 服务器地址为: smtp.163.com
     public static String EMAIL_SMTP_HOST = "smtp.163.com";
     // 收件人邮箱（替换为自己知道的有效邮箱）
-    public static String RECEIVE_MAIL_ACCOUNT = "1005814292@qq.com";
+    //public static String RECEIVE_MAIL_ACCOUNT = "1005814292@qq.com";
 
     public static Boolean  sendEmail(EmailCodePojo emailCodePojo) throws Exception{
         Properties props = new Properties();                    // 参数配置
         props.setProperty("mail.transport.protocol", "smtp");   // 使用的协议（JavaMail规范要求）
         props.setProperty("mail.smtp.host", EMAIL_SMTP_HOST);   // 发件人的邮箱的 SMTP 服务器地址
         props.setProperty("mail.smtp.auth", "true");            // 需要请求认证
+        props.setProperty("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+        props.setProperty("mail.smtp.socketFactory.fallback", "false");
+        props.setProperty("mail.smtp.port", "465");
+        props.setProperty("mail.smtp.socketFactory.port", "465");
         Session session = Session.getDefaultInstance(props);
         session.setDebug(true); // 设置为debug模式, 可以查看详细的发送 log
         //创建一封邮件

@@ -306,4 +306,51 @@ public class EvaluateController extends BaseController {
         return j;
     }
 
+    @RequestMapping(params = "doOrderNoUpdate")
+    @ResponseBody
+    public AjaxJson doOrderNoUpdate(PromotOrderEvaluateFlowEntity promotOrderEvaluateFlowEntity, HttpServletRequest request) {
+        AjaxJson j = new AjaxJson();
+        if (globalService.isNotAdminLogin()) {
+            j.setSuccess(AjaxJson.RELOGIN);
+            j.setMsg("请先登录管理账号！");
+            return j;
+        }
+
+        if (StringUtils.isEmpty(promotOrderEvaluateFlowEntity.getAmzOrderId())) {
+            j.setSuccess(AjaxJson.CODE_FAIL);
+            j.setMsg("亚马逊订单号不能为空！");
+            return j;
+        }
+
+
+
+        PromotOrderEvaluateFlowEntity promotOrderEvaluateFlowDb = evaluateService.find(PromotOrderEvaluateFlowEntity.class, promotOrderEvaluateFlowEntity.getId());
+        DetachedCriteria promotOrderEvaluateExistDetachedCriteria = DetachedCriteria.forClass(PromotOrderEvaluateFlowEntity.class);
+        promotOrderEvaluateExistDetachedCriteria.add(Restrictions.eq("amzOrderId", promotOrderEvaluateFlowEntity.getAmzOrderId()));
+        promotOrderEvaluateExistDetachedCriteria.add(Restrictions.eq("asinId", promotOrderEvaluateFlowDb.getAsinId()));
+        List<PromotOrderEvaluateFlowEntity> promotOrderExistFlowEntityList = promotOrderService.getListByCriteriaQuery(promotOrderEvaluateExistDetachedCriteria);
+        if (CollectionUtils.isNotEmpty(promotOrderExistFlowEntityList)) {
+            j.setSuccess(AjaxJson.CODE_FAIL);
+            j.setMsg("亚马逊订单号和ASIN编号同时相同的评价已存在，勿重复录入！");
+            return j;
+        }
+
+        if (promotOrderEvaluateFlowDb == null) {
+            j.setSuccess(AjaxJson.CODE_FAIL);
+            j.setMsg("评价已被删除或者不存在！");
+            return j;
+        }
+
+        try {
+            promotOrderEvaluateFlowDb.setAmzOrderId(promotOrderEvaluateFlowEntity.getAmzOrderId());
+            evaluateService.saveOrUpdate(promotOrderEvaluateFlowDb);
+        } catch (Exception e) {
+            logger.error(e.fillInStackTrace());
+            j.setSuccess(AjaxJson.CODE_FAIL);
+            j.setMsg("修改亚马逊订单号失败！");
+            return j;
+        }
+        return j;
+    }
+
 }

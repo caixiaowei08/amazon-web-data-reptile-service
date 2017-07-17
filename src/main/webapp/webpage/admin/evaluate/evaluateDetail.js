@@ -67,6 +67,45 @@ $(function () {
         }, 'json');
     });
 
+    $('#formModifyAmOrderNoModel').bootstrapValidator({
+        framework: 'bootstrap',
+        icon: {
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {
+            amzOrderId: {
+                validators: {
+                    notEmpty: {
+                        message: '亚马逊单号不能为空！'
+                    },
+                    regexp: {
+                        regexp:  /^[\d-]*$/,
+                        message: '亚马逊订单号只能是数字和-组合！'
+                    }
+                }
+            }
+        }
+    }).on('success.form.bv', function (e) {
+        var form = $('#formModifyAmOrderNoModel');
+        $.post(form.attr('action'), form.serialize(), function (result) {
+            if (result.success === "success") {
+                toastr.success(result.msg);
+                $('#modifyAmOrderNoModel').modal('hide');
+                $('#evaluateListTable').bootstrapTable("refresh");
+            } else if (result.success === "fail") {
+                toastr.warning(result.msg);
+                $('#modifyAmOrderNoModel').modal('hide');
+                form.bootstrapValidator('disableSubmitButtons', false);
+            } else {
+                toastr.warning("请重新登录！");
+                $('#modifyAmOrderNoModel').modal('hide');
+                setTimeout("window.location='/adminSystemController.admin?goAdminLogin'", 500);
+            }
+        }, 'json');
+    });
+
 
     $('#evaluateListTable').bootstrapTable({
         url: "/evaluateController.admin?dataGrid",
@@ -182,9 +221,9 @@ $(function () {
                 valign: "middle",//垂直
                 formatter: function (value, row, index) {
                     if (row.state === 1) {
-                        return "<a onclick='clickEvaluateModel(" + value + ");' title='删除评价' data-target='#deleteEvaluateModel' data-toggle='modal'><i class='fa fa-window-close'></i></a>&nbsp;&nbsp;<a onclick='clickAddEvaluateUrlModel(" + row.id + ")'; title='追加评论链接' data-target='#addEvaluateUrlModel' data-toggle='modal'><i class='fa fa-plus-square'></i></a>";
+                        return "<a onclick='clickModifyAmOrderNoModel(" + value + ");' title='修改亚马逊订单号' data-target='#modifyAmOrderNoModel' data-toggle='modal'><i class='fa fa-pencil-square'></i></a>&nbsp;&nbsp;<a onclick='clickEvaluateModel(" + value + ");' title='删除评价' data-target='#deleteEvaluateModel' data-toggle='modal'><i class='fa fa-window-close'></i></a>&nbsp;&nbsp;<a onclick='clickAddEvaluateUrlModel(" + row.id + ")'; title='追加评论链接' data-target='#addEvaluateUrlModel' data-toggle='modal'><i class='fa fa-plus-square'></i></a>";
                     } else if (row.state === 2) {
-                        return "<a onclick='clickEvaluateModel(" + value + ");' title='删除评价' data-target='#deleteEvaluateModel' data-toggle='modal'><i class='fa fa-window-close'></i></a>";
+                        return "<a onclick='clickModifyAmOrderNoModel(" + value + ");' title='修改亚马逊订单号' data-target='#modifyAmOrderNoModel' data-toggle='modal'><i class='fa fa-pencil-square'></i></a>&nbsp;&nbsp;<a onclick='clickEvaluateModel(" + value + ");' title='删除评价' data-target='#deleteEvaluateModel' data-toggle='modal'><i class='fa fa-window-close'></i></a>";
                     } else {
                         return "";
                     }
@@ -225,6 +264,10 @@ function submitAddReviewUrl(){
     $('#formAddEvaluateUrlModel').submit();
 }
 
+function submitModifyAmOrderNo(){
+    $('#formModifyAmOrderNoModel').submit();
+}
+
 function clickAddEvaluateUrlModel(id) {
     $.ajax({
         url: "/evaluateController.admin?doFindComment",
@@ -236,6 +279,29 @@ function clickAddEvaluateUrlModel(id) {
                 viewModel.asinId(data.content.asinId);
                 viewModel.amzOrderId(data.content.amzOrderId);
                 viewModel.reviewUrl("");
+            } else if (data.success === "fail") {
+                toastr.warning(data.msg);
+            } else {
+                window.location = '/adminSystemController.admin?goAdminLogin';
+            }
+        },
+        error: function (jqxhr, textStatus, errorThrow) {
+            toastr.success("服务器异常,请联系管理员！");
+        }
+    })
+}
+
+function clickModifyAmOrderNoModel(id) {
+    $.ajax({
+        url: "/evaluateController.admin?doFindComment",
+        type: 'post',
+        data: {id: id},
+        success: function (data) {
+            if (data.success === "success") {
+                viewModel.eid(data.content.id);
+                viewModel.asinId(data.content.asinId);
+                viewModel.amzOrderId(data.content.amzOrderId);
+                viewModel.reviewUrl(data.content.reviewUrl);
             } else if (data.success === "fail") {
                 toastr.warning(data.msg);
             } else {
@@ -309,7 +375,7 @@ function formValidator() {
                     },
                     regexp: {
                         regexp:  /^[\d-]*$/,
-                        message: '亚马逊订单号不能包含字母！'
+                        message: '亚马逊订单号只能是数字和-组合！'
                     }
 
                 }

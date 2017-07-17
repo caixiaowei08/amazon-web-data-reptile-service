@@ -42,7 +42,7 @@
                 <div class="col-md-4 col-md-offset-1">
                     <div class="thumbnail">
                         <div class="page-header text-center text-primary">
-                            <h3>欢迎注册Review Tracker</h3>
+                            <h3>欢迎注册AM Review Tracker</h3>
                         </div>
                         <p>&nbsp;</p>
                         <form id="formobj" class="form-horizontal" action="userController.do?doRegister" onsubmit="return false;">

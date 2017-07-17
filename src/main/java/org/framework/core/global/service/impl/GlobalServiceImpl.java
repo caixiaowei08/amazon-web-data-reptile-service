@@ -5,8 +5,11 @@ import com.amazon.admin.constant.Constants;
 import com.amazon.buyer.account.entity.BuyerUserEntity;
 import com.amazon.buyer.account.service.BuyerUserService;
 import com.amazon.buyer.utils.BuyerConstants;
+import com.amazon.service.user.controller.UserController;
 import com.amazon.service.user.entity.UserEntity;
 import com.amazon.system.Constant;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.framework.core.common.pojo.EmailCodePojo;
 import org.framework.core.common.service.impl.BaseServiceImpl;
 import org.framework.core.global.service.GlobalService;
@@ -24,6 +27,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class GlobalServiceImpl extends BaseServiceImpl implements GlobalService {
 
+    private static Logger logger = LogManager.getLogger(GlobalServiceImpl.class.getName());
+
     public boolean sendEmail() throws Exception {
         return false;
     }
@@ -34,7 +39,7 @@ public class GlobalServiceImpl extends BaseServiceImpl implements GlobalService 
         try {
             MailUtils.sendEmail(emailCodePojo);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.fillInStackTrace());
             return false;
         }
         return true;

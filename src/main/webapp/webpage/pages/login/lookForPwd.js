@@ -75,8 +75,6 @@ $(function () {
         $.ajax({
             type: "post",
             url: "userController.do?sendEmailCode",
-            async: true,
-            timeout: 10000,
             data: {account: email},
             success: function (res) {
                 if (res.success === "success") {
