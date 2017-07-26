@@ -82,4 +82,10 @@ public interface BaseDao {
      */
     public BigDecimal getRowBigDecimalSum(DetachedCriteria detachedCriteria);
 
+    /**
+     * 获取某一项的和
+     */
+    public Long getSum(DetachedCriteria detachedCriteria);
+
+
 }

@@ -90,9 +90,7 @@ public class UserRechargeFundController extends BaseController {
         try {
             poiPromotService.downChargeFundFlowExcel(userRechargeFundEntityList, response, excelFileNameHeader);
         } catch (Exception e) {
-            logger.error(e.fillInStackTrace());
+            logger.error("downChargeFundFlowExcel 错误！",e);
         }
     }
-
-
 }

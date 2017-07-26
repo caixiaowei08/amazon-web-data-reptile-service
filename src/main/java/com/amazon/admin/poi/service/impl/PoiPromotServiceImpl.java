@@ -96,8 +96,8 @@ public class PoiPromotServiceImpl implements PoiPromotService {
                 cell = row.createCell(7);
                 cell.setCellValue(promotOrderEvaluateVo.getRemark());
                 //if (promotOrderEvaluateVo.getIsComment().equals(Constants.EVALUATE_STATE_REVIEW)) {
-                    totalCashback = totalCashback.add(promotOrderEvaluateVo.getCashback());
-                    totalReviewPrice = totalReviewPrice.add(promotOrderEvaluateVo.getReviewPrice());
+                totalCashback = totalCashback.add(promotOrderEvaluateVo.getCashback());
+                totalReviewPrice = totalReviewPrice.add(promotOrderEvaluateVo.getReviewPrice());
                 //}
             }
             row = sheet.createRow(promotOrderEvaluateVoList.size() + 1);
@@ -167,13 +167,14 @@ public class PoiPromotServiceImpl implements PoiPromotService {
                 "订单编号", "客户账号", "ASIN", "商品亚马逊链接",
                 "商品标题", "商品店家", "亚马逊价格", "订单状态",
                 "下单日期", "结束日期", "订单目标好评", "每日目标好评",
-                "已下订单", "已获取的好评数", "订单备注"
+                "已下订单", "已获取的好评数", "订单备注", "搜索关键字", "排序页"
         };
         int[] columnsColumnWidth = {
                 4000, 4000, 4000, 4500,
                 4000, 4000, 4000, 4000,
                 4000, 4000, 4000, 4000,
-                4000, 4000, 8000
+                4000, 4000, 8000, 8000,
+                4000
         };
 
         CellStyle headStyle = workBook.createCellStyle();
@@ -233,6 +234,10 @@ public class PoiPromotServiceImpl implements PoiPromotService {
                 cell.setCellValue(promotOrderEntity.getEvaluateNum());
                 cell = row.createCell(14);
                 cell.setCellValue(promotOrderEntity.getRemark());
+                cell = row.createCell(15);
+                cell.setCellValue(promotOrderEntity.getKeyword());
+                cell = row.createCell(16);
+                cell.setCellValue(promotOrderEntity.getSequence() == null ? "" : promotOrderEntity.getSequence().toString());
             }
         }
 
@@ -293,11 +298,13 @@ public class PoiPromotServiceImpl implements PoiPromotService {
         String[] columns = {
                 "推广平台充值流水号", "支付平台支付流水", "充值类型", "充值金额(美元)",
                 "充值金额(人民币)", "购买会员月份", "支付方式", "支付状态",
+                "ASIN编号", "店铺名称", "备注",
                 "创建时间", "支付时间"
         };
         int[] columnsColumnWidth = {
                 8000, 8000, 4000, 4500,
                 4000, 4000, 4000, 4000,
+                4000, 4000, 4000,
                 8000, 8000
         };
 
@@ -341,14 +348,21 @@ public class PoiPromotServiceImpl implements PoiPromotService {
                 cell.setCellType(CellType.NUMERIC);
                 cell.setCellValue(Double.parseDouble(userRechargeFundEntity.getChargeFundRmb().toString()));
                 cell = row.createCell(5);
-                cell.setCellValue(userRechargeFundEntity.getMemberShipMonth() == null ? "" : userRechargeFundEntity.getMemberShipMonth().toString());
+                cell.setCellType(CellType.NUMERIC);
+                cell.setCellValue(Double.parseDouble(userRechargeFundEntity.getMemberShipMonth() == null ? "0" : userRechargeFundEntity.getMemberShipMonth().toString()));
                 cell = row.createCell(6);
                 cell.setCellValue(userRechargeFundEntity.getChargeSource().equals(ConstantSource.ZFB) ? "支付宝" : "其他");
                 cell = row.createCell(7);
                 cell.setCellValue(userRechargeFundEntity.getState().equals(ConstantFund.SUCCESS) ? "支付成功" : "未支付");
                 cell = row.createCell(8);
-                cell.setCellValue(DateUtils.getDateFormat(DateStyle.YYYY_MM_DD_HH_MM_SS.getValue()).format(userRechargeFundEntity.getCreateTime()));
+                cell.setCellValue(userRechargeFundEntity.getAsinId());
                 cell = row.createCell(9);
+                cell.setCellValue(userRechargeFundEntity.getBrand());
+                cell = row.createCell(10);
+                cell.setCellValue(userRechargeFundEntity.getRemark());
+                cell = row.createCell(11);
+                cell.setCellValue(DateUtils.getDateFormat(DateStyle.YYYY_MM_DD_HH_MM_SS.getValue()).format(userRechargeFundEntity.getCreateTime()));
+                cell = row.createCell(12);
                 cell.setCellValue(userRechargeFundEntity.getConfirmTime() == null ? "" : DateUtils.getDateFormat(DateStyle.YYYY_MM_DD_HH_MM_SS.getValue()).format(userRechargeFundEntity.getConfirmTime()));
             }
         }

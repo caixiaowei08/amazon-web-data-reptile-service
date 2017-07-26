@@ -53,8 +53,8 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand font-color" href="/skipController.admin?goToAdminMain" target="_parent">Seller
-                    Assistant管理端</a>
+                <a class="navbar-brand font-color" href="/skipController.admin?goToAdminMain" target="_parent">
+                    Review Tracker管理端</a>
             </div>
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">
@@ -184,7 +184,7 @@
             <div class="row">
                 <div class="col-sm-8 col-sm-offset-2">
                     <div style="text-align:center;line-height: 28px;">
-                        Copyright&copy;Viscal Technology Services Ltd All Rights Reserved&reg;鄂ICP备17013383号
+                        Copyright&copy;Viscal Technology Services Ltd All Rights Reserved&reg;ICP备17013383号
                     </div>
                 </div>
             </div>
@@ -320,7 +320,6 @@
         </div>
     </div>
 </div>
-
 <div class="modal fade" id="modifyAmOrderNoModel" tabindex="-1" role="dialog" aria-labelledby="modifyAmOrderNoModel"
      aria-hidden="true">
     <div class="modal-dialog">

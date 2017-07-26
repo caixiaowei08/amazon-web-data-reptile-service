@@ -38,7 +38,11 @@ public class UserBaseInfoVo implements Serializable{
      */
     private Integer todayEvaluateNum;
     /**
-     * 开启活动的所有联系的买家数
+     *所有活动计划订单数
+     */
+    private Integer planBuyerNum;
+    /**
+     * 所有活动已下订单
      */
     private Integer buyerNum;
     /**
@@ -49,7 +53,6 @@ public class UserBaseInfoVo implements Serializable{
      * 已经完成的和关闭的订单数
      */
     private Integer historyOrderNum;
-
     /**
      * 所有的评价消费总额
      */
@@ -157,5 +160,13 @@ public class UserBaseInfoVo implements Serializable{
 
     public void setMembershipEndTime(Date membershipEndTime) {
         this.membershipEndTime = membershipEndTime;
+    }
+
+    public Integer getPlanBuyerNum() {
+        return planBuyerNum;
+    }
+
+    public void setPlanBuyerNum(Integer planBuyerNum) {
+        this.planBuyerNum = planBuyerNum;
     }
 }

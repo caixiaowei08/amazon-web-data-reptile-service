@@ -151,4 +151,12 @@ public class BaseDaoImpl implements BaseDao {
         }
         return new BigDecimal(0.00);
     }
+
+    public Long getSum(DetachedCriteria detachedCriteria) {
+        Criteria criteria = detachedCriteria.getExecutableCriteria(getSession());
+        if (criteria.uniqueResult() != null) {
+            return (Long)(criteria.uniqueResult());
+        }
+        return 0L;
+    }
 }

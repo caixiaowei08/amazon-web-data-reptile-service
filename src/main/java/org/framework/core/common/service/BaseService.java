@@ -83,5 +83,7 @@ public interface BaseService {
 
     public BigDecimal getRowBigDecimalSum(DetachedCriteria detachedCriteria);
 
+    public Integer getRowSumPlanBuyerNum(DetachedCriteria detachedCriteria);
+
 
 }

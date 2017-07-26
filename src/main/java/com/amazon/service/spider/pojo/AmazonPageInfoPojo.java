@@ -57,6 +57,10 @@ public class AmazonPageInfoPojo implements Serializable{
 
     private String remark;
 
+    private Integer sequence = 1;
+
+    private String keyword;
+
     public String getPageUrl() {
         return pageUrl;
     }
@@ -143,5 +147,21 @@ public class AmazonPageInfoPojo implements Serializable{
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    public Integer getSequence() {
+        return sequence;
+    }
+
+    public void setSequence(Integer sequence) {
+        this.sequence = sequence;
+    }
+
+    public String getKeyword() {
+        return keyword;
+    }
+
+    public void setKeyword(String keyword) {
+        this.keyword = keyword;
     }
 }

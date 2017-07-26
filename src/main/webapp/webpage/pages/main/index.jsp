@@ -113,17 +113,17 @@
                                        <div class="infobox-data">
                                             <span class="infobox-data-number" data-bind="text:activeOrderNum">0</span>
                                             <div
-                                               class="infobox-content">活动订单</div>
+                                               class="infobox-content">活动推广</div>
                                        </div>
                                 </div>
                             </a>
-                            <div class="infobox infobox-pink">
+                            <div class="infobox infobox-brown">
                                 <div class="infobox-icon">
-                                    <i class="ace-icon fa fa-comments"></i>
+                                    <i class="ace-icon fa fa-handshake-o"></i>
                                 </div>
                                 <div class="infobox-data">
-                                    <span class="infobox-data-number" data-bind="text:todayEvaluateNum">0</span>
-                                    <lable href="" class="infobox-content">今日评论</lable>
+                                    <span class="infobox-data-number" data-bind="text:planBuyerNum">0</span>
+                                    <lable class="infobox-content">计划订单</lable>
                                 </div>
                             </div>
                             <div class="infobox infobox-blue">
@@ -133,6 +133,15 @@
                                 <div class="infobox-data">
                                     <span class="infobox-data-number" data-bind="text:buyerNum">0</span>
                                     <lable class="infobox-content">已下订单</lable>
+                                </div>
+                            </div>
+                            <div class="infobox infobox-pink">
+                                <div class="infobox-icon">
+                                    <i class="ace-icon fa fa-comments"></i>
+                                </div>
+                                <div class="infobox-data">
+                                    <span class="infobox-data-number" data-bind="text:todayEvaluateNum">0</span>
+                                    <lable href="" class="infobox-content">今日评论</lable>
                                 </div>
                             </div>
                             <div class="infobox infobox-red">
@@ -158,9 +167,13 @@
                                     <i class="ace-icon fa fa-file-archive-o" aria-hidden="true"></i>
                                 </div>
                                 <div class="infobox-data">
-                                    <span class="infobox-data-number" data-bind="text:totalConsumption">$0.00</span>
+                                    <span class="infobox-data-number" data-bind="text:totalConsumption"></span>
                                     <lable class="infobox-content">全部消费(美元)</lable>
                                 </div>
+                            </div>
+                            <div class="infobox">
+                            </div>
+                            <div class="infobox">
                             </div>
                             <div class="space-6"></div>
                             <div class="space-6"></div>
@@ -277,7 +290,7 @@
         <div class="row">
             <div class="col-sm-8 col-sm-offset-2">
                 <div style="text-align:center;line-height: 28px;">
-                    Copyright&copy;Viscal Technology Services Ltd  All Rights Reserved&reg;鄂ICP备17013383号
+                    Copyright&copy;Viscal Technology Services Ltd  All Rights Reserved&reg;ICP备17013383号
                 </div>
             </div>
         </div>

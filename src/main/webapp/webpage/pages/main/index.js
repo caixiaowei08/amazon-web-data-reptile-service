@@ -30,7 +30,10 @@ function newPromotOrder() {
     window.location = '/promotOrderController.do?goNewPromotOne'
 }
 
-var ViewModel = function (account, totalFund, usableFund, freezeFund, vip, beforeVip, membershipEndTime, activeOrderNum, todayEvaluateNum, buyerNum, totalEvaluateNum, historyOrderNum, totalConsumption) {
+var ViewModel = function (account, totalFund, usableFund, freezeFund,
+                          vip, beforeVip, membershipEndTime, activeOrderNum,
+                          todayEvaluateNum, buyerNum,planBuyerNum,totalEvaluateNum,
+                          historyOrderNum, totalConsumption) {
     this.account = ko.observable(account);
     this.totalFund = ko.observable(totalFund);
     this.usableFund = ko.observable(usableFund);
@@ -41,6 +44,7 @@ var ViewModel = function (account, totalFund, usableFund, freezeFund, vip, befor
     this.activeOrderNum = ko.observable(activeOrderNum);
     this.todayEvaluateNum = ko.observable(todayEvaluateNum);
     this.buyerNum = ko.observable(buyerNum);
+    this.planBuyerNum = ko.observable(planBuyerNum);
     this.totalEvaluateNum = ko.observable(totalEvaluateNum);
     this.historyOrderNum = ko.observable(historyOrderNum);
     this.totalConsumption = ko.observable(totalConsumption);
@@ -64,6 +68,7 @@ function loadData() {
                         data.content.activeOrderNum,
                         data.content.todayEvaluateNum,
                         data.content.buyerNum,
+                        data.content.planBuyerNum,
                         data.content.totalEvaluateNum,
                         data.content.historyOrderNum,
                         data.content.totalConsumption

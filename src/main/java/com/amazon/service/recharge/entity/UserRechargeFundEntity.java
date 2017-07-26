@@ -58,7 +58,7 @@ public class UserRechargeFundEntity extends IdEntity implements Serializable {
     private Integer state;
 
     /**
-     *支付宝回调信息
+     * 支付宝回调信息
      */
     private String notifyInfo;
 
@@ -68,6 +68,16 @@ public class UserRechargeFundEntity extends IdEntity implements Serializable {
     private Integer chargeType;
 
     /**
+     * ASIN编号
+     */
+    private String asinId;
+
+    /**
+     * brand编号
+     */
+    private String brand;
+
+    /**
      * 支付人民币
      */
     private BigDecimal chargeFundRmb;
@@ -75,7 +85,7 @@ public class UserRechargeFundEntity extends IdEntity implements Serializable {
     /**
      * 支付汇率
      */
-    private BigDecimal  exchangeRate;
+    private BigDecimal exchangeRate;
 
     /**
      * 支付发起时间
@@ -85,7 +95,12 @@ public class UserRechargeFundEntity extends IdEntity implements Serializable {
     private Date startTime;
 
     /**
-     *支付确认时间
+     * 备注
+     */
+    private String remark;
+
+    /**
+     * 支付确认时间
      */
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JSONField(format = "yyyy-MM-dd HH:mm:ss")
@@ -132,7 +147,7 @@ public class UserRechargeFundEntity extends IdEntity implements Serializable {
         this.chargeAccount = chargeAccount;
     }
 
-    @Column(name = "chargeFund", nullable = false,precision = 50, scale = 4)
+    @Column(name = "chargeFund", nullable = false, precision = 50, scale = 4)
     public BigDecimal getChargeFund() {
         return chargeFund;
     }
@@ -159,7 +174,7 @@ public class UserRechargeFundEntity extends IdEntity implements Serializable {
         this.chargeType = chargeType;
     }
 
-    @Column(name ="createTime",nullable=true,length=20)
+    @Column(name = "createTime", nullable = true, length = 20)
     public Date getCreateTime() {
         return createTime;
     }
@@ -168,7 +183,7 @@ public class UserRechargeFundEntity extends IdEntity implements Serializable {
         this.createTime = createTime;
     }
 
-    @Column(name ="updateTime",nullable=true,length=20)
+    @Column(name = "updateTime", nullable = true, length = 20)
     public Date getUpdateTime() {
         return updateTime;
     }
@@ -177,7 +192,7 @@ public class UserRechargeFundEntity extends IdEntity implements Serializable {
         this.updateTime = updateTime;
     }
 
-    @Column(name ="platformOrderNum",nullable=true,length = 100)
+    @Column(name = "platformOrderNum", nullable = true, length = 100)
     public String getPlatformOrderNum() {
         return platformOrderNum;
     }
@@ -187,7 +202,7 @@ public class UserRechargeFundEntity extends IdEntity implements Serializable {
     }
 
 
-    @Column(name ="notifyInfo",nullable=true)
+    @Column(name = "notifyInfo", nullable = true)
     public String getNotifyInfo() {
         return notifyInfo;
     }
@@ -196,7 +211,7 @@ public class UserRechargeFundEntity extends IdEntity implements Serializable {
         this.notifyInfo = notifyInfo;
     }
 
-    @Column(name ="startTime",nullable=true,length=20)
+    @Column(name = "startTime", nullable = true, length = 20)
     public Date getStartTime() {
         return startTime;
     }
@@ -205,7 +220,7 @@ public class UserRechargeFundEntity extends IdEntity implements Serializable {
         this.startTime = startTime;
     }
 
-    @Column(name ="confirmTime",nullable=true,length=20)
+    @Column(name = "confirmTime", nullable = true, length = 20)
     public Date getConfirmTime() {
         return confirmTime;
     }
@@ -214,7 +229,7 @@ public class UserRechargeFundEntity extends IdEntity implements Serializable {
         this.confirmTime = confirmTime;
     }
 
-    @Column(name ="zfbOrderNum",nullable=true,length = 100)
+    @Column(name = "zfbOrderNum", nullable = true, length = 100)
     public String getZfbOrderNum() {
         return zfbOrderNum;
     }
@@ -223,7 +238,7 @@ public class UserRechargeFundEntity extends IdEntity implements Serializable {
         this.zfbOrderNum = zfbOrderNum;
     }
 
-    @Column(name = "chargeFundRmb", nullable = false,precision = 50, scale = 4)
+    @Column(name = "chargeFundRmb", nullable = false, precision = 50, scale = 4)
     public BigDecimal getChargeFundRmb() {
         return chargeFundRmb;
     }
@@ -232,7 +247,7 @@ public class UserRechargeFundEntity extends IdEntity implements Serializable {
         this.chargeFundRmb = chargeFundRmb;
     }
 
-    @Column(name = "exchangeRate", nullable = false,precision = 50, scale = 4)
+    @Column(name = "exchangeRate", nullable = false, precision = 50, scale = 4)
     public BigDecimal getExchangeRate() {
         return exchangeRate;
     }
@@ -241,12 +256,39 @@ public class UserRechargeFundEntity extends IdEntity implements Serializable {
         this.exchangeRate = exchangeRate;
     }
 
-    @Column(name ="memberShipMonth",nullable=true,length=11)
+    @Column(name = "memberShipMonth", nullable = true, length = 11)
     public Integer getMemberShipMonth() {
         return memberShipMonth;
     }
 
     public void setMemberShipMonth(Integer memberShipMonth) {
         this.memberShipMonth = memberShipMonth;
+    }
+
+    @Column(name = "asinId", nullable = true, length = 50)
+    public String getAsinId() {
+        return asinId;
+    }
+
+    public void setAsinId(String asinId) {
+        this.asinId = asinId;
+    }
+
+    @Column(name = "brand", nullable = true, length = 200)
+    public String getBrand() {
+        return brand;
+    }
+
+    public void setBrand(String brand) {
+        this.brand = brand;
+    }
+
+    @Column(name = "remark", nullable = true)
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
     }
 }

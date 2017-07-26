@@ -34,14 +34,24 @@ public class PromotOrderEntity extends IdEntity implements Serializable {
     private String productUrl;
 
     /**
-     *商品标题
+     * 商品标题
      */
     private String productTitle;
 
     /**
-     *商品店家
+     * 商品店家
      */
     private String brand;
+
+    /**
+     * 搜索关键字
+     */
+    private String keyword;
+
+    /**
+     * 排序
+     */
+    private Integer sequence;
 
     /**
      * 商品缩略图
@@ -49,7 +59,7 @@ public class PromotOrderEntity extends IdEntity implements Serializable {
     private String thumbnail;
 
     /**
-     *商品价格
+     * 商品价格
      */
     private String salePrice;
 
@@ -190,7 +200,7 @@ public class PromotOrderEntity extends IdEntity implements Serializable {
         this.finishDate = finishDate;
     }
 
-    @Column(name = "guaranteeFund", nullable = false,precision = 50, scale = 4)
+    @Column(name = "guaranteeFund", nullable = false, precision = 50, scale = 4)
     public BigDecimal getGuaranteeFund() {
         return guaranteeFund;
     }
@@ -199,7 +209,7 @@ public class PromotOrderEntity extends IdEntity implements Serializable {
         this.guaranteeFund = guaranteeFund;
     }
 
-    @Column(name = "consumption", nullable = false,precision = 50, scale = 4)
+    @Column(name = "consumption", nullable = false, precision = 50, scale = 4)
     public BigDecimal getConsumption() {
         return consumption;
     }
@@ -261,6 +271,7 @@ public class PromotOrderEntity extends IdEntity implements Serializable {
     public void setBrand(String brand) {
         this.brand = brand;
     }
+
     @Column(name = "thumbnail", nullable = true)
     public String getThumbnail() {
         return thumbnail;
@@ -270,7 +281,7 @@ public class PromotOrderEntity extends IdEntity implements Serializable {
         this.thumbnail = thumbnail;
     }
 
-    @Column(name = "salePrice", nullable = true,length = 50)
+    @Column(name = "salePrice", nullable = true, length = 50)
     public String getSalePrice() {
         return salePrice;
     }
@@ -288,7 +299,7 @@ public class PromotOrderEntity extends IdEntity implements Serializable {
         this.productTitle = productTitle;
     }
 
-    @Column(name = "reviewPrice", nullable = false,precision = 50, scale = 4)
+    @Column(name = "reviewPrice", nullable = false, precision = 50, scale = 4)
     public BigDecimal getReviewPrice() {
         return reviewPrice;
     }
@@ -306,7 +317,7 @@ public class PromotOrderEntity extends IdEntity implements Serializable {
         this.evaluateNum = evaluateNum;
     }
 
-    @Column(name = "cashBackConsumption", nullable = false,precision = 50, scale = 4)
+    @Column(name = "cashBackConsumption", nullable = false, precision = 50, scale = 4)
     public BigDecimal getCashBackConsumption() {
         return cashBackConsumption;
     }
@@ -315,7 +326,7 @@ public class PromotOrderEntity extends IdEntity implements Serializable {
         this.cashBackConsumption = cashBackConsumption;
     }
 
-    @Column(name = "cashback", nullable = false,precision = 50, scale = 4)
+    @Column(name = "cashback", nullable = false, precision = 50, scale = 4)
     public BigDecimal getCashback() {
         return cashback;
     }
@@ -331,5 +342,23 @@ public class PromotOrderEntity extends IdEntity implements Serializable {
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    @Column(name = "keyword", nullable = true, length = 100)
+    public String getKeyword() {
+        return keyword;
+    }
+
+    public void setKeyword(String keyword) {
+        this.keyword = keyword;
+    }
+
+    @Column(name = "sequence", nullable = true, length = 11)
+    public Integer getSequence() {
+        return sequence;
+    }
+
+    public void setSequence(Integer sequence) {
+        this.sequence = sequence;
     }
 }

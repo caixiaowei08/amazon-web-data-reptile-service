@@ -57,7 +57,7 @@ $(function () {
             {
                 title: '平台充值流水号',
                 field: "platformOrderNum",
-                width: "10%",//宽度
+                width: "8%",//宽度
                 align: "center",//水平
                 valign: "middle"//垂直
             },
@@ -77,23 +77,23 @@ $(function () {
                 }
             },
             {
-                title: '充值金额($)',
+                title: '金额($)',
                 field: "chargeFund",
-                width: "10%",//宽度
+                width: "7%",//宽度
                 align: "center",//水平
                 valign: "middle",//垂直
             },
             {
-                title: '充值金额(￥)',
+                title: '金额(￥)',
                 field: "chargeFundRmb",
-                width: "10%",//宽度
+                width: "7%",//宽度
                 align: "center",//水平
                 valign: "middle",//垂直
             },
             {
-                title: '购买会员月份',
+                title: '会员月份',
                 field: "memberShipMonth",
-                width: "10%",//宽度
+                width: "7%",//宽度
                 align: "center",//水平
                 valign: "middle"//垂直
             },
@@ -101,7 +101,7 @@ $(function () {
                 title: '支付方式',
                 field: "chargeSource",
                 sortable: true,
-                width: "10%",//宽度
+                width: "7%",//宽度
                 align: "center",//水平
                 valign: "middle",//垂直
                 formatter: function (value, row, index) {
@@ -117,7 +117,7 @@ $(function () {
                 title: '状态',
                 field: "state",
                 sortable: true,
-                width: "10%",//宽度
+                width: "8%",//宽度
                 align: "center",//水平
                 valign: "middle",//垂直
                 formatter: function (value, row, index) {
@@ -130,6 +130,34 @@ $(function () {
                     }
                     return "";
                 }
+            },
+            {
+                title: 'ASIN',
+                field: "asinId",
+                width: "8%",//宽度
+                align: "center",//水平
+                valign: "middle",//垂直
+            },
+            {
+                title: '店铺',
+                field: "brand",
+                width: "7%",//宽度
+                align: "center",//水平
+                valign: "middle",//垂直
+                formatter: function (value, row, index) {
+                    if(value===undefined||value===""){
+                        return "-";
+                    }else{
+                        return '<input type="text" style="border:none;background:none;"  size="8" readonly="readonly" value="' + value + '"/>';
+                    }
+                }
+            },
+            {
+                title: '备注',
+                field: "remark",
+                width: "8%",//宽度
+                align: "center",//水平
+                valign: "middle",//垂直
             },
             {
                 title: '创建时间',

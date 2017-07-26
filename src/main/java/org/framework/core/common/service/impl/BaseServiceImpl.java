@@ -62,4 +62,8 @@ public class BaseServiceImpl implements BaseService{
     public BigDecimal getRowBigDecimalSum(DetachedCriteria detachedCriteria){
         return baseDao.getRowBigDecimalSum(detachedCriteria);
     }
+
+    public Integer getRowSumPlanBuyerNum(DetachedCriteria detachedCriteria) {
+        return baseDao.getSum(detachedCriteria).intValue();
+    }
 }

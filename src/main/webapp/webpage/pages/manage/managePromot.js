@@ -32,6 +32,44 @@ $(function () {
         $('#addDate_end').datetimepicker('hide');
     });
 
+    $('#formUpdatePromotModel').bootstrapValidator({
+        framework: 'bootstrap',
+        icon: {
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {
+            sequence: {
+                validators: {
+                    between: {
+                        min: 1,
+                        max: 20,
+                        message: '请输入大于1小于20的数字！'
+                    }
+                }
+            }
+        }
+    }).on('success.form.bv', function (e) {
+        var form = $('#formUpdatePromotModel');
+        $.post(form.attr('action'), form.serialize(), function (result) {
+            if (result.success === "success") {
+                toastr.success(result.msg);
+                $('#updatePromotModel').modal('hide');
+                $('#promotListTable').bootstrapTable("refresh");
+            } else if (result.success === "fail") {
+                toastr.warning(result.msg);
+                $('#updatePromotModel').modal('hide');
+                form.bootstrapValidator('disableSubmitButtons', false);
+            } else {
+                toastr.warning("请重新登录！");
+                $('#updatePromotModel').modal('hide');
+                setTimeout("window.location='/adminSystemController.admin?goAdminLogin'", 500);
+            }
+            form.bootstrapValidator('disableSubmitButtons', false);
+        }, 'json');
+    });
+
     $('#promotListTable').bootstrapTable({
         url: "/promotOrderController.do?dataGrid",
         sidePagination: "server",
@@ -40,7 +78,7 @@ $(function () {
         sortName: "addDate",
         sortOrder: 'desc',
         pageNumber: 1,
-        pageSize: 20,
+        pageSize: 10,
         pageList: [10, 20, 30, 50, 100],
         pagination: true,
         onLoadError:function () {
@@ -74,14 +112,11 @@ $(function () {
                 field: "brand",
                 align: "center",//水平
                 valign: "middle",//垂直
-                cellStyle:function (value, row, index) {
-                    return {
-                        css : {
-                            "overflow":"hidden",
-                            "white-space":"nowrap",
-                            "text-overflow":"ellipsis",
-                            "width":"100px"
-                        }
+                formatter: function (value, row, index) {
+                    if(value===undefined||value===""){
+                        return "-";
+                    }else{
+                        return '<input type="text" style="border:none;background:none;"  size="10" readonly="readonly" value="' + value + '"/>';
                     }
                 }
             },
@@ -156,7 +191,7 @@ $(function () {
                 align: "center",//水平
                 valign: "middle",//垂直
                 formatter: function (value, row, index) {
-                    return "<a onclick='loadPromotOrder(" + value + ")'title='查看详情' data-target='#orderDetailModal' data-toggle='modal'><i class='fa fa-search'></i></a>";
+                    return "<a onclick='loadPromotOrder(" + value + ")'title='查看详情' data-target='#orderDetailModal' data-toggle='modal'><i class='fa fa-search'></i></a>&nbsp;&nbsp;<a onclick='loadPromotOrder(" + value + ");' title='修改推广' data-target='#updatePromotModel' data-toggle='modal'><i class='fa fa-pencil-square'></i></a>";
                 }
             }
         ]],
@@ -180,6 +215,10 @@ function doPromotSearch() {
     $('#promotListTable').bootstrapTable("refresh");
 }
 
+function submitUpdatePromot(){
+    $('#formUpdatePromotModel').submit();
+}
+
 var viewModel = {
     id: ko.observable(),
     asinId: ko.observable(),
@@ -199,6 +238,8 @@ var viewModel = {
     buyerNum: ko.observable(),
     evaluateNum: ko.observable(),
     cashback: ko.observable(),
+    keyword: ko.observable(),
+    sequence: ko.observable(),
     reviewPrice: ko.observable(),
     remark: ko.observable()
 };
@@ -231,6 +272,8 @@ function loadPromotOrder(promotId) {
                 viewModel.evaluateNum(data.content.evaluateNum);
                 viewModel.cashback(data.content.cashback);
                 viewModel.reviewPrice(data.content.reviewPrice);
+                viewModel.keyword(data.content.keyword);
+                viewModel.sequence(data.content.sequence);
                 viewModel.remark(data.content.remark);
             } else if (data.success === "fail") {
                 toastr.warning(data.msg);

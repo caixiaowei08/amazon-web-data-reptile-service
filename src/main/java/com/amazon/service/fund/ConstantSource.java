@@ -8,5 +8,5 @@ public class ConstantSource {
     /**
      * 充值方式支付宝
      */
-    public final  static Integer ZFB = 1;
+    public final static Integer ZFB = 1;
 }

@@ -89,7 +89,6 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
         //求和联系人数
         DetachedCriteria promotOrderDetachedCriteriaBuyerNum = DetachedCriteria.forClass(PromotOrderEntity.class);
         promotOrderDetachedCriteriaBuyerNum.add(Restrictions.eq("sellerId", userEntity.getId()));
-        //promotOrderDetachedCriteriaBuyerNum.add(Restrictions.eq("state", Constant.STATE_Y));
         promotOrderDetachedCriteriaBuyerNum.setProjection(Projections.sum("buyerNum"));
         userBaseInfoVo.setBuyerNum(promotOrderService.getRowSum(promotOrderDetachedCriteriaBuyerNum));
         //求和总好评数
@@ -108,6 +107,12 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
         promotOrderDetachedCriteriaConsumption.setProjection(Projections.sum("consumption"));
         userBaseInfoVo.setTotalConsumption(promotOrderService.getRowBigDecimalSum(promotOrderDetachedCriteriaConsumption));
         userBaseInfoVo.setAccount(userEntity.getAccount());
+        //计划订单计算
+        DetachedCriteria detachedCriteriaConsumptionPlanBuyerNum = DetachedCriteria.forClass(PromotOrderEntity.class);
+        detachedCriteriaConsumptionPlanBuyerNum.add(Restrictions.eq("sellerId", userEntity.getId()));
+        detachedCriteriaConsumptionPlanBuyerNum.setProjection(Projections.sum("needReviewNum"));
+        userBaseInfoVo.setPlanBuyerNum(promotOrderService.getRowSumPlanBuyerNum(detachedCriteriaConsumptionPlanBuyerNum));
+        //个人资金计算
         DetachedCriteria userFundDetachedCriteria = DetachedCriteria.forClass(UserFundEntity.class);
         userFundDetachedCriteria.add(Restrictions.eq("sellerId", userEntity.getId()));
         List<UserFundEntity> userFundEntityList = userFundService.getListByCriteriaQuery(userFundDetachedCriteria);

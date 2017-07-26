@@ -205,17 +205,17 @@
 }
 
 .infobox-brown {
-    color: #C67A3E;
-    border-color: #C67A3E
+    color: #33CC99;
+    border-color: #33CC99;
 }
 
 .infobox-brown>.infobox-icon>.ace-icon {
-    background-color: #C67A3E
+    background-color: #33CC99;
 }
 
 .infobox-brown.infobox-dark {
-    background-color: #C67A3E;
-    border-color: #C67A3E
+    background-color: #33CC99;
+    border-color: #33CC99;
 }
 
 .infobox-wood {

@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="/webpage/plug-in/bootstrap/css/bootstrap-theme.min.css"/>
     <link rel="stylesheet" href="/webpage/plug-in/font-awesome/css/font-awesome.min.css"/>
     <link rel="stylesheet" href="/webpage/plug-in/bootstrap-table/dist/bootstrap-table.min.css"/>
+    <link rel="stylesheet" href="/webpage/plug-in/bootstrapvalidator/dist/css/bootstrapValidator.min.css"/>
     <link rel="stylesheet" href="/webpage/plug-in/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css"/>
     <link rel="stylesheet" href="/webpage/pages/manage/managePromot.css"/>
     <link rel="stylesheet" href="/webpage/pages/main/index.css"/>
@@ -21,6 +22,7 @@
     <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
     <![endif]-->
     <script type="text/javascript" src="/webpage/plug-in/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="/webpage/plug-in/bootstrapvalidator/dist/js/bootstrapValidator.min.js"></script>
     <script type="text/javascript" src="/webpage/plug-in/bootstrap/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="/webpage/plug-in/bootstrap-table/dist/bootstrap-table.min.js"></script>
     <script type="text/javascript"
@@ -170,7 +172,7 @@
                     <div class="row">
                         <div class="col-sm-6 col-sm-offset-6">
                             <div class="btn-group" role="group">
-                                <a  onclick="downEvaluateExcel();" class="btn btn-default" style="width: 104px;">评论导出
+                                <a  onclick="downEvaluateExcel();" class="btn btn-default" style="width: 120px;">亚马逊订单导出
                                 </a>
                                 <a  onclick="downPromotOrderExcel();" class="btn btn-default" style="width: 104px;">订单导出
                                 </a>
@@ -291,6 +293,13 @@
                                        readonly aria-describedby="remark">
                             </div>
                         </div>
+                        <div class="form-group">
+                            <div class="input-group">
+                                <span class="input-group-addon" style="width: 80px;" id="sequence">排序页</span>
+                                <input type="text" class="form-control" data-bind="value:sequence"
+                                       readonly aria-describedby="sequence">
+                            </div>
+                        </div>
                     </div>
                     <div class="col-sm-6">
                         <div class="form-group">
@@ -335,8 +344,16 @@
                             <div class="input-group">
                                 <span class="input-group-addon" style="width: 160px;" id="reviewPrice">单个评论费用(美元)</span>
                                 <input type="text" class="form-control" data-bind="value:reviewPrice"
-                                       placeholder="每个评论费用"
+                                       placeholder="单个评论费用"
                                        readonly aria-describedby="reviewPrice">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="input-group">
+                                <span class="input-group-addon" style="width: 80px;" id="keyword">搜索关键字</span>
+                                <input type="text" class="form-control" data-bind="value:keyword"
+                                       placeholder="搜索关键字"
+                                       readonly aria-describedby="keyword">
                             </div>
                         </div>
                     </div>
@@ -349,12 +366,73 @@
         </div>
     </div>
 </div>
+<div class="modal fade" id="updatePromotModel" tabindex="-1" role="dialog" aria-labelledby="updatePromotModel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="formUpdatePromotModel" action="/promotOrderController.do?doUpdate"
+                  onsubmit="return false;">
+                <div class="modal-header">
+                    <button type="button" class="close"
+                            data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                    <input type="hidden" name="id" data-bind="value:id">
+                    <h4 class="modal-title">
+                        推广活动修改
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group" style="height: 50px;">
+                        <div class="input-group" style="width: 100%;">
+                            <span class="input-group-addon" style="width:150px;">ASIN编号</span>
+                            <input type="text" class="form-control" readonly="readonly" data-bind="value:asinId"
+                                   placeholder="ASIN编号"
+                                   aria-describedby="basic-addon1">
+                        </div>
+                    </div>
+                    <div class="form-group" style="height: 50px;">
+                        <div class="input-group" style="width: 100%;">
+                            <span class="input-group-addon" style="width:150px;">订单编号</span>
+                            <input type="text" class="form-control" readonly="readonly" data-bind="value:id"
+                                   placeholder="订单编号"
+                                   aria-describedby="basic-addon1">
+                        </div>
+                    </div>
+                    <div class="form-group" style="height: 50px;">
+                        <div class="input-group" style="width: 100%;">
+                            <span class="input-group-addon" style="width:150px;">搜索关键字</span>
+                            <input type="text" class="form-control" name="keyword" data-bind="value:keyword"
+                                   placeholder="搜索关键字" onkeydown="if(event.keyCode==13){event.keyCode=0;event.returnValue=false;}"
+                                   aria-describedby="basic-addon1">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="input-group" style="width: 100%;">
+                            <span class="input-group-addon" style="width:150px;">排序</span>
+                            <input type="number" class="form-control"  name="sequence"
+                                   data-bind="value:sequence" onkeydown="if(event.keyCode==13){event.keyCode=0;event.returnValue=false;}"
+                                   placeholder="排序"
+                                   aria-describedby="basic-addon1">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" onclick="submitUpdatePromot();" class="btn btn-primary">修改
+                    </button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 <nav class="navbar navbar-default navbar-fixed-bottom">
     <div class="container">
         <div class="row">
             <div class="col-sm-8 col-sm-offset-2">
                 <div style="text-align:center;line-height: 28px;">
-                    Copyright&copy;Viscal Technology Services Ltd  All Rights Reserved&reg;鄂ICP备17013383号
+                    Copyright&copy;Viscal Technology Services Ltd  All Rights Reserved&reg;ICP备17013383号
                 </div>
             </div>
         </div>

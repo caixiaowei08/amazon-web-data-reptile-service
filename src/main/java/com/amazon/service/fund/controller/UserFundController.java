@@ -43,9 +43,6 @@ public class UserFundController extends BaseController {
     @Autowired
     private UserFundService userFundService;
 
-    @Autowired
-    private GlobalService globalService;
-
     @RequestMapping(params = "getUserFundInfo")
     @ResponseBody
     public AjaxJson getUserFundInfo(HttpServletRequest request, HttpServletResponse response) {

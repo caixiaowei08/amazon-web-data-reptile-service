@@ -5,6 +5,7 @@ import com.alipay.api.domain.AlipayTradePayModel;
 import com.amazon.service.fund.ConstantChargeType;
 import com.amazon.service.fund.ConstantFund;
 import com.amazon.service.fund.ConstantSource;
+import com.amazon.service.fund.constant.ConstantChargeAndOrderFlag;
 import com.amazon.service.fund.controller.UserFundController;
 import com.amazon.service.fund.entity.UserFundEntity;
 import com.amazon.service.fund.service.UserFundService;
@@ -14,6 +15,7 @@ import com.amazon.service.promot.price.entity.PromotPriceEntity;
 import com.amazon.service.recharge.controller.UserRechargeFundController;
 import com.amazon.service.recharge.entity.UserRechargeFundEntity;
 import com.amazon.service.recharge.service.UserRechargeFundService;
+import com.amazon.service.spider.pojo.AmazonPageInfoPojo;
 import com.amazon.service.user.entity.UserEntity;
 import com.amazon.service.vip.entity.UserMembershipEntity;
 import com.amazon.service.vip.service.UserMembershipService;
@@ -103,7 +105,7 @@ public class UserFundServiceImpl extends BaseServiceImpl implements UserFundServ
     public AjaxJson goChargeFund(HttpServletRequest request, HttpServletResponse response) {
         AjaxJson j = new AjaxJson();
         String chargefund = request.getParameter("chargeFund").trim();
-        String chargeSource = request.getParameter("chargeSource");
+        //String chargeSource = request.getParameter("chargeSource");
         if (!RegularExpressionUtils.isMoney(chargefund)) {
             j.setSuccess(AjaxJson.CODE_FAIL);
             j.setMsg("充值金额有误，请重新输入！");
@@ -150,8 +152,14 @@ public class UserFundServiceImpl extends BaseServiceImpl implements UserFundServ
         userRechargeFundEntity.setStartTime(new Date());
         userRechargeFundEntity.setCreateTime(new Date());
         userRechargeFundEntity.setUpdateTime(new Date());
-        rechargeFundService.save(userRechargeFundEntity);
+        AmazonPageInfoPojo amazonPageInfoPojo = (AmazonPageInfoPojo) ContextHolderUtils.getSession().getAttribute(ConstantChargeAndOrderFlag.CHARGE_FOR_ORDER_FLAG);
+        if (amazonPageInfoPojo != null) {
+            userRechargeFundEntity.setBrand(amazonPageInfoPojo.getBrand());
+            userRechargeFundEntity.setAsinId(amazonPageInfoPojo.getAsin());
+            userRechargeFundEntity.setRemark(amazonPageInfoPojo.getRemark());
+        }
         try {
+            rechargeFundService.save(userRechargeFundEntity);
             alipayService.doAlipayTradePayRequestPost(alipayTradePayModel, request, response);
         } catch (IOException ie) {
             logger.error(ie);
@@ -162,7 +170,7 @@ public class UserFundServiceImpl extends BaseServiceImpl implements UserFundServ
     }
 
     public AjaxJson notifyChargeFund(AlipayNotifyPojo alipayNotifyPojo) {
-        logger.info("---------------notifyChargeFund---开始--------------"+JSON.toJSONString(alipayNotifyPojo));
+        logger.info("---------------notifyChargeFund---开始--------------" + JSON.toJSONString(alipayNotifyPojo));
         AjaxJson j = new AjaxJson();
         //根据platformOrderNum查询交易信息
         if (alipayNotifyPojo == null) {
@@ -190,7 +198,7 @@ public class UserFundServiceImpl extends BaseServiceImpl implements UserFundServ
             return j;
         }
         UserRechargeFundEntity userRechargeFundEntity = userRechargeFundEntityList.get(0);
-        logger.info("---------------userRechargeFundEntity--------------"+JSON.toJSONString(userRechargeFundEntity));
+        logger.info("---------------userRechargeFundEntity--------------" + JSON.toJSONString(userRechargeFundEntity));
         if (userRechargeFundEntity.getChargeType().equals(ConstantChargeType.BALANCE_FUND)) {//余额充值
             DetachedCriteria userFundDetachedCriteria = DetachedCriteria.forClass(UserFundEntity.class);
             userFundDetachedCriteria.add(Restrictions.eq("sellerId", userRechargeFundEntity.getSellerId()));
@@ -202,7 +210,7 @@ public class UserFundServiceImpl extends BaseServiceImpl implements UserFundServ
             }
             //资金变动
             UserFundEntity userFundEntity = userFundEntityList.get(0);
-            logger.info("---------------userFundEntity--------------"+JSON.toJSONString(userFundEntity));
+            logger.info("---------------userFundEntity--------------" + JSON.toJSONString(userFundEntity));
             userFundEntity.setTotalFund(userFundEntity.getTotalFund().add(userRechargeFundEntity.getChargeFund()));
             userFundEntity.setUsableFund(userFundEntity.getUsableFund().add(userRechargeFundEntity.getChargeFund()));
             userFundEntity.setUpdateTime(new Date());
@@ -211,8 +219,8 @@ public class UserFundServiceImpl extends BaseServiceImpl implements UserFundServ
             userRechargeFundEntity.setNotifyInfo(alipayNotifyPojo.getTrade_status());
             userRechargeFundEntity.setConfirmTime(new Date());
             userRechargeFundEntity.setState(ConstantFund.SUCCESS);
-            logger.info("---------------userFundEntity saveOrUpdate --------------"+JSON.toJSONString(userFundEntity));
-            logger.info("---------------userRechargeFundEntity saveOrUpdate --------------"+JSON.toJSONString(userRechargeFundEntity));
+            logger.info("---------------userFundEntity saveOrUpdate --------------" + JSON.toJSONString(userFundEntity));
+            logger.info("---------------userRechargeFundEntity saveOrUpdate --------------" + JSON.toJSONString(userRechargeFundEntity));
             userFundService.saveOrUpdate(userFundEntity);
             rechargeFundService.saveOrUpdate(userRechargeFundEntity);
         } else if (userRechargeFundEntity.getChargeType().equals(ConstantChargeType.MEMBERSHIP_FUND)) {//会员充值
@@ -225,7 +233,7 @@ public class UserFundServiceImpl extends BaseServiceImpl implements UserFundServ
                 return j;
             }
             UserMembershipEntity userMembershipEntity = userMembershipEntityList.get(0);
-            logger.info("---------------userMembershipEntity--------------"+JSON.toJSONString(userMembershipEntity));
+            logger.info("---------------userMembershipEntity--------------" + JSON.toJSONString(userMembershipEntity));
             //处理会员逻辑
             if (userMembershipEntity.getMembershipEndTime() == null) {
                 Date beginOfDate = DateUtils.getBeginOfDate();
@@ -238,12 +246,12 @@ public class UserFundServiceImpl extends BaseServiceImpl implements UserFundServ
             } else {
                 //判断是否到期
                 Date membershipEndTime = userMembershipEntity.getMembershipEndTime();
-                if (DateUtils.compareTo(membershipEndTime, new Date()) > 0){//未到期处理
+                if (DateUtils.compareTo(membershipEndTime, new Date()) > 0) {//未到期处理
                     userMembershipEntity.setLastMembershipEndTime(membershipEndTime);
-                    membershipEndTime = DateUtils.addMonth(membershipEndTime,userRechargeFundEntity.getMemberShipMonth());
+                    membershipEndTime = DateUtils.addMonth(membershipEndTime, userRechargeFundEntity.getMemberShipMonth());
                     membershipEndTime = DateUtils.getEndOfDate(membershipEndTime);
                     userMembershipEntity.setMembershipEndTime(membershipEndTime);
-                }else{//到期处理
+                } else {//到期处理
                     Date beginOfDate = DateUtils.getBeginOfDate();
                     userMembershipEntity.setMembershipStartTime(beginOfDate);
                     Date newMembershipEndTime = DateUtils.addMonth(beginOfDate, userRechargeFundEntity.getMemberShipMonth());
@@ -260,8 +268,8 @@ public class UserFundServiceImpl extends BaseServiceImpl implements UserFundServ
             userRechargeFundEntity.setNotifyInfo(alipayNotifyPojo.getTrade_status());
             userRechargeFundEntity.setConfirmTime(new Date());
             userRechargeFundEntity.setState(ConstantFund.SUCCESS);//交易成功
-            logger.info("---------------userMembershipEntity saveOrUpdate --------------"+JSON.toJSONString(userMembershipEntity));
-            logger.info("---------------userRechargeFundEntity saveOrUpdate --------------"+JSON.toJSONString(userRechargeFundEntity));
+            logger.info("---------------userMembershipEntity saveOrUpdate --------------" + JSON.toJSONString(userMembershipEntity));
+            logger.info("---------------userRechargeFundEntity saveOrUpdate --------------" + JSON.toJSONString(userRechargeFundEntity));
             userMembershipService.saveOrUpdate(userMembershipEntity);
             rechargeFundService.saveOrUpdate(userRechargeFundEntity);
         }

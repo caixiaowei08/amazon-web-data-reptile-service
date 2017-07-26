@@ -46,7 +46,7 @@
                 </button>
                 <a href="/mainController.do?index" target="_parent">
                     <div class="pull-left " style="width: 50px;height: 50px;margin:3px 6px; ">
-                        <img alt="Brand"  class="img-responsive img-rounded" src="/webpage/plug-in/imgs/logo.jpg">
+                        <img alt="Brand" class="img-responsive img-rounded" src="/webpage/plug-in/imgs/logo.jpg">
                     </div>
                     <div class="navbar-brand font-color">
                         Review Tracker
@@ -176,7 +176,7 @@
                                 <div class="form-group">
                                     <div class="input-group">
                                         <span class="input-group-addon" id="needReviewNum-addon">
-                                            <div class="text-right" style="width: 80px; ">目标好评数</div>
+                                            <div class="text-right" style="width: 80px; ">目标好评数*</div>
                                         </span>
                                         <input type="number" data-bind="value:needReviewNum" class="form-control"
                                                id="needReviewNum"
@@ -198,9 +198,9 @@
                                 </div>
                                 <div class="form-group">
                                     <div class="input-group">
-                                <span class="input-group-addon" id="dayReviewNum-addon">
-                                    <div class="text-right" style="width: 80px; ">每天好评数</div>
-                                </span>
+                                        <span class="input-group-addon" id="dayReviewNum-addon">
+                                            <div class="text-right" style="width: 80px; ">每天好评数*</div>
+                                        </span>
                                         <input type="number" class="form-control" id="dayReviewNum" name="dayReviewNum"
                                                onkeydown="if(event.keyCode==13){event.keyCode=0;event.returnValue=false;}"
                                                placeholder="请输入每天好评数！"
@@ -208,45 +208,79 @@
                                                aria-describedby="dayReviewNum-addon" value="10">
                                     </div>
                                 </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                            <span class="input-group-addon" id="guaranteeFund-addon">
+                                                <div class="text-right" style="width: 80px; ">所需保证金</div>
+                                            </span>
+                                        <input type="text" data-bind='value: guaranteeFund' class="form-control"
+                                               readonly="readonly"
+                                               id="guaranteeFund"
+                                               aria-describedby="guaranteeFund-addon">
+                                    </div>
+                                </div>
                             </div>
                             <div class="col-xs-5">
-                                <img src="" data-bind="attr:{src:landingImage}" alt="产品主图" style="height:230px; "
+                                <img src="" data-bind="attr:{src:landingImage}" alt="产品主图" style="height:250px; "
                                      class="img-responsive center-block">
                             </div>
                         </div>
-                        <div class="form-group">
-                            <div class="input-group">
-                                <span class="input-group-addon" id="guaranteeFund-addon">
-                                    <div class="text-right" style="width: 80px; ">所需保证金</div>
-                                </span>
-                                <input type="text" data-bind='value: guaranteeFund' class="form-control"
-                                       readonly="readonly"
-                                       id="guaranteeFund"
-                                       aria-describedby="guaranteeFund-addon">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="input-group date form_date" data-date="" data-date-format="yyyy-mm-dd"
-                                 data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
+                        <div class="row">
+                            <div class="col-xs-4">
+                                <div class="form-group">
+                                    <div class="input-group date form_date" data-date="" data-date-format="yyyy-mm-dd"
+                                         data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
                                         <span class="input-group-addon">
-                                            <div class="text-right" style="width: 80px;">结束日期</div>
+                                            <div class="text-right" style="width: 80px;">结束日期*</div>
                                         </span>
-                                <input class="form-control" name="finishDate" data-bind="value:finishDate" id="finishDate" placeholder="订单最少时间为三天！"
-                                       size="16" type="text" value="" readonly
-                                       onkeydown="if(event.keyCode==13){event.keyCode=0;event.returnValue=false;}"
-                                >
-                                <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
-                                <span class="input-group-addon"><span
-                                        class="glyphicon glyphicon-calendar"></span></span>
+                                        <input class="form-control" name="finishDate" data-bind="value:finishDate"
+                                               id="finishDate" placeholder="订单最少时间为三天！"
+                                               size="16" type="text" value="" readonly
+                                               onkeydown="if(event.keyCode==13){event.keyCode=0;event.returnValue=false;}"
+                                        >
+                                        <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                                        <span class="input-group-addon"><span
+                                                class="glyphicon glyphicon-calendar"></span></span>
+                                    </div>
+                                </div>
                             </div>
-                            <input type="hidden" id="dtp_input2" value=""/><br/>
+                            <div class="col-xs-4">
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <span class="input-group-addon" id="keyword-addon">
+                                            <div class="text-right" style="width: 80px; ">搜索关键词</div>
+                                        </span>
+                                        <input data-bind="value:keyword" type="text"
+                                               class="form-control" id="keyword"
+                                               name="keyword"
+                                               aria-describedby="brand-addon">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-4">
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <span class="input-group-addon" id="sort-addon">
+                                            <div class="text-right" style="width: 80px; ">排位</div>
+                                        </span>
+                                        <input type="number" data-bind="value:sequence" class="form-control"
+                                               id="sequence"
+                                               onkeydown="if(event.keyCode==13){event.keyCode=0;event.returnValue=false;}"
+                                               name="sequence"
+                                               placeholder="请输入排位"
+                                               aria-describedby="sort-addon">
+                                        <span class="input-group-addon" id="basic-addon2">页</span>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <div class="form-group">
                             <div class="input-group">
                                 <span class="input-group-addon" id="remark-addon">
                                     <div class="text-right" style="width: 80px; ">备注：</div>
                                 </span>
-                                <input type="text" name="remark" class="form-control" data-bind="value:remark" placeholder="写下您的备注信息！"
+                                <input type="text" name="remark" class="form-control" data-bind="value:remark"
+                                       placeholder="写下您的备注信息！"
                                        id="remark"
                                        aria-describedby="remark-addon">
                             </div>
@@ -285,7 +319,7 @@
                     </h4>
                 </div>
                 <div class="modal-body">
-                    <input type="hidden" id="chargeFund" name="chargeFund" >
+                    <input type="hidden" id="chargeFund" name="chargeFund">
                     请先补充余额差额<span id="chargeFundShow"></span>美元，并重新提交订单！
                 </div>
                 <div class="modal-footer">
@@ -303,7 +337,7 @@
         <div class="row">
             <div class="col-sm-8 col-sm-offset-2">
                 <div style="text-align:center;line-height: 28px;">
-                    Copyright&copy;Viscal Technology Services Ltd All Rights Reserved&reg;鄂ICP备17013383号
+                    Copyright&copy;Viscal Technology Services Ltd All Rights Reserved&reg;ICP备17013383号
                 </div>
             </div>
         </div>
@@ -360,6 +394,15 @@
                             message: '请输入推广活动结束日期！'
                         }
                     }
+                },
+                sequence: {
+                    validators: {
+                        between: {
+                            min: 1,
+                            max: 20,
+                            message: '请输入大于1小于20的数字！'
+                        }
+                    }
                 }
             }
         });
@@ -369,7 +412,9 @@
         $('#formObj').submit();
     });
 
-    var ViewModel = function (pageUrl, asin, productTitle, priceblockSaleprice, brand, reviewPrice, needReviewNum,landingImage,dayReviewNum,finishDate,remark) {
+    var ViewModel = function (pageUrl, asin, productTitle, priceblockSaleprice,
+                              brand, reviewPrice, needReviewNum, landingImage,
+                              dayReviewNum, finishDate, remark, sequence, keyword) {
         this.pageUrl = ko.observable(pageUrl);
         this.asin = ko.observable(asin);
         this.productTitle = ko.observable(productTitle);
@@ -402,6 +447,8 @@
             }
             return "$" + (Math.ceil((Number(s4.replace(".", "")) * Number(s2.replace(".", "")) / Math.pow(10, m)) * 100)) / Math.pow(10, 2);
         }, this);
+        this.sequence = ko.observable(sequence);
+        this.keyword = ko.observable(keyword);
     };
     function loadData() {
         $.ajax({
@@ -420,7 +467,9 @@
                             data.content.landingImage,
                             data.content.dayReviewNum,
                             data.content.finishDate,
-                            data.content.remark
+                            data.content.remark,
+                            data.content.sequence,
+                            data.content.keyword
                         )
                     );
                 } else if (data.success === "fail") {
@@ -447,6 +496,7 @@
         var dayReviewNum = $("#dayReviewNum").val();
         var needReviewNum = $("#needReviewNum").val();
         var finishDate = $("#finishDate").val();
+        var sequence = $("#sequence").val();
         if (
             dayReviewNum === null || dayReviewNum === undefined || dayReviewNum === '' ||
             needReviewNum === null || needReviewNum === undefined || needReviewNum === '' ||
@@ -482,9 +532,8 @@
             }
         });
     }
-    
+
     function chargeFundNow() {
-        window.location = '/redirectionController.do?goToChargeFund&chargeFund='+$("#chargeFund").val();
-        //$('#chargeFundModel').modal('hide');
+        window.location = '/redirectionController.do?goToChargeFund&chargeFund=' + $("#chargeFund").val();
     }
 </script>

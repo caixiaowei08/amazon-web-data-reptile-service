@@ -1,6 +1,5 @@
 package com.amazon.service.promot.order.controller;
 
-import com.amazon.admin.constant.Constants;
 import com.amazon.admin.poi.service.PoiPromotService;
 import com.amazon.service.promot.flow.entity.PromotOrderEvaluateFlowEntity;
 import com.amazon.service.promot.flow.service.PromotOrderEvaluateFlowService;
@@ -12,7 +11,6 @@ import com.amazon.service.promot.price.service.PromotPriceService;
 import com.amazon.service.spider.SpiderConstant;
 import com.amazon.service.spider.pojo.AmazonPageInfoPojo;
 import com.amazon.service.spider.service.SpiderService;
-import com.amazon.service.user.controller.UserController;
 import com.amazon.service.user.entity.UserEntity;
 import com.amazon.service.vip.service.UserMembershipService;
 import com.amazon.system.Constant;
@@ -26,7 +24,6 @@ import org.apache.logging.log4j.Logger;
 import org.framework.core.common.controller.BaseController;
 import org.framework.core.common.model.json.AjaxJson;
 import org.framework.core.global.service.GlobalService;
-import org.framework.core.utils.BeanUtils;
 import org.framework.core.utils.ContextHolderUtils;
 import org.framework.core.utils.DateUtils.DateUtils;
 import org.framework.core.utils.RegularExpressionUtils;
@@ -40,13 +37,10 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.IOException;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -132,10 +126,8 @@ public class PromotOrderController extends BaseController {
                         promotOrderEvaluateVo.setAmzOrderId(promotOrderEvaluateFlowEntity.getAmzOrderId());
                         promotOrderEvaluateVo.setUpdateTime(promotOrderEvaluateFlowEntity.getUpdateTime());
                         promotOrderEvaluateVo.setAsin(promotOrderEvaluateFlowEntity.getAsinId());
-                        //if(promotOrderEvaluateFlowEntity.getState().equals(Constants.EVALUATE_STATE_REVIEW)){
                         promotOrderEvaluateVo.setCashback(promotOrderEntity.getCashback());
                         promotOrderEvaluateVo.setReviewPrice(promotOrderEntity.getReviewPrice());
-                        //}
                         promotOrderEvaluateVo.setIsComment(promotOrderEvaluateFlowEntity.getState());
                         promotOrderEvaluateVo.setRemark(promotOrderEntity.getRemark());
                         promotOrderEvaluateVoList.add(promotOrderEvaluateVo);
@@ -170,7 +162,7 @@ public class PromotOrderController extends BaseController {
         try {
             poiPromotService.downPromotOrderExcel(promotOrderEntityList, response, excelFileNameHeader);
         } catch (Exception e) {
-            logger.error(e);
+            logger.error("平台订单表导出异常！", e);
         }
     }
 
@@ -184,7 +176,7 @@ public class PromotOrderController extends BaseController {
         try {
             criteriaQuery.installHqlParams();
         } catch (Exception e) {
-            logger.info("组装查询出错！", e);
+            logger.error("组装查询出错！", e);
         }
         criteriaQuery.getDetachedCriteria().add(Restrictions.eq("sellerId", userEntity.getId()));//加上用户
         DataGridReturn dataGridReturn = promotOrderService.getDataGridReturn(criteriaQuery);
@@ -305,6 +297,8 @@ public class PromotOrderController extends BaseController {
         amazonPageInfoPojo.setDayReviewNum(promotOrderEntity.getDayReviewNum());
         amazonPageInfoPojo.setFinishDate(promotOrderEntity.getFinishDate());
         amazonPageInfoPojo.setRemark(promotOrderEntity.getRemark());
+        amazonPageInfoPojo.setKeyword(promotOrderEntity.getKeyword());
+        amazonPageInfoPojo.setSequence(promotOrderEntity.getSequence());
         ContextHolderUtils.getSession().setAttribute(SpiderConstant.AMAZON_PAGE_INFO_POJO,amazonPageInfoPojo);
         try {
             j = promotOrderService.doAddNewPromot(userEntity, amazonPageInfoPojo, promotOrderEntity);
@@ -326,8 +320,12 @@ public class PromotOrderController extends BaseController {
             j.setMsg("请选择你需要查看详情的数据！");
             return j;
         }
-
         UserEntity userEntity = globalService.getUserEntityFromSession();
+        if (userEntity == null) {
+            j.setSuccess(AjaxJson.RELOGIN);
+            j.setMsg("请重新登录！");
+            return j;
+        }
         DetachedCriteria promotOrderDetachedCriteria = DetachedCriteria.forClass(PromotOrderEntity.class);
         promotOrderDetachedCriteria.add(Restrictions.eq("sellerId", userEntity.getId()));
         promotOrderDetachedCriteria.add(Restrictions.eq("id", promotOrderEntity.getId()));
@@ -339,6 +337,41 @@ public class PromotOrderController extends BaseController {
             return j;
         }
         j.setContent(promotOrderEntityList.get(0));
+        return j;
+    }
+
+    @RequestMapping(params = "doUpdate")
+    @ResponseBody
+    public AjaxJson doUpdate(PromotOrderEntity promotOrderEntity, HttpServletRequest request, HttpServletResponse response) {
+        AjaxJson j = new AjaxJson();
+        UserEntity userEntity = globalService.getUserEntityFromSession();
+        if (userEntity == null) {
+            j.setSuccess(AjaxJson.RELOGIN);
+            j.setMsg("请重新登录！");
+            return j;
+        }
+        DetachedCriteria promotOrderDetachedCriteria = DetachedCriteria.forClass(PromotOrderEntity.class);
+        promotOrderDetachedCriteria.add(Restrictions.eq("sellerId", userEntity.getId()));
+        promotOrderDetachedCriteria.add(Restrictions.eq("id", promotOrderEntity.getId()));
+        List<PromotOrderEntity> promotOrderEntityList = promotOrderService.getListByCriteriaQuery(promotOrderDetachedCriteria);
+
+        if (CollectionUtils.isEmpty(promotOrderEntityList)) {
+            j.setSuccess(AjaxJson.CODE_FAIL);
+            j.setMsg("订单不存在或被删除！");
+            return j;
+        }
+        try {
+            PromotOrderEntity promotOrderDb =  promotOrderEntityList.get(0);
+            promotOrderDb.setKeyword(promotOrderEntity.getKeyword());
+            promotOrderDb.setSequence(promotOrderEntity.getSequence());
+            promotOrderService.saveOrUpdate(promotOrderDb);
+        }catch (Exception e){
+            j.setSuccess(AjaxJson.CODE_FAIL);
+            j.setMsg("推广活动修改失败！");
+            return j;
+        }
+        j.setSuccess(AjaxJson.CODE_SUCCESS);
+        j.setMsg("推广活动修改成功！");
         return j;
     }
 }
