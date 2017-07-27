@@ -1,6 +1,7 @@
 package com.amazon.service.recharge.controller;
 
 import com.amazon.admin.poi.service.PoiPromotService;
+import com.amazon.service.fund.ConstantFund;
 import com.amazon.service.promot.order.entity.PromotOrderEntity;
 import com.amazon.service.recharge.entity.UserRechargeFundEntity;
 import com.amazon.service.recharge.service.UserRechargeFundService;
@@ -59,13 +60,13 @@ public class UserRechargeFundController extends BaseController {
         if (userEntity == null) {
             return;
         }
-
         try {
             criteriaQuery.installHqlParams();
         } catch (Exception e) {
             logger.info("组装查询出错！", e);
         }
         criteriaQuery.getDetachedCriteria().add(Restrictions.eq("sellerId", userEntity.getId()));//加上用户
+        criteriaQuery.getDetachedCriteria().add(Restrictions.eq("state", ConstantFund.SUCCESS));
         DataGridReturn dataGridReturn = userRechargeFundService.getDataGridReturn(criteriaQuery);
         DatagridJsonUtils.listToObj(dataGridReturn, PromotOrderEntity.class, dataGrid.getField());
         DatagridJsonUtils.datagrid(response, dataGridReturn);
@@ -85,6 +86,7 @@ public class UserRechargeFundController extends BaseController {
         }
         criteriaQuery.getDetachedCriteria().addOrder(Order.desc("createTime"));
         criteriaQuery.getDetachedCriteria().add(Restrictions.eq("sellerId", userEntity.getId()));
+        criteriaQuery.getDetachedCriteria().add(Restrictions.eq("state", ConstantFund.SUCCESS));
         List<UserRechargeFundEntity> userRechargeFundEntityList = userRechargeFundService.getListByCriteriaQuery(criteriaQuery.getDetachedCriteria());
         String excelFileNameHeader = "充值记录报表" + DateUtils.getDate(new Date());
         try {

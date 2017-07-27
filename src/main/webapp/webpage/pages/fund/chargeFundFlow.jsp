@@ -113,23 +113,23 @@
                 </div>
                 <div class="panel panel-body">
                     <div class="row">
-                        <div class="col-sm-4">
+                        <div class="col-sm-6">
                             <div class="form-group">
-                                <label class="col-xs-3 control-label amazon-label" for="amazon_state">
+                                <label class="col-xs-3 control-label amazon-label" for="amazon_chargeType">
                                     <nobr>充值类型:</nobr>
                                 </label>
                                 <div class="col-xs-8">
                                     <select id="amazon_chargeType" class="form-control">
                                         <option value="">--选择--</option>
-                                        <option value="1">会员充值</option>
-                                        <option value="2">余额充值</option>
+                                        <option value="1">余额充值</option>
+                                        <option value="2">会员充值</option>
                                     </select>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-sm-4">
+                        <div class="col-sm-6">
                             <div class="form-group">
-                                <label class="col-xs-3 control-label amazon-label" for="amazon_state">
+                                <label class="col-xs-3 control-label amazon-label" for="amazon_chargeSource">
                                     <nobr>支付方式:</nobr>
                                 </label>
                                 <div class="col-xs-8">
@@ -140,7 +140,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-sm-4">
+                        <%--<div class="col-sm-4">
                             <div class="form-group">
                                 <label class="col-xs-3 control-label amazon-label" for="amazon_state">
                                     <nobr>状态:</nobr>
@@ -153,13 +153,13 @@
                                     </select>
                                 </div>
                             </div>
-                        </div>
-                        <div class="col-sm-6">
+                        </div>--%>
+                        <div class="col-sm-9">
                             <div class="form-group">
                                 <label class="col-xs-2 control-label amazon-label">
                                     <nobr>创建时间：</nobr>
                                 </label>
-                                <div class="col-xs-5">
+                                <div class="col-xs-4">
                                     <div class="input-group date form_date" id="startTime_begin"
                                          data-date-format="yyyy-mm-dd"
                                          data-link-field="addDate_begin_input" data-link-format="yyyy-mm-dd">
@@ -171,7 +171,7 @@
                                     </div>
                                     <input type="hidden" id="addDate_begin_input" value=""/>
                                 </div>
-                                <div class="col-xs-5">
+                                <div class="col-xs-4">
                                     <div class="input-group date form_date" id="startTime_end"
                                          data-date-format="yyyy-mm-dd"
                                          data-link-field="addDate_end_input" data-link-format="yyyy-mm-dd">

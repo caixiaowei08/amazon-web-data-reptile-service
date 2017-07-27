@@ -60,13 +60,13 @@ $(function () {
             } else if (result.success === "fail") {
                 toastr.warning(result.msg);
                 $('#updatePromotModel').modal('hide');
-                form.bootstrapValidator('disableSubmitButtons', false);
             } else {
                 toastr.warning("请重新登录！");
                 $('#updatePromotModel').modal('hide');
                 setTimeout("window.location='/adminSystemController.admin?goAdminLogin'", 500);
             }
-            form.bootstrapValidator('disableSubmitButtons', false);
+            viewModel.keyword("");
+            viewModel.sequence("");
         }, 'json');
     });
 

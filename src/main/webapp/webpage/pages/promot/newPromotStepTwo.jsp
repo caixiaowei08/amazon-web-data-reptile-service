@@ -233,7 +233,7 @@
                                             <div class="text-right" style="width: 80px;">结束日期*</div>
                                         </span>
                                         <input class="form-control" name="finishDate" data-bind="value:finishDate"
-                                               id="finishDate" placeholder="订单最少时间为三天！"
+                                               id="finishDate" placeholder="订单最少时间为三天！" readonly="readonly"
                                                size="16" type="text" value=""
                                                onkeydown="if(event.keyCode==13){event.keyCode=0;event.returnValue=false;}"
                                         >
@@ -259,7 +259,7 @@
                                 <div class="form-group">
                                     <div class="input-group">
                                         <span class="input-group-addon" id="sort-addon">
-                                            <div class="text-right" style="width: 80px; ">排位</div>
+                                            <div class="text-right" style="width: 80px; ">关键字排名</div>
                                         </span>
                                         <input type="number" data-bind="value:sequence" class="form-control"
                                                id="sequence"

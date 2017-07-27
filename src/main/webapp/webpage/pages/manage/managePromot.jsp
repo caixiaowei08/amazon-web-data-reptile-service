@@ -50,7 +50,7 @@
                 </button>
                 <a href="/mainController.do?index" target="_parent">
                     <div class="pull-left " style="width: 50px;height: 50px;margin:3px 6px; ">
-                        <img alt="Brand"  class="img-responsive img-rounded" src="/webpage/plug-in/imgs/logo.jpg">
+                        <img alt="Brand" class="img-responsive img-rounded" src="/webpage/plug-in/imgs/logo.jpg">
                     </div>
                     <div class="navbar-brand font-color">
                         Review Tracker
@@ -65,12 +65,14 @@
                         <ul class="dropdown-menu">
                             <li>
                                 <a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin=282208271&site=qq&menu=yes">
-                                    客服1&nbsp;<img border="0" src="http://wpa.qq.com/pa?p=2:282208271:51" alt="客服1" title="客服1"/>
+                                    客服1&nbsp;<img border="0" src="http://wpa.qq.com/pa?p=2:282208271:51" alt="客服1"
+                                                  title="客服1"/>
                                 </a>
                             </li>
                             <li>
                                 <a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin=3170047818&site=qq&menu=yes">
-                                    客服2&nbsp;<img border="0" src="http://wpa.qq.com/pa?p=2:3170047818:51" alt="客服2" title="客服2"/>
+                                    客服2&nbsp;<img border="0" src="http://wpa.qq.com/pa?p=2:3170047818:51" alt="客服2"
+                                                  title="客服2"/>
                                 </a>
                             </li>
                         </ul>
@@ -172,9 +174,9 @@
                     <div class="row">
                         <div class="col-sm-6 col-sm-offset-6">
                             <div class="btn-group" role="group">
-                                <a  onclick="downEvaluateExcel();" class="btn btn-default" style="width: 120px;">亚马逊订单导出
+                                <a onclick="downEvaluateExcel();" class="btn btn-default" style="width: 120px;">亚马逊订单导出
                                 </a>
-                                <a  onclick="downPromotOrderExcel();" class="btn btn-default" style="width: 104px;">订单导出
+                                <a onclick="downPromotOrderExcel();" class="btn btn-default" style="width: 104px;">订单导出
                                 </a>
                                 <button type="button" onclick="doPromotSearch();" class="btn btn-default"
                                         style="width: 104px;">查询
@@ -295,7 +297,7 @@
                         </div>
                         <div class="form-group">
                             <div class="input-group">
-                                <span class="input-group-addon" style="width: 80px;" id="sequence">排序页</span>
+                                <span class="input-group-addon" style="width: 80px;" id="sequence">关键字排名页</span>
                                 <input type="text" class="form-control" data-bind="value:sequence"
                                        readonly aria-describedby="sequence">
                             </div>
@@ -305,14 +307,17 @@
                         <div class="form-group">
                             <div class="input-group">
                                 <span class="input-group-addon" style="width: 160px;" id="consumption">评价花费(美元)</span>
-                                <input type="text" class="form-control" data-bind="value:consumption" placeholder="评价花费(美元)"
+                                <input type="text" class="form-control" data-bind="value:consumption"
+                                       placeholder="评价花费(美元)"
                                        readonly aria-describedby="consumption">
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="input-group">
-                                <span class="input-group-addon" style="width: 160px;" id="cashBackConsumption">返现花费(美元)</span>
-                                <input type="text" class="form-control" data-bind="value:cashBackConsumption" placeholder="返现花费(美元)"
+                                <span class="input-group-addon" style="width: 160px;"
+                                      id="cashBackConsumption">返现花费(美元)</span>
+                                <input type="text" class="form-control" data-bind="value:cashBackConsumption"
+                                       placeholder="返现花费(美元)"
                                        readonly aria-describedby="consumption">
                             </div>
                         </div>
@@ -403,22 +408,24 @@
                         <div class="input-group" style="width: 100%;">
                             <span class="input-group-addon" style="width:150px;">搜索关键字</span>
                             <input type="text" class="form-control" name="keyword" data-bind="value:keyword"
-                                   placeholder="搜索关键字" onkeydown="if(event.keyCode==13){event.keyCode=0;event.returnValue=false;}"
+                                   placeholder="搜索关键字"
+                                   onkeydown="if(event.keyCode==13){event.keyCode=0;event.returnValue=false;}"
                                    aria-describedby="basic-addon1">
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="input-group" style="width: 100%;">
-                            <span class="input-group-addon" style="width:150px;">排序</span>
-                            <input type="number" class="form-control"  name="sequence"
-                                   data-bind="value:sequence" onkeydown="if(event.keyCode==13){event.keyCode=0;event.returnValue=false;}"
-                                   placeholder="排序"
+                            <span class="input-group-addon" style="width:150px;">关键字排名页</span>
+                            <input type="number" class="form-control" name="sequence"
+                                   data-bind="value:sequence"
+                                   onkeydown="if(event.keyCode==13){event.keyCode=0;event.returnValue=false;}"
+                                   placeholder="若需要填写，请填写1-20"
                                    aria-describedby="basic-addon1">
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" onclick="submitUpdatePromot();" class="btn btn-primary">修改
+                    <button type="button" onclick="submitUpdatePromot();" class="btn btn-primary">修改
                     </button>
                     <button type="button" class="btn btn-default" data-dismiss="modal">关闭
                     </button>
@@ -432,7 +439,7 @@
         <div class="row">
             <div class="col-sm-8 col-sm-offset-2">
                 <div style="text-align:center;line-height: 28px;">
-                    Copyright&copy;Viscal Technology Services Ltd  All Rights Reserved&reg;ICP备17013383号
+                    Copyright&copy;Viscal Technology Services Ltd All Rights Reserved&reg;ICP备17013383号
                 </div>
             </div>
         </div>

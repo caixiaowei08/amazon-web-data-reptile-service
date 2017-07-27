@@ -172,7 +172,7 @@ $(function () {
         queryParams: function (params) {
             params.chargeType = $("#amazon_chargeType").val().trim();
             params.chargeSource = $("#amazon_chargeSource").val().trim();
-            params.state = $("#amazon_state").val().trim();
+            //params.state = $("#amazon_state").val().trim();
             params.startTime_begin = $("#startTime_begin_value").val().trim();
             params.startTime_end = $("#startTime_end_value").val().trim();
             return params;
@@ -194,7 +194,7 @@ function downChargeFundFlowExcel() {
     var params = new Object();
     params.chargeType = $("#amazon_chargeType").val().trim();
     params.chargeSource = $("#amazon_chargeSource").val().trim();
-    params.state = $("#amazon_state").val().trim();
+    //params.state = $("#amazon_state").val().trim();
     params.startTime_begin = $("#startTime_begin_value").val().trim();
     params.startTime_end = $("#startTime_end_value").val().trim();
     if ((params.startTime_begin === "") ^ (params.startTime_begin === "")) {
@@ -209,7 +209,7 @@ function downChargeFundFlowExcel() {
                 window.open(
                     "/userRechargeFundController.do?downChargeFundFlowExcel&chargeType=" + params.chargeType
                     + "&chargeSource=" + params.chargeSource
-                    + "&state=" + params.state
+                    //+ "&state=" + params.state
                     + "&startTime_begin=" + params.startTime_begin
                     + "&startTime_end=" + params.startTime_end
                 )
