@@ -10,6 +10,7 @@ import com.amazon.service.promot.order.entity.PromotOrderEntity;
 import com.amazon.service.promot.order.service.PromotOrderService;
 import com.amazon.service.promot.price.entity.PromotPriceEntity;
 import com.amazon.service.promot.price.service.PromotPriceService;
+import com.amazon.service.spider.SpiderConstant;
 import com.amazon.service.spider.pojo.AmazonPageInfoPojo;
 import com.amazon.service.user.entity.UserEntity;
 import com.amazon.service.vip.entity.UserMembershipEntity;
@@ -21,6 +22,7 @@ import org.apache.logging.log4j.Logger;
 import org.framework.core.common.model.json.AjaxJson;
 import org.framework.core.common.service.impl.BaseServiceImpl;
 import org.framework.core.global.service.GlobalService;
+import org.framework.core.utils.ContextHolderUtils;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -161,6 +163,7 @@ public class PromotOrderServiceImpl extends BaseServiceImpl implements PromotOrd
         promotOrderEntity.setCreateTime(new Date());
         promotOrderEntity.setUpdateTime(new Date());
         promotOrderService.save(promotOrderEntity);
+        ContextHolderUtils.getSession().setAttribute(SpiderConstant.AMAZON_PAGE_INFO_POJO,null);
         return j;
     }
 

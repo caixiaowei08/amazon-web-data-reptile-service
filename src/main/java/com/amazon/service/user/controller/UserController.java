@@ -253,5 +253,4 @@ public class UserController extends BaseController {
         j.setMsg("密码修改成功！");
         return j;
     }
-
 }

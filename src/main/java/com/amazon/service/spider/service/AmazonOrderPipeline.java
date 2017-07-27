@@ -25,9 +25,6 @@ public class AmazonOrderPipeline implements Pipeline {
         if(StringUtils.hasText(amazonPageInfoPojo.getBrand())){
             amazonPageInfoPojo.setBrand(amazonPageInfoPojo.getBrand().replaceAll("[\\s*|\t|\r|\n]", ""));
         }
-        System.out.println(amazonPageInfoPojo.getAsin());
-        System.out.println(amazonPageInfoPojo.getBrand());
-        System.out.println(amazonPageInfoPojo.getPageUrl());
         if(StringUtils.hasText(amazonPageInfoPojo.getPriceblockSaleprice())){
             amazonPageInfoPojo.setPriceblockSaleprice(amazonPageInfoPojo.getPriceblockSaleprice().replaceAll("[\\s*|\t|\r|\n]", ""));
         }

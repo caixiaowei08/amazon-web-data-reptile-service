@@ -97,12 +97,12 @@ $(function () {
             } else if (result.success === "fail") {
                 toastr.warning(result.msg);
                 $('#modifyAmOrderNoModel').modal('hide');
-                form.bootstrapValidator('disableSubmitButtons', false);
             } else {
                 toastr.warning("请重新登录！");
                 $('#modifyAmOrderNoModel').modal('hide');
                 setTimeout("window.location='/adminSystemController.admin?goAdminLogin'", 500);
             }
+            form.bootstrapValidator('disableSubmitButtons', false);
         }, 'json');
     });
 
@@ -314,7 +314,6 @@ function clickModifyAmOrderNoModel(id) {
     })
 }
 
-
 function beforeSend() {
     $("#deleteEvaluateByIdBtn").addClass("disabled"); // Disables visually
     $("#deleteEvaluateByIdBtn").prop("disabled", true); // Disables visually + functionally
@@ -432,7 +431,6 @@ function doSubmitEvaluate() {
             toastr.success("服务器异常,请联系管理员！");
         },
         complete: function () {
-            //$('#addNewReview').modal('hide');
             $('#evaluateListTable').bootstrapTable("refresh");
             SendComplete();
         }

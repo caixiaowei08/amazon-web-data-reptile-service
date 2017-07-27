@@ -23,14 +23,13 @@
     <script type="text/javascript" src="/webpage/plug-in/jquery/jquery.min.js"></script>
     <script type="text/javascript" src="/webpage/plug-in/bootstrap/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="/webpage/plug-in/bootstrapvalidator/dist/js/bootstrapValidator.min.js"></script>
+    <script type="text/javascript" src="/webpage/plug-in/bootstrapvalidator/dist/js/language/zh_CN.js"></script>
     <script type="text/javascript" src="/webpage/plug-in/bootstrap-datetimepicker/js/bootstrap-datetimepicker.js"
             charset="UTF-8"></script>
-    <script type="text/javascript"
-            src="/webpage/plug-in/bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js"
+    <script type="text/javascript" src="/webpage/plug-in/bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js"
             charset="UTF-8"></script>
     <script type="text/javascript" src="/webpage/plug-in/toastr/toastr.min.js"></script>
     <script type="text/javascript" src="/webpage/plug-in/knockoutjs/dist/knockout.js"></script>
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
 </head>
 <body style="overflow-y:auto;">
 <div class="main-container">
@@ -106,11 +105,11 @@
         <div style="height: 20px;"></div>
         <div class="container">
             <div class="panel panel-warning">
-                <div class="panel-heading">
-                    <h3 class="panel-title">新建推广活动</h3>
-                </div>
-                <div class="panel-body">
-                    <form id="formObj" onsubmit="return doSubmitPromotOrder()">
+                    <form id="promotOrderSubmitForm" action="/promotOrderController.do?doAdd" onsubmit="return false;">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">新建推广活动</h3>
+                    </div>
+                    <div class="panel-body">
                         <h5>
                             <strong>第二步</strong>:&nbsp;&nbsp;填写推广活动订单信息
                         </h5>
@@ -118,9 +117,9 @@
                         </div>
                         <div class="form-group">
                             <div class="input-group">
-                        <span class="input-group-addon" id="pageUrl-addon">
-                            <div class="text-right" style="width: 80px;">产品URL链接</div>
-                        </span>
+                                <span class="input-group-addon" id="pageUrl-addon">
+                                    <div class="text-right" style="width: 80px;">产品URL链接</div>
+                                </span>
                                 <input data-bind="value: pageUrl" type="text" class="form-control" readonly="readonly"
                                        id="asinOrUrl" name="productUrl" placeholder="请输入亚马逊ASIN或者商品主页链接！"
                                        aria-describedby="pageUrl-addon">
@@ -235,12 +234,11 @@
                                         </span>
                                         <input class="form-control" name="finishDate" data-bind="value:finishDate"
                                                id="finishDate" placeholder="订单最少时间为三天！"
-                                               size="16" type="text" value="" readonly
+                                               size="16" type="text" value=""
                                                onkeydown="if(event.keyCode==13){event.keyCode=0;event.returnValue=false;}"
                                         >
                                         <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
-                                        <span class="input-group-addon"><span
-                                                class="glyphicon glyphicon-calendar"></span></span>
+                                        <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                                     </div>
                                 </div>
                             </div>
@@ -285,21 +283,21 @@
                                        aria-describedby="remark-addon">
                             </div>
                         </div>
-                    </form>
-                </div>
-                <div style="height: 20px;"></div>
-                <div class="panel-footer">
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-md-1 col-md-offset-6">
-                                <button type="button" id="" class="btn btn-default">上一步</button>
-                            </div>
-                            <div class="col-md-1">
-                                <button type="button" id="btn_sub" class="btn btn-primary">提&nbsp;交</button>
+                    </div>
+                    <div style="height: 20px;"></div>
+                    <div class="panel-footer">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-md-1 col-md-offset-6">
+                                    <input type="button" onclick="goToNewPromotOne();" class="btn btn-default" value="上一步"/>
+                                </div>
+                                <div class="col-md-1">
+                                    <input type="button" onclick="submitOrder();" class="btn btn-primary" value="提&nbsp;交">
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                </form>
             </div>
         </div>
         <div style="height: 100px;"></div>
@@ -347,6 +345,8 @@
 </html>
 <script>
     $(function () {
+        loadData();
+        formValidator();
         $('.form_date').datetimepicker({
             weekStart: 1,
             todayBtn: 1,
@@ -356,60 +356,11 @@
             minView: 2,
             startDate: new Date(Date.parse(new Date().toString()) + 86400000 * 3),
             forceParse: 0
+        }).on('hide',function(e) {
+            $('#promotOrderSubmitForm').data('bootstrapValidator')
+                .updateStatus('finishDate', 'NOT_VALIDATED',null)
+                .validateField('finishDate');
         });
-        loadData();
-        $('#formObj').bootstrapValidator({
-            framework: 'bootstrap',
-            icon: {
-                valid: 'glyphicon glyphicon-ok',
-                invalid: 'glyphicon glyphicon-remove',
-                validating: 'glyphicon glyphicon-refresh'
-            },
-            fields: {
-                needReviewNum: {
-                    validators: {
-                        notEmpty: {
-                            message: '请输入目标好评数'
-                        },
-                        regexp: {
-                            regexp: /^[1-9]\d*$/,
-                            message: '请输入大于0的数字！'
-                        }
-                    }
-                },
-                dayReviewNum: {
-                    validators: {
-                        notEmpty: {
-                            message: '请输入每天好评数'
-                        },
-                        regexp: {
-                            regexp: /^[1-9]\d*$/,
-                            message: '请输入大于0的数字！'
-                        }
-                    }
-                },
-                finishDate: {
-                    validators: {
-                        notEmpty: {
-                            message: '请输入推广活动结束日期！'
-                        }
-                    }
-                },
-                sequence: {
-                    validators: {
-                        between: {
-                            min: 1,
-                            max: 20,
-                            message: '请输入大于1小于20的数字！'
-                        }
-                    }
-                }
-            }
-        });
-    });
-
-    $("#btn_sub").click(function () {
-        $('#formObj').submit();
     });
 
     var ViewModel = function (pageUrl, asin, productTitle, priceblockSaleprice,
@@ -483,57 +434,98 @@
             }
         });
     }
-    function beforeSend() {
-        $("#btn_sub").addClass("disabled"); // Disables visually
-        $("#btn_sub").prop("disabled", true); // Disables visually + functionally
-    }
-    function SendComplete() {
-        $("#btn_sub").removeClass("disabled"); // Disables visually
-        $("#btn_sub").prop("disabled", false); // Disables visually + functionally
+    
+    function submitOrder() {
+        $('#promotOrderSubmitForm').submit();
+        return false;
     }
 
-    function doSubmitPromotOrder() {
-        var dayReviewNum = $("#dayReviewNum").val();
-        var needReviewNum = $("#needReviewNum").val();
-        var finishDate = $("#finishDate").val();
-        var sequence = $("#sequence").val();
-        if (
-            dayReviewNum === null || dayReviewNum === undefined || dayReviewNum === '' ||
-            needReviewNum === null || needReviewNum === undefined || needReviewNum === '' ||
-            finishDate === null || finishDate === undefined || finishDate === ''
-        ) {
-            return;
-        }
+    function chargeFundNow() {
+        window.location = '/redirectionController.do?goToChargeFund&chargeFund=' + $("#chargeFund").val();
+    }
 
-        $.ajax({
-            url: "/promotOrderController.do?doAdd",
-            type: 'post',
-            beforeSend: beforeSend,
-            data: $('#formObj').serialize(),
-            success: function (data) {
+    function goToNewPromotOne() {
+        window.location = '/promotOrderController.do?goNewPromotOne';
+    }
+
+    function formValidator() {
+        $('#promotOrderSubmitForm').bootstrapValidator({
+            framework: 'bootstrap',
+            icon: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            fields: {
+                needReviewNum: {
+                    validators: {
+                        notEmpty: {
+                            message: '请输入目标好评数'
+                        },
+                        regexp: {
+                            regexp: /^[1-9]\d*$/,
+                            message: '请输入大于0的数字！'
+                        }
+                    }
+                },
+                dayReviewNum: {
+                    validators: {
+                        notEmpty: {
+                            message: '请输入每天好评数'
+                        },
+                        regexp: {
+                            regexp: /^[1-9]\d*$/,
+                            message: '请输入大于0的数字！'
+                        }
+                    }
+                },
+                finishDate: {
+                    validators: {
+                        notEmpty: {
+                            message: '请输入推广活动结束日期！'
+                        }
+                    }
+                },
+                sequence: {
+                    validators: {
+                        between: {
+                            min: 1,
+                            max: 20,
+                            message: '请输入大于1小于20的数字！'
+                        }
+                    }
+                }
+            }
+        }).on('success.form.bv', function (e) {
+            console.log("-----success.form.bv------");
+            var form = $('#promotOrderSubmitForm');
+            beforeSend();
+            $.post(form.attr('action'), form.serialize(), function (data) {
                 if (data.success === "success") {
-                    window.location = '/redirectionController.do?goManagePromot'
+                    window.location = '/redirectionController.do?goManagePromot';
                 } else if (data.success === "fail") {
                     toastr.error(data.msg);
                 } else if (data.success === "charge") {
-                    console.log(data.content);
                     $("#chargeFund").val(data.content);
                     $("#chargeFundShow").text(data.content);
                     $('#chargeFundModel').modal('show');
                 } else {
                     window.location = '/loginController.do?login';
                 }
-            },
-            error: function (jqxhr, textStatus, errorThrow) {
-                toastr.error("服务器异常,请联系管理员！");
-            },
-            complete: function () {
-                SendComplete();
-            }
+                console.log("-----success.form.bv---end-----")
+                sendComplete();
+            }, 'json');
         });
     }
 
-    function chargeFundNow() {
-        window.location = '/redirectionController.do?goToChargeFund&chargeFund=' + $("#chargeFund").val();
+
+    function beforeSend() {
+        $("#deleteEvaluateByIdBtn").addClass("disabled"); // Disables visually
+        $("#deleteEvaluateByIdBtn").prop("disabled", true); // Disables visually + functionally
+    }
+
+    function sendComplete() {
+        $("#deleteEvaluateByIdBtn").removeClass("disabled"); // Disables visually
+        $("#deleteEvaluateByIdBtn").prop("disabled", false); // Disables visually + functionally
     }
 </script>

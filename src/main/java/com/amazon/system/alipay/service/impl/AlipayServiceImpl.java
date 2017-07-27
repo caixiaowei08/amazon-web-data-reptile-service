@@ -4,6 +4,7 @@ import com.alipay.api.AlipayApiException;
 import com.alipay.api.AlipayClient;
 import com.alipay.api.domain.AlipayTradePayModel;
 import com.alipay.api.request.AlipayTradePagePayRequest;
+import com.amazon.service.fund.constant.ConstantChargeAndOrderFlag;
 import com.amazon.service.spider.SpiderConstant;
 import com.amazon.service.spider.pojo.AmazonPageInfoPojo;
 import com.amazon.system.alipay.AlipayClientSingleton;
@@ -32,14 +33,12 @@ public class AlipayServiceImpl implements AlipayService {
     public void doAlipayTradePayRequestPost(AlipayTradePayModel alipayTradePayModel, HttpServletRequest httpRequest, HttpServletResponse httpResponse) throws ServletException, IOException {
         AlipayClient alipayClient = AlipayClientSingleton.getInstance();
         AlipayTradePagePayRequest alipayRequest = new AlipayTradePagePayRequest();
-        AmazonPageInfoPojo amazonPageInfoPojo = (AmazonPageInfoPojo) ContextHolderUtils.getSession().getAttribute(SpiderConstant.AMAZON_PAGE_INFO_POJO);
-
+        AmazonPageInfoPojo amazonPageInfoPojo = (AmazonPageInfoPojo) ContextHolderUtils.getSession().getAttribute( ConstantChargeAndOrderFlag.CHARGE_FOR_ORDER_FLAG);
         if (amazonPageInfoPojo != null) {
-            alipayRequest.setReturnUrl(AlipayConfig.RETURN_URL_ORDER);
-        }else{
-            alipayRequest.setReturnUrl(AlipayConfig.RETURN_URL);
+            alipayRequest.setReturnUrl(AlipayConfig.RETURN_URL_ORDER + "&jsessionid=" + ContextHolderUtils.getSession().getId());
+        } else {
+            alipayRequest.setReturnUrl(AlipayConfig.RETURN_URL + "&jsessionid=" + ContextHolderUtils.getSession().getId());
         }
-
         alipayRequest.setNotifyUrl(AlipayConfig.NOTIFY_URL);
         alipayRequest.setBizModel(alipayTradePayModel);
         String form = "";

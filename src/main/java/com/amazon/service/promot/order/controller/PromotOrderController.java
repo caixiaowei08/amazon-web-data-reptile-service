@@ -25,11 +25,13 @@ import org.framework.core.common.controller.BaseController;
 import org.framework.core.common.model.json.AjaxJson;
 import org.framework.core.global.service.GlobalService;
 import org.framework.core.utils.ContextHolderUtils;
+import org.framework.core.utils.DateUtils.DateStyle;
 import org.framework.core.utils.DateUtils.DateUtils;
 import org.framework.core.utils.RegularExpressionUtils;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
+import org.jsoup.helper.DataUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -77,7 +79,6 @@ public class PromotOrderController extends BaseController {
     @Autowired
     private PromotOrderEvaluateFlowService promotOrderEvaluateFlowService;
 
-
     @RequestMapping(params = "goNewPromotOne")
     public String goNewPromotOne(HttpServletRequest request, HttpServletResponse response) {
         if (userMembershipService.isMemberShipVip()) {
@@ -89,13 +90,19 @@ public class PromotOrderController extends BaseController {
 
     @RequestMapping(params = "goNewPromotTwo")
     public String goNewPromotOneTwo(HttpServletRequest request, HttpServletResponse response) {
+        String JSESSIONID = request.getParameter("jsessionid");
+        if (StringUtils.hasText(JSESSIONID)) {
+            HttpSession session = ContextHolderUtils.getSession();
+            Cookie cookie = new Cookie("JSESSIONID", session.getId());
+            cookie.setPath("/");
+            response.addCookie(cookie);
+        }
         if (userMembershipService.isMemberShipVip()) {
             return "pages/promot/newPromotStepTwo";
         } else {
             return "pages/fund/memberShip";
         }
     }
-
     @RequestMapping(params = "downEvaluateExcel")
     public void downEvaluateExcel(HttpServletRequest request, HttpServletResponse response) {
         UserEntity userEntity = globalService.getUserEntityFromSession();
@@ -239,6 +246,7 @@ public class PromotOrderController extends BaseController {
             j.setMsg("未设置评价单价！");
             return j;
         }
+        ContextHolderUtils.getSession().setAttribute(SpiderConstant.AMAZON_PAGE_INFO_POJO,null);
         spiderService.spiderAmazonPageInfoSaveToHttpSession(url, 4);
         AmazonPageInfoPojo amazonPageInfoPojo = (AmazonPageInfoPojo) ContextHolderUtils.getSession().getAttribute(SpiderConstant.AMAZON_PAGE_INFO_POJO);
         if (amazonPageInfoPojo == null) {
@@ -276,11 +284,6 @@ public class PromotOrderController extends BaseController {
     @ResponseBody
     public AjaxJson doAdd(PromotOrderEntity promotOrderEntity, HttpServletRequest request, HttpServletResponse response) {
         AjaxJson j = new AjaxJson();
-        HttpSession session = ContextHolderUtils.getSession();
-        Cookie cookie = new Cookie("JSESSIONID", session.getId());
-        cookie.setMaxAge(10 * 60);
-        cookie.setPath("/");
-        response.addCookie(cookie);//点击添加保存cookie
         UserEntity userEntity = globalService.getUserEntityFromSession();
         if (userEntity == null) {
             j.setSuccess(AjaxJson.RELOGIN);
@@ -290,7 +293,7 @@ public class PromotOrderController extends BaseController {
         AmazonPageInfoPojo amazonPageInfoPojo = (AmazonPageInfoPojo) ContextHolderUtils.getSession().getAttribute(SpiderConstant.AMAZON_PAGE_INFO_POJO);
         if (amazonPageInfoPojo == null) {
             j.setSuccess(AjaxJson.CODE_FAIL);
-            j.setMsg("登录超时，请重新建推广活动订单！");
+            j.setMsg("请重新建推广活动订单！");
             return j;
         }
         amazonPageInfoPojo.setNeedReviewNum(promotOrderEntity.getNeedReviewNum());

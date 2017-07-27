@@ -105,7 +105,6 @@ public class UserFundServiceImpl extends BaseServiceImpl implements UserFundServ
     public AjaxJson goChargeFund(HttpServletRequest request, HttpServletResponse response) {
         AjaxJson j = new AjaxJson();
         String chargefund = request.getParameter("chargeFund").trim();
-        //String chargeSource = request.getParameter("chargeSource");
         if (!RegularExpressionUtils.isMoney(chargefund)) {
             j.setSuccess(AjaxJson.CODE_FAIL);
             j.setMsg("充值金额有误，请重新输入！");

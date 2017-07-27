@@ -44,6 +44,7 @@ public class RedirectionController extends BaseController {
     @RequestMapping(params = "goToChargeFund")
     public String goToChangeFund(HttpServletRequest request, HttpServletResponse response) {
         String chargeFund = request.getParameter("chargeFund");
+        ContextHolderUtils.getSession().removeAttribute(ConstantChargeAndOrderFlag.CHARGE_FOR_ORDER_FLAG);
         if (StringUtils.hasText(chargeFund)) {//余额不足跳转充值
             AmazonPageInfoPojo amazonPageInfoPojo = (AmazonPageInfoPojo) ContextHolderUtils.getSession().getAttribute(SpiderConstant.AMAZON_PAGE_INFO_POJO);
             if (amazonPageInfoPojo != null) {//session充值标识

@@ -30,7 +30,6 @@ $(function () {
             }
         }
     }).on('success.form.bv',function (e) {
-        console.log('success.form.bv');
        var form = $('#formobj');
        $.post(form.attr('action'),form.serialize(),function (result) {
            if (result.success == "success") {

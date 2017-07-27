@@ -51,11 +51,6 @@ public class UserFundController extends BaseController {
 
     @RequestMapping("/doAlipayTradePagePay")
     public void doAlipayTradePagePay(HttpServletRequest request, HttpServletResponse response) {
-        HttpSession session = ContextHolderUtils.getSession();
-        Cookie cookie = new Cookie("JSESSIONID", session.getId());
-        cookie.setPath("/");
-        cookie.setMaxAge(10 * 60);
-        response.addCookie(cookie);//点击添加保存cookie
         userFundService.goChargeFund(request, response);
     }
 

@@ -15,7 +15,6 @@ public interface UserFundService extends BaseService {
     public AjaxJson getUserFundInfo();
 
     public AjaxJson goChargeFund(HttpServletRequest request, HttpServletResponse response);
-
     /**
      *
      * @param alipayNotifyPojo
