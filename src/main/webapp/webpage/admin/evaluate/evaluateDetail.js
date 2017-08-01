@@ -81,7 +81,7 @@ $(function () {
                         message: '亚马逊单号不能为空！'
                     },
                     regexp: {
-                        regexp:  /^[\d-]*$/,
+                        regexp: /^[\d-]*$/,
                         message: '亚马逊订单号只能是数字和-组合！'
                     }
                 }
@@ -123,6 +123,7 @@ $(function () {
             params.amzOrderId = $("#amazon_amzOrderId").val().trim();
             params.asinId = $("#amazon_asin").val().trim();
             params.state = $("#amazon_state").val().trim();
+            params.promotId = $("#amazon_promoteId").val().trim();
             params.createTime_begin = $("#createTime_begin_value").val().trim();
             params.createTime_end = $("#createTime_end_value").val().trim();
             return params;
@@ -181,7 +182,7 @@ $(function () {
                 align: "center",//水平
                 valign: "middle",//垂直
                 formatter: function (value, row, index) {
-                    var html =('<span>'+value.substr(0,10)+'</span>');
+                    var html = ('<span>' + value.substr(0, 10) + '</span>');
                     return html;
                 }
             },
@@ -260,11 +261,11 @@ function clickEvaluateModel(id) {
     viewModel.deleteId(id);
 }
 
-function submitAddReviewUrl(){
+function submitAddReviewUrl() {
     $('#formAddEvaluateUrlModel').submit();
 }
 
-function submitModifyAmOrderNo(){
+function submitModifyAmOrderNo() {
     $('#formModifyAmOrderNoModel').submit();
 }
 
@@ -373,7 +374,7 @@ function formValidator() {
                         message: '请输入亚马逊订单号!'
                     },
                     regexp: {
-                        regexp:  /^[\d-]*$/,
+                        regexp: /^[\d-]*$/,
                         message: '亚马逊订单号只能是数字和-组合！'
                     }
 

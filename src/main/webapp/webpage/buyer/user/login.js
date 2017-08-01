@@ -41,6 +41,5 @@ $(function () {
 });
 
 function loginBuyerSubmit() {
-    console.log("----loginBuyerSubmit-----");
     $('#formObj').submit();
 }

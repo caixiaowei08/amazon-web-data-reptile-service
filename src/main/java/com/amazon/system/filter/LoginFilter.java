@@ -1,7 +1,6 @@
 package com.amazon.system.filter;
 
 import com.alibaba.fastjson.JSON;
-import com.amazon.service.user.entity.UserEntity;
 import com.amazon.system.Constant;
 import org.framework.core.common.model.json.AjaxJson;
 
@@ -48,7 +47,7 @@ public class LoginFilter implements Filter {
                 e.printStackTrace();
             }
             return;
-        } else {//有session user 通过
+        } else {
             chain.doFilter(request, response);
             return;
         }

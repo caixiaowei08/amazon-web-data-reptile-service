@@ -15,11 +15,12 @@ import java.io.PrintWriter;
 /**
  * Created by User on 2017/6/29.
  */
-public class AdminLoginFilter  implements Filter {
+public class AdminLoginFilter implements Filter {
 
     public void init(FilterConfig filterConfig) throws ServletException {
 
     }
+
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest req = (HttpServletRequest) request;
         HttpServletResponse res = (HttpServletResponse) response;
@@ -27,10 +28,10 @@ public class AdminLoginFilter  implements Filter {
         String url = req.getServletPath();
         if (url.equals("/adminSystemController.admin")) {
             chain.doFilter(request, response);
-        }else if(url.equals("/admin.admin")){
+        } else if (url.equals("/admin.admin")) {
             session.invalidate();
             res.sendRedirect("/adminSystemController.admin?goAdminLogin");
-        }else if(session.getAttribute(Constants.ADMIN_SESSION_CONSTANTS) == null){
+        } else if (session.getAttribute(Constants.ADMIN_SESSION_CONSTANTS) == null) {
             session.invalidate();
             res.sendRedirect("/adminSystemController.admin?goAdminLogin");
             AjaxJson j = new AjaxJson();
@@ -46,10 +47,11 @@ public class AdminLoginFilter  implements Filter {
                 e.printStackTrace();
             }
             return;
-        }else{
+        } else {
             chain.doFilter(request, response);
         }
     }
+
     public void destroy() {
 
     }

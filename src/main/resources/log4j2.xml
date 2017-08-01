@@ -7,7 +7,7 @@
 		<property name="SERVER_NAME">app</property>
 	</Properties>
 	<Appenders>
-		<Console name="Console" target="SYSTEM_OUT">
+		<Console name="console" target="SYSTEM_OUT">
 			<PatternLayout pattern="[amazon-web-reptile-service] %date{yyyy-MM-dd HH:mm:ss.SSS} %level [%thread][%file:%line] - %msg%n" />
 		</Console>
 		<!-- 程序员调试日志 -->
@@ -30,7 +30,7 @@
 		<logger name="org.eclipse.jetty" level="ERROR" />
 		<Root level="ALL">
 			<appender-ref ref="appLog" />
-			<!--<AppenderRef ref="Console"/>-->
+			<AppenderRef ref="console"/>
 		</Root>
 	</Loggers>
 </Configuration>

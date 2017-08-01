@@ -105,7 +105,7 @@ public class AuthorUserEntity extends IdEntity implements Serializable {
         this.status = status;
     }
 
-    @Column(name = "status", nullable = true)
+    @Column(name = "remark", nullable = true)
     public String getRemark() {
         return remark;
     }

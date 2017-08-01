@@ -39,9 +39,6 @@ public class MainBuyerController extends BaseController {
     private static Logger logger = LogManager.getLogger(MainBuyerController.class.getName());
 
     @Autowired
-    private GlobalService globalService;
-
-    @Autowired
     private PromotOrderService promotOrderService;
 
 

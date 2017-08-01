@@ -39,6 +39,7 @@
 	<servlet-mapping>
 		<servlet-name>springMvc</servlet-name>
 		<url-pattern>*.do</url-pattern>
+		<url-pattern>*.author</url-pattern>
 		<url-pattern>*.buyer</url-pattern>
 		<url-pattern>*.admin</url-pattern>
 	</servlet-mapping>
@@ -54,7 +55,6 @@
 		<description>request监听器</description>
 		<listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
 	</listener>
-	<!--判断操作是否超时-->
 	<filter>
 		<filter-name>login-filter</filter-name>
 		<filter-class>com.amazon.system.filter.LoginFilter</filter-class>
@@ -63,7 +63,6 @@
 		<filter-name>login-filter</filter-name>
 		<url-pattern>*.do</url-pattern>
 	</filter-mapping>
-	<!--session超时30分钟-->
 	<!--判断操作是否超时-->
 	<filter>
 		<filter-name>admin-login-filter</filter-name>
@@ -73,7 +72,14 @@
 		<filter-name>admin-login-filter</filter-name>
 		<url-pattern>*.admin</url-pattern>
 	</filter-mapping>
-	<!--session超时10分钟-->
+	<filter>
+		<filter-name>author_login_filter</filter-name>
+		<filter-class>com.amazon.author.common.filter.AuthorFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>author_login_filter</filter-name>
+		<url-pattern>/author/*</url-pattern>
+	</filter-mapping>
 	<session-config>
 		<session-timeout>10</session-timeout>
 	</session-config>

@@ -292,7 +292,7 @@
                                     <input type="button" onclick="goToNewPromotOne();" class="btn btn-default" value="上一步"/>
                                 </div>
                                 <div class="col-md-1">
-                                    <input type="button" onclick="submitOrder();" class="btn btn-primary" value="提&nbsp;交">
+                                    <input type="button" id="submitOrderBtn" onclick="submitOrder();" class="btn btn-primary" value="提&nbsp;交">
                                 </div>
                             </div>
                         </div>
@@ -322,7 +322,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                    <button type="button" class="btn btn-primary" id="deleteEvaluateByIdBtn"
+                    <button type="button" class="btn btn-primary"
                             onclick="chargeFundNow();">马上充值
                     </button>
                 </div>
@@ -497,7 +497,6 @@
                 }
             }
         }).on('success.form.bv', function (e) {
-            console.log("-----success.form.bv------");
             var form = $('#promotOrderSubmitForm');
             beforeSend();
             $.post(form.attr('action'), form.serialize(), function (data) {
@@ -512,7 +511,6 @@
                 } else {
                     window.location = '/loginController.do?login';
                 }
-                console.log("-----success.form.bv---end-----")
                 sendComplete();
             }, 'json');
         });
@@ -520,12 +518,13 @@
 
 
     function beforeSend() {
-        $("#deleteEvaluateByIdBtn").addClass("disabled"); // Disables visually
-        $("#deleteEvaluateByIdBtn").prop("disabled", true); // Disables visually + functionally
+        //submitOrderBtn
+        $("#submitOrderBtn").addClass("disabled"); // Disables visually
+        $("#submitOrderBtn").prop("disabled", true); // Disables visually + functionally
     }
 
     function sendComplete() {
-        $("#deleteEvaluateByIdBtn").removeClass("disabled"); // Disables visually
-        $("#deleteEvaluateByIdBtn").prop("disabled", false); // Disables visually + functionally
+        $("#submitOrderBtn").removeClass("disabled"); // Disables visually
+        $("#submitOrderBtn").prop("disabled", false); // Disables visually + functionally
     }
 </script>
