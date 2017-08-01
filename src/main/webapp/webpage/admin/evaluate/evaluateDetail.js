@@ -32,41 +32,6 @@ $(function () {
         $('#createTime_end').datetimepicker('hide');
     });
 
-    $('#formAddEvaluateUrlModel').bootstrapValidator({
-        framework: 'bootstrap',
-        icon: {
-            valid: 'glyphicon glyphicon-ok',
-            invalid: 'glyphicon glyphicon-remove',
-            validating: 'glyphicon glyphicon-refresh'
-        },
-        fields: {
-            reviewUrl: {
-                validators: {
-                    notEmpty: {
-                        message: '评价链接不能为空！'
-                    }
-                }
-            }
-        }
-    }).on('success.form.bv', function (e) {
-        var form = $('#formAddEvaluateUrlModel');
-        $.post(form.attr('action'), form.serialize(), function (result) {
-            if (result.success === "success") {
-                toastr.success(result.msg);
-                $('#addEvaluateUrlModel').modal('hide');
-                $('#evaluateListTable').bootstrapTable("refresh");
-            } else if (result.success === "fail") {
-                toastr.warning(result.msg);
-                $('#addEvaluateUrlModel').modal('hide');
-                form.bootstrapValidator('disableSubmitButtons', false);
-            } else {
-                toastr.warning("请重新登录！");
-                $('#addEvaluateUrlModel').modal('hide');
-                setTimeout("window.location='/adminSystemController.admin?goAdminLogin'", 500);
-            }
-        }, 'json');
-    });
-
     $('#formModifyAmOrderNoModel').bootstrapValidator({
         framework: 'bootstrap',
         icon: {
@@ -81,8 +46,8 @@ $(function () {
                         message: '亚马逊单号不能为空！'
                     },
                     regexp: {
-                        regexp: /^[\d-]*$/,
-                        message: '亚马逊订单号只能是数字和-组合！'
+                        regexp: /[0-9]+[\-]+[0-9\-]*$/,
+                        message: '亚马逊订单号必须是数字和-组合！'
                     }
                 }
             }
@@ -102,10 +67,8 @@ $(function () {
                 $('#modifyAmOrderNoModel').modal('hide');
                 setTimeout("window.location='/adminSystemController.admin?goAdminLogin'", 500);
             }
-            form.bootstrapValidator('disableSubmitButtons', false);
         }, 'json');
     });
-
 
     $('#evaluateListTable').bootstrapTable({
         url: "/evaluateController.admin?dataGrid",
@@ -237,15 +200,12 @@ $(function () {
         $('#formObj').submit();
     });
 
-    $('#addNewReview').on('hide.bs.modal', function () {
-        $("#asinId").val("");
-        $("#amzOrderId").val("");
-        $("#reviewUrl").val("");
-        $("#formObj").data('bootstrapValidator').destroy();
-        $('#formObj').data('bootstrapValidator', null);
-        formValidator();
-    })
+    $("#addEvaluateUrlBtn").click(function () {
+        $('#formAddEvaluateUrlModel').submit();
+    });
+
     formValidator();
+    formAddEvaluateUrlModelValidator();
     ko.applyBindings(viewModel);
 });
 
@@ -259,10 +219,6 @@ var viewModel = {
 
 function clickEvaluateModel(id) {
     viewModel.deleteId(id);
-}
-
-function submitAddReviewUrl() {
-    $('#formAddEvaluateUrlModel').submit();
 }
 
 function submitModifyAmOrderNo() {
@@ -374,10 +330,33 @@ function formValidator() {
                         message: '请输入亚马逊订单号!'
                     },
                     regexp: {
-                        regexp: /^[\d-]*$/,
-                        message: '亚马逊订单号只能是数字和-组合！'
+                        regexp: /[0-9]+[\-]+[0-9\-]*$/,
+                        message: '亚马逊订单号必须是数字和-组合！'
                     }
-
+                }
+            },
+            weChat: {
+                validators: {
+                    regexp: {
+                        regexp: /^[0-9]+([.]{1}[0-9]{1,2})?$/,
+                        message: '金额至多保留两位小数的正数!'
+                    }
+                }
+            },
+            zfb: {
+                validators: {
+                    regexp: {
+                        regexp: /^[0-9]+([.]{1}[0-9]{1,2})?$/,
+                        message: '金额至多保留两位小数的正数!'
+                    }
+                }
+            },
+            payPal: {
+                validators: {
+                    regexp: {
+                        regexp: /^[0-9]+([.]{1}[0-9]{1,2})?$/,
+                        message: '金额至多保留两位小数的正数!'
+                    }
                 }
             }
         }
@@ -401,13 +380,27 @@ function SendComplete() {
 function doSubmitEvaluate() {
     var asinId = $("#asinId").val();
     var amzOrderId = $("#amzOrderId").val();
-    var reviewUrl = $("#reviewUrl").val();
     if (
         asinId === null || asinId === undefined || asinId === '' ||
         amzOrderId === null || amzOrderId === undefined || amzOrderId === ''
     ) {
         return;
     }
+    var reviewUrl = $("#reviewUrl").val();
+    if (!(reviewUrl === null || reviewUrl === undefined || reviewUrl === '')) {
+        var weChat = $("#weChat").val();
+        var zfb = $("#zfb").val();
+        var payPal = $("#payPal").val();
+        if (
+            (weChat === null || weChat === undefined || weChat === '') &&
+            (zfb === null || zfb === undefined || zfb === '') &&
+            (payPal === null || payPal === undefined || payPal === '')
+        ) {
+            toastr.info("请填写微信、支付宝、PayPal其中之一的金额！");
+            return;
+        }
+    }
+
     $.ajax({
         url: "/evaluateController.admin?doAdd",
         type: 'post',
@@ -419,6 +412,9 @@ function doSubmitEvaluate() {
                 $("#asinId").val("");
                 $("#amzOrderId").val("");
                 $("#reviewUrl").val("");
+                $("#weChat").val("");
+                $("#zfb").val("");
+                $("#payPal").val("");
                 $("#formObj").data('bootstrapValidator').destroy();
                 $('#formObj').data('bootstrapValidator', null);
                 formValidator();
@@ -475,7 +471,162 @@ function downEvaluateExcel() {
     });
 }
 
+function doSubmitEvaluate() {
+    var asinId = $("#asinId").val();
+    var amzOrderId = $("#amzOrderId").val();
+    if (
+        asinId === null || asinId === undefined || asinId === '' ||
+        amzOrderId === null || amzOrderId === undefined || amzOrderId === ''
+    ) {
+        return;
+    }
+    var reviewUrl = $("#reviewUrl").val();
+    if (!(reviewUrl === null || reviewUrl === undefined || reviewUrl === '')) {
+        var weChat = $("#weChat").val();
+        var zfb = $("#zfb").val();
+        var payPal = $("#payPal").val();
+        if (
+            (weChat === null || weChat === undefined || weChat === '') &&
+            (zfb === null || zfb === undefined || zfb === '') &&
+            (payPal === null || payPal === undefined || payPal === '')
+        ) {
+            toastr.info("请填写微信、支付宝、PayPal其中之一的金额！");
+            return;
+        }
+    }
 
+    $.ajax({
+        url: "/evaluateController.admin?doAdd",
+        type: 'post',
+        beforeSend: beforeSend,
+        data: $('#formObj').serialize(),
+        success: function (data) {
+            if (data.success === "success") {
+                toastr.success(data.msg);
+                $("#asinId").val("");
+                $("#amzOrderId").val("");
+                $("#reviewUrl").val("");
+                $("#weChat").val("");
+                $("#zfb").val("");
+                $("#payPal").val("");
+                $("#formObj").data('bootstrapValidator').destroy();
+                $('#formObj').data('bootstrapValidator', null);
+                formValidator();
+            } else if (data.success === "fail") {
+                toastr.warning(data.msg);
+            } else {
+                window.location = '/adminSystemController.admin?goAdminLogin'
+            }
+        },
+        error: function (jqxhr, textStatus, errorThrow) {
+            toastr.success("服务器异常,请联系管理员！");
+        },
+        complete: function () {
+            $('#evaluateListTable').bootstrapTable("refresh");
+            SendComplete();
+        }
+    });
+}
 
+function formAddEvaluateUrlModelValidator() {
+    $('#formAddEvaluateUrlModel').bootstrapValidator({
+        framework: 'bootstrap',
+        icon: {
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {
+            reviewUrl: {
+                validators: {
+                    notEmpty: {
+                        message: '评价链接不能为空！'
+                    }
+                }
+            },
+            weChat: {
+                validators: {
+                    regexp: {
+                        regexp: /^[0-9]+([.]{1}[0-9]{1,2})?$/,
+                        message: '金额至多保留两位小数的正数!'
+                    }
+                }
+            },
+            zfb: {
+                validators: {
+                    regexp: {
+                        regexp: /^[0-9]+([.]{1}[0-9]{1,2})?$/,
+                        message: '金额至多保留两位小数的正数!'
+                    }
+                }
+            },
+            payPal: {
+                validators: {
+                    regexp: {
+                        regexp: /^[0-9]+([.]{1}[0-9]{1,2})?$/,
+                        message: '金额至多保留两位小数的正数!'
+                    }
+                }
+            }
+        }
+    })
+}
 
+function submitAddReviewUrl() {
+    console.log("submitAddReviewUrl");
+    var reviewUrl = $("#addReviewUrl").val();
+    if (reviewUrl === null || reviewUrl === undefined || reviewUrl === '') {
+        return;
+    }
+    var weChat = $("#weChat-url").val();
+    var zfb = $("#zfb-url").val();
+    var payPal = $("#payPal-url").val();
+    if (
+        (weChat === null || weChat === undefined || weChat === '') &&
+        (zfb === null || zfb === undefined || zfb === '') &&
+        (payPal === null || payPal === undefined || payPal === '')
+    ) {
+        toastr.info("请填写微信、支付宝、PayPal其中之一的金额！");
+        return;
+    }
 
+    $.ajax({
+        url: "/evaluateController.admin?doAddReviewUrl",
+        type: 'post',
+        beforeSend: beforeSendAddEvaluateUrlBtn,
+        data: $('#formAddEvaluateUrlModel').serialize(),
+        success: function (data) {
+            if (data.success === "success") {
+                toastr.success(data.msg);
+                $('#addEvaluateUrlModel').modal('hide');
+                $("#weChat-url").val("");
+                $("#zfb-url").val("");
+                $("#payPal-url").val("");
+            } else if (data.success === "fail") {
+                toastr.error(data.msg);
+            } else {
+                window.location = '/adminSystemController.admin?goAdminLogin'
+            }
+        },
+        error: function (jqxhr, textStatus, errorThrow) {
+            toastr.success("服务器异常,请联系管理员！");
+        },
+        complete: function () {
+            $('#evaluateListTable').bootstrapTable("refresh");
+            $("#formAddEvaluateUrlModel").data('bootstrapValidator').destroy();
+            $('#formAddEvaluateUrlModel').data('bootstrapValidator', null);
+            formAddEvaluateUrlModelValidator();
+            sendCompleteAddEvaluateUrlBtn();
+        }
+    });
+}
+
+function beforeSendAddEvaluateUrlBtn() {
+    $("#addEvaluateUrlBtn").addClass("disabled"); // Disables visually
+    $("#addEvaluateUrlBtn").prop("disabled", true); // Disables visually + functionally
+}
+
+function sendCompleteAddEvaluateUrlBtn() {
+    $("#addEvaluateUrlBtn").removeClass("disabled"); // Disables visually
+    $("#addEvaluateUrlBtn").prop("disabled", false); // Disables visually + functionally
+}

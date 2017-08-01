@@ -154,6 +154,9 @@ public class EvaluateController extends BaseController {
                                 reviewUrl.substring(reviewUrl.lastIndexOf("/") + 1, reviewUrl.lastIndexOf("?")))
                 );
             }
+            promotOrderEvaluateFlowDb.setPayPal(promotOrderEvaluateFlowEntity.getPayPal());
+            promotOrderEvaluateFlowDb.setWeChat(promotOrderEvaluateFlowEntity.getWeChat());
+            promotOrderEvaluateFlowDb.setZfb(promotOrderEvaluateFlowEntity.getZfb());
             j = evaluateService.doAddReviewUrl(promotOrderEvaluateFlowEntity, promotOrderEvaluateFlowDb);
         } catch (Exception e) {
             j.setSuccess(AjaxJson.CODE_FAIL);
@@ -315,7 +318,6 @@ public class EvaluateController extends BaseController {
             j.setMsg("亚马逊订单号不能为空！");
             return j;
         }
-
 
 
         PromotOrderEvaluateFlowEntity promotOrderEvaluateFlowDb = evaluateService.find(PromotOrderEvaluateFlowEntity.class, promotOrderEvaluateFlowEntity.getId());

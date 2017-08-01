@@ -152,7 +152,8 @@
                                     <div class="input-group date form_date" id="createTime_end"
                                          data-date-format="yyyy-mm-dd"
                                          data-link-field="createTime_end_input" data-link-format="yyyy-mm-dd">
-                                        <input class="form-control" name="createTime_end" id="createTime_end_value" size="16"
+                                        <input class="form-control" name="createTime_end" id="createTime_end_value"
+                                               size="16"
                                                type="text" value="" readonly placeholder="结束时间">
                                         <span class="input-group-addon"><span
                                                 class="glyphicon glyphicon-remove"></span></span>
@@ -169,7 +170,7 @@
                     <div class="row">
                         <div class="col-sm-4 col-sm-offset-8">
                             <div class="btn-group" role="group">
-                                <a  onclick="downEvaluateExcel();" class="btn btn-default" style="width: 104px;">评论导出
+                                <a onclick="downEvaluateExcel();" class="btn btn-default" style="width: 104px;">评论导出
                                 </a>
                                 <a type="button" data-target='#addNewReview' class="btn btn-default" data-toggle='modal'
                                    style="width: 104px;">评论录入
@@ -229,11 +230,38 @@
                                    aria-describedby="basic-addon1">
                         </div>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group has-warning" style="height: 50px;">
                         <div class="input-group" style="width: 100%;">
                             <span class="input-group-addon" style="width:150px;" id="reviewUrl-addon">亚马逊评论链接</span>
                             <input type="text" class="form-control" id="reviewUrl" name="reviewUrl"
                                    placeholder="亚马逊评论链接"
+                                   aria-describedby="basic-addon1">
+                        </div>
+                        <small class="help-block">若填写亚马逊评论链接 则必填 微信 支付宝 PayPal其中之一</small>
+                    </div>
+                    <div class="form-group" style="height: 50px;">
+                        <div class="input-group" style="width: 100%;">
+                            <span class="input-group-addon" style="width:150px;"
+                                  id="weChat-addon">微信&nbsp;&nbsp;￥</span>
+                            <input type="number" class="form-control" id="weChat" name="weChat"
+                                   placeholder="微信&nbsp;&nbsp;￥"
+                                   aria-describedby="basic-addon1">
+                        </div>
+                    </div>
+                    <div class="form-group" style="height: 50px;">
+                        <div class="input-group" style="width: 100%;">
+                            <span class="input-group-addon" style="width:150px;" id="zfb-addon">支付宝&nbsp;&nbsp;￥</span>
+                            <input type="number" class="form-control" id="zfb" name="zfb"
+                                   placeholder="支付宝￥"
+                                   aria-describedby="basic-addon1">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="input-group" style="width: 100%;">
+                            <span class="input-group-addon" style="width:150px;"
+                                  id="PayPal-addon">PayPal&nbsp;&nbsp;$</span>
+                            <input type="number" class="form-control" id="payPal" name="payPal"
+                                   placeholder="PayPal$"
                                    aria-describedby="basic-addon1">
                         </div>
                     </div>
@@ -279,8 +307,7 @@
      aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form id="formAddEvaluateUrlModel" action="/evaluateController.admin?doAddReviewUrl"
-                  onsubmit="return false;">
+            <form id="formAddEvaluateUrlModel" onsubmit="return submitAddReviewUrl();">
                 <div class="modal-header">
                     <button type="button" class="close"
                             data-dismiss="modal" aria-hidden="true">
@@ -308,7 +335,7 @@
                                    aria-describedby="basic-addon1">
                         </div>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group" style="height: 50px;">
                         <div class="input-group" style="width: 100%;">
                             <span class="input-group-addon" style="width:150px;">亚马逊评论链接*</span>
                             <input type="text" class="form-control" id="addReviewUrl" name="reviewUrl"
@@ -317,9 +344,38 @@
                                    aria-describedby="basic-addon1">
                         </div>
                     </div>
+                    <div class="form-group" style="height: 50px;">
+                        <div class="input-group" style="width: 100%;">
+                            <span class="input-group-addon" style="width:150px;"
+                                  id="weChat-url-addon">微信&nbsp;&nbsp;￥</span>
+                            <input type="number" class="form-control" id="weChat-url" name="weChat"
+                                   placeholder="微信&nbsp;&nbsp;￥"
+                                   aria-describedby="basic-addon1">
+                        </div>
+                    </div>
+                    <div class="form-group" style="height: 50px;">
+                        <div class="input-group" style="width: 100%;">
+                            <span class="input-group-addon" style="width:150px;" id="zfb-url-addon">支付宝&nbsp;&nbsp;￥</span>
+                            <input type="number" class="form-control" id="zfb-url" name="zfb"
+                                   placeholder="支付宝&nbsp;&nbsp;￥"
+                                   aria-describedby="basic-addon1">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="input-group" style="width: 100%;">
+                            <span class="input-group-addon" style="width:150px;"
+                                  id="payPal-url-addon">PayPal&nbsp;&nbsp;$</span>
+                            <input type="number" class="form-control" id="payPal-url" name="payPal"
+                                   placeholder="PayPal&nbsp;&nbsp;$"
+                                   aria-describedby="basic-addon1">
+                        </div>
+                    </div>
+                    <div class="form-group has-warning">
+                        <small class="help-block">必填 微信 支付宝 PayPal 其中之一</small>
+                    </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" onclick="submitAddReviewUrl();" class="btn btn-primary">录入
+                    <button type="button"  id="addEvaluateUrlBtn" class="btn btn-primary">录入
                     </button>
                     <button type="button" class="btn btn-default" data-dismiss="modal">关闭
                     </button>
@@ -372,7 +428,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" onclick="submitModifyAmOrderNo();" class="btn btn-primary">修改订单编号
+                    <button type="button" onclick="submitModifyAmOrderNo();" class="btn btn-primary">修改订单编号
                     </button>
                     <button type="button" class="btn btn-default" data-dismiss="modal">关闭
                     </button>

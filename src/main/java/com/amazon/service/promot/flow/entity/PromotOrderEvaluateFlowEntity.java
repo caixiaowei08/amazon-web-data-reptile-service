@@ -8,6 +8,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 
 /**
@@ -29,7 +30,7 @@ public class PromotOrderEvaluateFlowEntity extends IdEntity implements Serializa
     private Integer sellerId;
 
     /**
-     *评价位置识别码 防止评价重复录入
+     * 评价位置识别码 防止评价重复录入
      */
     private String reviewCode;
 
@@ -52,7 +53,7 @@ public class PromotOrderEvaluateFlowEntity extends IdEntity implements Serializa
      */
     private String amzOrderId;
     /**
-     *评价链接
+     * 评价链接
      */
     private String reviewUrl;
     /**
@@ -71,6 +72,19 @@ public class PromotOrderEvaluateFlowEntity extends IdEntity implements Serializa
      * 投诉 0-无投诉 1 2 3 4 5
      */
     private Integer complaint;
+
+    /**
+     * 微信金额
+     */
+    private BigDecimal weChat;
+    /**
+     * 支付宝
+     */
+    private BigDecimal zfb;
+    /**
+     * payPal
+     */
+    private BigDecimal payPal;
 
     private String remark;
     /**
@@ -160,7 +174,6 @@ public class PromotOrderEvaluateFlowEntity extends IdEntity implements Serializa
     }
 
 
-
     @Column(name = "reviewStar", nullable = true)
     public Double getReviewStar() {
         return reviewStar;
@@ -222,5 +235,32 @@ public class PromotOrderEvaluateFlowEntity extends IdEntity implements Serializa
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    @Column(name = "weChat", nullable = true, precision = 50, scale = 4)
+    public BigDecimal getWeChat() {
+        return weChat;
+    }
+
+    public void setWeChat(BigDecimal weChat) {
+        this.weChat = weChat;
+    }
+
+    @Column(name = "zfb", nullable = true, precision = 50, scale = 4)
+    public BigDecimal getZfb() {
+        return zfb;
+    }
+
+    public void setZfb(BigDecimal zfb) {
+        this.zfb = zfb;
+    }
+
+    @Column(name = "payPal", nullable = true, precision = 50, scale = 4)
+    public BigDecimal getPayPal() {
+        return payPal;
+    }
+
+    public void setPayPal(BigDecimal payPal) {
+        this.payPal = payPal;
     }
 }
