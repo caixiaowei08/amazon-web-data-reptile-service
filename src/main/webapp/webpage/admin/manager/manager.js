@@ -71,7 +71,7 @@ $(function () {
                 field: "id",
                 width: "10%",//宽度
                 formatter: function (value, row, index) {
-                    return "&nbsp;&nbsp;<a onclick='loadAuthorInfo(" + value + ")' href='#' title='修改账户' data-target='#updateAuthorModel'  data-toggle='modal'><i class='fa fa-pencil'></i></a>&nbsp;&nbsp;&nbsp;&nbsp;<a onclick='loadUserFundInfo(" + value + ");' title='删除账号' href='#' data-target='#fundCharge' data-toggle='modal'><i class='fa fa-trash'></i></a>";
+                    return "&nbsp;&nbsp;<a onclick='loadAuthorInfo(" + value + ")' href='#' title='修改账户' data-target='#updateAuthorModel'  data-toggle='modal'><i class='fa fa-pencil'></i></a>&nbsp;&nbsp;&nbsp;&nbsp;<a onclick='loadDeleteAuthorInfo(" + row.id +");' title='删除账号' href='#' data-target='#deleteAuthorModel' data-toggle='modal'><i class='fa fa-trash'></i></a>";
                 }
             }
         ]],
@@ -90,7 +90,9 @@ var viewModel = {
     pwd: ko.observable(),
     updateAccount: ko.observable(),
     updateId: ko.observable(),
-    updateStatus: ko.observable()
+    updateStatus: ko.observable(),
+    deleteId: ko.observable(),
+    deleteAccount: ko.observable()
 }
 
 //搜索
@@ -167,7 +169,7 @@ function loadAuthorInfo(authorId) {
                 viewModel.updateId(data.content.id);
                 viewModel.updateAccount(data.content.account);
                 viewModel.updateStatus(data.content.status);
-                $("#selectStatus option[value='"+data.content.status+"']").attr('selected', 'selected');
+                $("#selectStatus option[value='" + data.content.status + "']").attr('selected', 'selected');
             } else if (data.success === "fail") {
                 toastr.warning(data.msg);
             } else {
@@ -175,7 +177,7 @@ function loadAuthorInfo(authorId) {
             }
         },
         error: function (jqxhr, textStatus, errorThrow) {
-            toastr.success("服务器异常,请联系管理员！");
+            toastr.error("服务器异常,请联系管理员！");
         }
     });
 }
@@ -209,4 +211,51 @@ function updateAuthorValidator() {
             $('#authorListTable').bootstrapTable("refresh");
         }, 'json');
     });
+}
+
+function loadDeleteAuthorInfo(id) {
+    $.ajax({
+        url: "/adminAuthorController.admin?doGet",
+        type: 'post',
+        data: {id: id},
+        success: function (data) {
+            if (data.success === "success") {
+                viewModel.deleteId(data.content.id);
+                viewModel.deleteAccount(data.content.account);
+            } else if (data.success === "fail") {
+                toastr.warning(data.msg);
+            } else {
+                window.location = '/adminSystemController.admin?goAdminLogin'
+            }
+        },
+        error: function (jqxhr, textStatus, errorThrow) {
+            toastr.error("服务器异常,请联系管理员！");
+        }
+    });
+}
+
+function deleteAuthorById() {
+    var authorId = $("#deleteId").val();
+
+    $.ajax({
+        url: "/adminAuthorController.admin?doDel",
+        type: 'post',
+        data: {id: authorId},
+        success: function (data) {
+            if (data.success === "success") {
+                viewModel.deleteId("");
+                viewModel.deleteAccount("");
+            } else if (data.success === "fail") {
+                toastr.warning(data.msg);
+            } else {
+                window.location = '/adminSystemController.admin?goAdminLogin'
+            }
+            $('#deleteAuthorModel').modal('hide');
+            $('#authorListTable').bootstrapTable("refresh");
+        },
+        error: function (jqxhr, textStatus, errorThrow) {
+            toastr.error("服务器异常,请联系管理员！");
+        }
+    });
+
 }

@@ -119,6 +119,7 @@ public class AdminAuthorController extends BaseController {
         AjaxJson j = new AjaxJson();
         try {
             AuthorUserEntity authorUserDb = authorUserService.find(AuthorUserEntity.class, authorUserEntity.getId());
+            authorUserDb.setPwd("");
             j.setSuccess(AjaxJson.CODE_SUCCESS);
             j.setContent(authorUserDb);
             return j;
@@ -134,6 +135,13 @@ public class AdminAuthorController extends BaseController {
     @ResponseBody
     public AjaxJson doUpdate(AuthorUserEntity authorUserEntity, HttpServletRequest request, HttpServletResponse response) {
         AjaxJson j = new AjaxJson();
+        AdminSystemEntity adminSystemEntity = globalService.getAdminEntityFromSession();
+        if (adminSystemEntity == null) {
+            j.setSuccess(AjaxJson.RELOGIN);
+            j.setMsg("请重新登录！");
+            return j;
+        }
+
         try {
             AuthorUserEntity authorUserDb = authorUserService.find(AuthorUserEntity.class, authorUserEntity.getId());
             authorUserDb.setStatus(authorUserEntity.getStatus());
@@ -143,6 +151,61 @@ public class AdminAuthorController extends BaseController {
             logger.error(e);
             j.setSuccess(AjaxJson.CODE_FAIL);
             j.setMsg("修改普通会员失败！");
+            return j;
+        }
+        return j;
+    }
+
+    @RequestMapping(params = "doDel")
+    @ResponseBody
+    public AjaxJson doDel(AuthorUserEntity authorUserEntity, HttpServletRequest request, HttpServletResponse response) {
+        AjaxJson j = new AjaxJson();
+        AdminSystemEntity adminSystemEntity = globalService.getAdminEntityFromSession();
+        if (adminSystemEntity == null) {
+            j.setSuccess(AjaxJson.RELOGIN);
+            j.setMsg("请重新登录！");
+            return j;
+        }
+        try {
+            AuthorUserEntity authorUserDb = authorUserService.find(AuthorUserEntity.class, authorUserEntity.getId());
+            if (authorUserDb != null) {
+                authorUserService.delete(authorUserDb);
+            }
+        } catch (Exception e) {
+            logger.error(e);
+            j.setSuccess(AjaxJson.CODE_FAIL);
+            j.setMsg("删除普通会员失败！");
+            return j;
+        }
+        return j;
+    }
+
+    @RequestMapping(params = "doGetAllAuthorUser")
+    @ResponseBody
+    public AjaxJson doGetAllAuthorUser(AuthorUserEntity authorUserEntity, HttpServletRequest request, HttpServletResponse response) {
+        AjaxJson j = new AjaxJson();
+        AdminSystemEntity adminSystemEntity = globalService.getAdminEntityFromSession();
+        if (adminSystemEntity == null) {
+            j.setSuccess(AjaxJson.RELOGIN);
+            j.setMsg("请重新登录！");
+            return j;
+        }
+        try {
+            DetachedCriteria detachedCriteria = DetachedCriteria.forClass(AuthorUserEntity.class);
+            detachedCriteria.add(Restrictions.eq("status",AuthorConstant.AUTHOR_NORMAL_CONSTANTS));
+            List<AuthorUserEntity> authorUserEntityList = authorUserService.getListByCriteriaQuery(detachedCriteria);
+            if(CollectionUtils.isNotEmpty(authorUserEntityList)){
+                for (AuthorUserEntity authorUserItem :authorUserEntityList) {
+                    authorUserItem.setAccount(authorUserItem.getId()+" : "+authorUserItem.getAccount());
+                    authorUserItem.setPwd("");
+                }
+            }
+            j.setSuccess(AjaxJson.CODE_SUCCESS);
+            j.setContent(authorUserEntityList);
+        } catch (Exception e) {
+            logger.error(e);
+            j.setSuccess(AjaxJson.CODE_FAIL);
+            j.setMsg("获取所有普通管理员失败！");
             return j;
         }
         return j;

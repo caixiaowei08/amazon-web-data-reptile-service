@@ -61,7 +61,7 @@
                        aria-expanded="false">系统设置<span class="caret"></span></a>
                     <ul class="dropdown-menu">
                         <li><a href="/skipController.admin?goPriceExchange" target="_parent">价格汇率</a></li>
-                        <%--<li><a href="/skipController.admin?goQQContacts" target="_parent">联系人</a></li>--%>
+                        <li><a href="/skipController.admin?goGeneralManager" target="_parent">普通管理员</a></li>
                     </ul>
                 </li>
                 <li class="dropdown">
@@ -214,6 +214,31 @@
                     </button>
                 </div>
             </form>
+        </div>
+    </div>
+</div>
+<div class="modal fade bs-example-modal-sm" id="deleteAuthorModel" tabindex="-1" role="dialog"
+     aria-labelledby="deleteAuthorModel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close"
+                        data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title">
+                    提示：删除普通管理员
+                </h4>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="deleteId" data-bind="value:deleteId">
+                确认删除普通管理员<span data-bind="text:deleteAccount"></span>吗？
+            </div>
+            <div class="modal-footer">
+                <button type="button" onclick="deleteAuthorById();" class="btn btn-primary">删除</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            </div>
         </div>
     </div>
 </div>

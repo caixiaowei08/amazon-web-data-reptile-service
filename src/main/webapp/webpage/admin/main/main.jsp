@@ -355,6 +355,13 @@
                                        readonly aria-describedby="reviewPrice">
                             </div>
                         </div>
+                        <div class="form-group">
+                            <div class="input-group">
+                                <span class="input-group-addon" style="width: 160px;" id="authorAccount">分配管理员</span>
+                                <input type="text" class="form-control" data-bind="value:authorAccount"
+                                       readonly aria-describedby="authorAccount">
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -388,6 +395,54 @@
                 <button type="button" class="btn btn-primary" id="deleteOrderByIdBtn" onclick="deleteOrderById();">确定
                 </button>
             </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="allotOrderModel" tabindex="-1" role="dialog" aria-labelledby="allotOrderModel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="formAllotOrderModel" action="/adminPromotController.admin?doAllotOrder">
+                <div class="modal-header">
+                    <button type="button" class="close"
+                            data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                    <h4 class="modal-title">
+                        订单分配
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group" style="height: 50px;">
+                        <div class="input-group" style="width: 100%;">
+                            <span class="input-group-addon" style="width:150px;">订单编号</span>
+                            <input type="text" class="form-control" name="id" readonly="readonly" data-bind="value:id"
+                                   aria-describedby="basic-addon1">
+                        </div>
+                    </div>
+                    <div class="form-group" style="height: 50px;">
+                        <div class="input-group" style="width: 100%;">
+                            <span class="input-group-addon" style="width:150px;">ASIN</span>
+                            <input type="s" class="form-control" readonly="readonly" data-bind="value:asinId"
+                                   aria-describedby="basic-addon1">
+                        </div>
+                    </div>
+                    <div class="form-group" style="height: 50px;">
+                        <div class="input-group" style="width: 100%;">
+                            <span class="input-group-addon" style="width:150px;">普通管理员</span>
+                            <select id="selectStatus" class="form-control" name="authorId"
+                                    data-bind="options:authorList,optionsText:'account',optionsValue:'id'">
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">分配订单
+                    </button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 </div>

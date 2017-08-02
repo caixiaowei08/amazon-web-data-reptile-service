@@ -49,7 +49,7 @@ $(function () {
         locale: "zh-CN",
         showColumns: false,
         singleSelect: true,
-        onLoadError:function () {
+        onLoadError: function () {
             toastr.warning("请重新登录！");
             setTimeout("window.location='/adminSystemController.admin?goAdminLogin'", 1000);
         },
@@ -155,13 +155,14 @@ $(function () {
                 field: "id",
                 width: "10%",//宽度
                 formatter: function (value, row, index) {
+                    var html = "<a onclick='loadPromotOrder(" + value + ")' title='查看详情' href='#' data-target='#orderDetailModal' data-toggle='modal'><i class='fa fa-search'></i></a>&nbsp;";
                     if (row.state === 1) {//开启状态
-                        return "<a onclick='loadPromotOrder(" + value + ")' title='查看详情' data-target='#orderDetailModal' data-toggle='modal'><i class='fa fa-search'></i></a>&nbsp;&nbsp;<a onclick='clickDeleteModel(" + value + ");' title='关闭推广' data-target='#deleteOrderModel' data-toggle='modal'><i class='fa fa-window-close'></i></a>";
-                    } else if (row.state === 2) { //关闭状态*/
-                        return "<a onclick='loadPromotOrder(" + value + ")'title='查看详情' data-target='#orderDetailModal' data-toggle='modal'><i class='fa fa-search'></i></a>";
-                    } else {
-                        return "";
+                        html = html + "<a onclick='clickDeleteModel(" + value + ");' title='关闭推广' href='#' data-target='#deleteOrderModel' data-toggle='modal'><i class='fa fa-window-close'></i></a>&nbsp;";
                     }
+                    if (row.state === 1 && (row.authorId === undefined || row.authorId === null || row.authorId === "")) {
+                        html = html + "<a onclick='clickAllotModel(" + value + ");' title='分配订单' href='#' data-target='#allotOrderModel' data-toggle='modal'><i class='fa fa fa-share'></i></a>&nbsp;";
+                    }
+                    return html;
                 }
             }
         ]],
@@ -171,11 +172,11 @@ $(function () {
             params.state = $("#amazon_state").val().trim();
             params.addDate_begin = $("#addDate_begin_value").val().trim();
             params.addDate_end = $("#addDate_end_value").val().trim();
-            params.account  = $("#account").val().trim();
+            params.account = $("#account").val().trim();
             return params;
         }
     });
-
+    allotOrderValidator();
     ko.applyBindings(viewModel);
 });
 
@@ -212,9 +213,12 @@ var viewModel = {
     dayReviewNum: ko.observable(),
     buyerNum: ko.observable(),
     evaluateNum: ko.observable(),
-    cashback:ko.observable(),
+    cashback: ko.observable(),
     reviewPrice: ko.observable(),
-    remark: ko.observable()
+    remark: ko.observable(),
+    authorList: ko.observable(),
+    authorAccount: ko.observable(),
+
 };
 
 
@@ -245,6 +249,7 @@ function loadPromotOrder(promotId) {
                 viewModel.evaluateNum(data.content.evaluateNum);
                 viewModel.reviewPrice(data.content.reviewPrice);
                 viewModel.remark(data.content.remark);
+                viewModel.authorAccount(data.content.authorAccount);
             } else if (data.success === "fail") {
                 toastr.warning(data.msg);
             } else {
@@ -264,7 +269,7 @@ function downPromotOrderExcel() {
     params.state = $("#amazon_state").val().trim();
     params.addDate_begin = $("#addDate_begin_value").val().trim();
     params.addDate_end = $("#addDate_end_value").val().trim();
-    params.account  = $("#account").val().trim();
+    params.account = $("#account").val().trim();
 
     if ((params.addDate_end === "") ^ (params.addDate_begin === "")) {
         toastr.warning("若填写查询时间，开始时间和结束时间需要同时填写！");
@@ -333,5 +338,70 @@ function beforeSend() {
 function SendComplete() {
     $("#deleteOrderByIdBtn").removeClass("disabled"); // Disables visually
     $("#deleteOrderByIdBtn").prop("disabled", false); // Disables visually + functionally
+}
+
+function clickAllotModel(id) {
+    $.ajax({
+        url: "/adminPromotController.admin?doGet",
+        type: 'post',
+        data: {id: id},
+        success: function (data) {
+            if (data.success === "success") {
+                viewModel.id(data.content.id);
+                viewModel.asinId(data.content.asinId);
+            } else if (data.success === "fail") {
+                toastr.warning(data.msg);
+            } else {
+                window.location = '/adminSystemController.admin?goAdminLogin'
+            }
+        },
+        error: function (jqxhr, textStatus, errorThrow) {
+            toastr.success("服务器异常,请联系管理员！");
+        }
+    });
+
+    $.ajax({
+        url: "/adminAuthorController.admin?doGetAllAuthorUser",
+        success: function (data) {
+            if (data.success === "success") {
+                viewModel.authorList(data.content);
+            } else if (data.success === "fail") {
+                toastr.warning(data.msg);
+            } else {
+                window.location = '/adminSystemController.admin?goAdminLogin'
+            }
+        },
+        error: function (jqxhr, textStatus, errorThrow) {
+            toastr.success("服务器异常,请联系管理员！");
+        }
+    });
+}
+
+function allotOrderValidator() {
+    $('#formAllotOrderModel').bootstrapValidator({
+        framework: 'bootstrap',
+        icon: {
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {}
+    }).on('success.form.bv', function (e) {
+        var form = $('#formAllotOrderModel');
+        e.preventDefault(); // 阻止默认事件提交
+        $.post(form.attr('action'), form.serialize(), function (result) {
+            if (result.success === "success") {
+                toastr.success(result.msg);
+                $('#allotOrderModel').modal('hide');
+            } else if (result.success === "fail") {
+                toastr.error(result.msg);
+            } else {
+                window.location = '/adminSystemController.admin?goAdminLogin';
+            }
+            form.bootstrapValidator('disableSubmitButtons', false);
+            form.data('bootstrapValidator').resetForm();
+            $('#promotListTable').bootstrapTable("refresh");
+        }, 'json');
+    });
 }
 

@@ -13,6 +13,7 @@ import org.apache.logging.log4j.Logger;
 import org.framework.core.common.controller.BaseController;
 import org.framework.core.common.model.json.AjaxJson;
 import org.framework.core.global.service.GlobalService;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -47,6 +48,11 @@ public class AuthorPromoteController extends BaseController {
         } catch (Exception e) {
             logger.error("组装查询出错！", e);
         }
+        AuthorUserEntity authorUserEntity = globalService.getAuthorUserEntityFromSession();
+        if(authorUserEntity == null ){
+            return;
+        }
+        criteriaQuery.getDetachedCriteria().add(Restrictions.eq("authorId",authorUserEntity.getId()));
         DataGridReturn dataGridReturn = promotOrderService.getDataGridReturn(criteriaQuery);
         DatagridJsonUtils.listToObj(dataGridReturn, PromotOrderEntity.class, dataGrid.getField());
         DatagridJsonUtils.datagrid(response, dataGridReturn);

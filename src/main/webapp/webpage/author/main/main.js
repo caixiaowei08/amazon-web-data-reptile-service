@@ -50,8 +50,7 @@ $(function () {
         showColumns: false,
         singleSelect: true,
         onLoadError:function () {
-            toastr.warning("请重新登录！");
-            setTimeout("window.location='/adminSystemController.admin?goAdminLogin'", 1000);
+            window.location = '/author/pageController.author?main';
         },
         queryParams: function (params) {
             params.id = $("#amazon_id").val().trim();
@@ -236,7 +235,7 @@ function loadPromotOrder(promotId) {
             } else if (data.success === "fail") {
                 toastr.warning(data.msg);
             } else {
-                window.location = '/adminSystemController.admin?goAdminLogin'
+                window.location = '/author/pageController.author?main';
             }
         },
         error: function (jqxhr, textStatus, errorThrow) {

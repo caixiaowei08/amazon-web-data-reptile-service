@@ -2,10 +2,12 @@ package com.amazon.admin.promot.controller;
 
 import com.amazon.admin.poi.service.PoiPromotService;
 import com.amazon.admin.promot.service.AdminPromotService;
+import com.amazon.admin.promot.vo.PromotOrderVo;
+import com.amazon.author.account.entity.AuthorUserEntity;
+import com.amazon.author.account.service.AuthorUserService;
 import com.amazon.service.promot.order.entity.PromotOrderEntity;
 import com.amazon.service.promot.order.service.PromotOrderService;
 import com.amazon.service.user.entity.UserEntity;
-import com.amazon.system.Constant;
 import com.amazon.system.system.bootstrap.hibernate.CriteriaQuery;
 import com.amazon.system.system.bootstrap.json.DataGrid;
 import com.amazon.system.system.bootstrap.json.DataGridReturn;
@@ -16,7 +18,7 @@ import org.apache.logging.log4j.Logger;
 import org.framework.core.common.controller.BaseController;
 import org.framework.core.common.model.json.AjaxJson;
 import org.framework.core.global.service.GlobalService;
-import org.framework.core.utils.ContextHolderUtils;
+import org.framework.core.utils.BeanUtils;
 import org.framework.core.utils.DateUtils.DateUtils;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
@@ -51,6 +53,9 @@ public class AdminPromotController extends BaseController {
 
     @Autowired
     private GlobalService globalService;
+
+    @Autowired
+    private AuthorUserService authorUserService;
 
     @Autowired
     private PromotOrderService promotOrderService;
@@ -132,8 +137,25 @@ public class AdminPromotController extends BaseController {
             j.setMsg("请选择您需要查看信息详情！");
             return j;
         }
-        PromotOrderEntity promotOrderDb = promotOrderService.find(PromotOrderEntity.class, promotOrderEntity.getId());
-        j.setContent(promotOrderDb);
+        try {
+            PromotOrderEntity promotOrderDb = promotOrderService.find(PromotOrderEntity.class, promotOrderEntity.getId());
+            PromotOrderVo promotOrderVo = new PromotOrderVo();
+            BeanUtils.copyBeanNotNull2Bean(promotOrderDb, promotOrderVo);
+            promotOrderVo.setAuthorAccount("");
+            if (promotOrderDb.getAuthorId() != null) {
+                AuthorUserEntity authorUserEntity = authorUserService.find(AuthorUserEntity.class, promotOrderDb.getAuthorId());
+                if (authorUserEntity != null) {
+                    promotOrderVo.setAuthorAccount(authorUserEntity.getAccount());
+                }
+            }
+            j.setSuccess(AjaxJson.CODE_SUCCESS);
+            j.setContent(promotOrderVo);
+        } catch (Exception e) {
+            logger.error(e);
+            j.setSuccess(AjaxJson.CODE_FAIL);
+            j.setMsg("获取订单信息失败！");
+            return j;
+        }
         return j;
     }
 
@@ -141,7 +163,7 @@ public class AdminPromotController extends BaseController {
     @ResponseBody
     public AjaxJson doCloseById(PromotOrderEntity promotOrderEntity, HttpServletRequest request) {
         AjaxJson j = new AjaxJson();
-        if(globalService.isNotAdminLogin()){
+        if (globalService.isNotAdminLogin()) {
             j.setSuccess(AjaxJson.RELOGIN);
             j.setMsg("请重新登录！");
             return j;
@@ -156,6 +178,41 @@ public class AdminPromotController extends BaseController {
         } catch (Exception e) {
             j.setSuccess(AjaxJson.CODE_FAIL);
             j.setMsg("关闭失败！");
+            return j;
+        }
+        return j;
+    }
+
+    @RequestMapping(params = "doAllotOrder")
+    @ResponseBody
+    public AjaxJson doAllotOrder(PromotOrderEntity promotOrderEntity, HttpServletRequest request) {
+        AjaxJson j = new AjaxJson();
+        if (globalService.isNotAdminLogin()) {
+            j.setSuccess(AjaxJson.RELOGIN);
+            j.setMsg("请重新登录！");
+            return j;
+        }
+        try {
+            AuthorUserEntity authorUserDb = authorUserService.find(AuthorUserEntity.class, promotOrderEntity.getAuthorId());
+            PromotOrderEntity promotOrderDb = promotOrderService.find(PromotOrderEntity.class, promotOrderEntity.getId());
+            if (authorUserDb == null || promotOrderDb == null) {
+                logger.info("authorUserDb--promotOrderDb--都为空！");
+                j.setSuccess(AjaxJson.CODE_FAIL);
+                j.setMsg("选择订单或者普通管理员被删除！");
+                return j;
+            }
+            if (promotOrderDb.getAuthorId() != null) {
+                j.setSuccess(AjaxJson.CODE_FAIL);
+                j.setMsg("选择订单已被分配！");
+                return j;
+            }
+            promotOrderDb.setAuthorId(authorUserDb.getId());
+            promotOrderDb.setUpdateTime(new Date());
+            promotOrderService.saveOrUpdate(promotOrderDb);
+        } catch (Exception e) {
+            j.setSuccess(AjaxJson.CODE_FAIL);
+            j.setMsg("分配失败！");
+            logger.error(e);
             return j;
         }
         return j;
