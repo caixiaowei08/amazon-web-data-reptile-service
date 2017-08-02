@@ -67,7 +67,7 @@
                         </ul>
                     </li>
                     <li>
-                        <a href="/author/userController.author?doLogOff">
+                        <a href="/author/userController.author?doLoginOff">
                             退出
                             <i class="fa fa-power-off" style="color: red" aria-hidden="true"></i>
                         </a>
@@ -191,6 +191,169 @@
             </div>
         </div>
     </nav>
+</div>
+<div class="modal fade" id="orderDetailModal" tabindex="-1" role="dialog" aria-labelledby="orderDetailModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close"
+                        data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title" id="orderDetailModalLabel">
+                    推广活动详情
+                </h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <span class="input-group-addon" style="width: 80px;" id="id">订单编号</span>
+                                <input type="text" class="form-control" data-bind="value:id" placeholder="订单编号" readonly
+                                       aria-describedby="salePrice">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="input-group">
+                                <span class="input-group-addon" style="width: 80px;" id="asinId">ASIN</span>
+                                <input type="text" class="form-control" data-bind="value:asinId" placeholder="ASIN"
+                                       readonly aria-describedby="asin">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="input-group">
+                                <span class="input-group-addon" style="width: 80px;" id="salePrice">商品价格</span>
+                                <input type="text" class="form-control" data-bind="value:salePrice"
+                                       placeholder="salePrice" readonly aria-describedby="productTitle">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="input-group">
+                                <span class="input-group-addon" style="width: 80px;" id="brand">商品店家</span>
+                                <input type="text" class="form-control" data-bind="value:brand" placeholder="" readonly
+                                       aria-describedby="brand">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <img src="" data-bind="attr:{src:landingImage}" alt="产品主图" style="height:180px; "
+                             class="img-responsive center-block">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <span class="input-group-addon" style="width: 80px;" id="productTitle">商品标题</span>
+                                <input type="text" class="form-control" data-bind="value:productTitle"
+                                       placeholder="商品标题" readonly aria-describedby="productTitle">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="input-group">
+                                <span class="input-group-addon" style="width: 80px;" id="addDate">下单日期</span>
+                                <input type="text" class="form-control" data-bind="value:addDate" placeholder="下单日期"
+                                       readonly aria-describedby="addDate">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="input-group">
+                                <span class="input-group-addon" style="width: 80px;" id="finishDate">结束日期</span>
+                                <input type="text" class="form-control" data-bind="value:finishDate" placeholder="结束日期"
+                                       readonly aria-describedby="finishDate">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="input-group">
+                                <span class="input-group-addon" style="width: 160px;" id="guaranteeFund">保证金(美元)</span>
+                                <input type="text" class="form-control" data-bind="value:guaranteeFund"
+                                       placeholder="保证金(美元)" readonly aria-describedby="guaranteeFund">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="input-group">
+                                <span class="input-group-addon" style="width: 160px;" id="evaluateNum">获取评论数</span>
+                                <input type="text" class="form-control" data-bind="value:evaluateNum"
+                                       placeholder="获取评论数" readonly aria-describedby="evaluateNum">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="input-group">
+                                <span class="input-group-addon" style="width: 160px;" id="cashback">单个返现费用(美元)</span>
+                                <input type="text" class="form-control" data-bind="value:cashback"
+                                       placeholder="单个返现费用(美元)"
+                                       readonly aria-describedby="cashback">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="input-group">
+                                <span class="input-group-addon" style="width: 80px;" id="remark">备注</span>
+                                <input type="text" class="form-control" data-bind="value:remark"
+                                       readonly aria-describedby="remark">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <span class="input-group-addon" style="width: 160px;" id="consumption">评价花费(美元)</span>
+                                <input type="text" class="form-control" data-bind="value:consumption"
+                                       placeholder="评价花费(美元)"
+                                       readonly aria-describedby="consumption">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="input-group">
+                                <span class="input-group-addon" style="width: 160px;"
+                                      id="cashBackConsumption">返现花费(美元)</span>
+                                <input type="text" class="form-control" data-bind="value:cashBackConsumption"
+                                       placeholder="返现花费(美元)"
+                                       readonly aria-describedby="consumption">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="input-group">
+                                <span class="input-group-addon" style="width: 160px;" id="needReviewNum">总目标好评数</span>
+                                <input type="text" class="form-control" data-bind="value:needReviewNum"
+                                       placeholder="目标好评数"
+                                       readonly aria-describedby="needReviewNum">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="input-group">
+                                <span class="input-group-addon" style="width: 160px;" id="dayReviewNum">每日目标评论</span>
+                                <input type="text" class="form-control" data-bind="value:dayReviewNum"
+                                       placeholder="每天目标好评数"
+                                       readonly aria-describedby="dayReviewNum">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="input-group">
+                                <span class="input-group-addon" style="width: 160px;" id="buyerNum">联系买家</span>
+                                <input type="text" class="form-control" data-bind="value:buyerNum"
+                                       placeholder="已联系到的买家数"
+                                       readonly aria-describedby="buyerNum">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="input-group">
+                                <span class="input-group-addon" style="width: 160px;" id="reviewPrice">单个评论费用(美元)</span>
+                                <input type="text" class="form-control" data-bind="value:reviewPrice"
+                                       placeholder="每个评论费用"
+                                       readonly aria-describedby="reviewPrice">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭
+                </button>
+            </div>
+        </div>
+    </div>
 </div>
 </body>
 </html>

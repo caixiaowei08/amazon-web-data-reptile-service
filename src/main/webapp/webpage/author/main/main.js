@@ -49,6 +49,19 @@ $(function () {
         locale: "zh-CN",
         showColumns: false,
         singleSelect: true,
+        onLoadError:function () {
+            toastr.warning("请重新登录！");
+            setTimeout("window.location='/adminSystemController.admin?goAdminLogin'", 1000);
+        },
+        queryParams: function (params) {
+            params.id = $("#amazon_id").val().trim();
+            params.asinId = $("#amazon_asin").val().trim();
+            params.state = $("#amazon_state").val().trim();
+            params.addDate_begin = $("#addDate_begin_value").val().trim();
+            params.addDate_end = $("#addDate_end_value").val().trim();
+            params.account  = $("#account").val().trim();
+            return params;
+        },
         columns: [[
             {
                 title: '订单编号',
@@ -151,29 +164,86 @@ $(function () {
                 field: "id",
                 width: "10%",//宽度
                 formatter: function (value, row, index) {
-                    if (row.state === 1) {//开启状态
-                        return "<a onclick='loadPromotOrder(" + value + ")' title='查看详情' data-target='#orderDetailModal' data-toggle='modal'><i class='fa fa-search'></i></a>&nbsp;&nbsp;<a onclick='clickDeleteModel(" + value + ");' title='关闭推广' data-target='#deleteOrderModel' data-toggle='modal'><i class='fa fa-window-close'></i></a>";
-                    } else if (row.state === 2) { //关闭状态*/
-                        return "<a onclick='loadPromotOrder(" + value + ")'title='查看详情' data-target='#orderDetailModal' data-toggle='modal'><i class='fa fa-search'></i></a>";
-                    } else {
-                        return "";
-                    }
+                    return "<a onclick='loadPromotOrder(" + value + ")'title='查看详情' data-target='#orderDetailModal' data-toggle='modal'><i class='fa fa-search'></i></a>";
                 }
             }
-        ]],
-        queryParams: function (params) {
-            params.id = $("#amazon_id").val().trim();
-            params.asinId = $("#amazon_asin").val().trim();
-            params.state = $("#amazon_state").val().trim();
-            params.addDate_begin = $("#addDate_begin_value").val().trim();
-            params.addDate_end = $("#addDate_end_value").val().trim();
-            params.account  = $("#account").val().trim();
-            return params;
-        }
+        ]]
     });
-
     ko.applyBindings(viewModel);
 });
+
+var viewModel = {
+    id: ko.observable(),
+    deleteId: ko.observable(),
+    asinId: ko.observable(),
+    productUrl: ko.observable(),
+    productTitle: ko.observable(),
+    brand: ko.observable(),
+    landingImage: ko.observable(),
+    salePrice: ko.observable(),
+    state: ko.observable(),
+    addDate: ko.observable(),
+    finishDate: ko.observable(),
+    cashBackConsumption: ko.observable(),
+    guaranteeFund: ko.observable(),
+    consumption: ko.observable(),
+    needReviewNum: ko.observable(),
+    dayReviewNum: ko.observable(),
+    buyerNum: ko.observable(),
+    evaluateNum: ko.observable(),
+    cashback:ko.observable(),
+    reviewPrice: ko.observable(),
+    remark: ko.observable()
+};
+
+function doPromotSearch() {
+    var addDate_begin = $("#addDate_begin_value").val().trim();
+    var addDate_end = $("#addDate_end_value").val().trim();
+    if ((addDate_end === "") ^ (addDate_begin === "")) {
+        toastr.warning("若填写查询时间，开始时间和结束时间需要同时填写！");
+        return;
+    }
+    $('#promotListTable').bootstrapTable("refresh");
+}
+
+function loadPromotOrder(promotId) {
+    $.ajax({
+        url: "/author/promoteController.author?doGet",
+        type: 'post',
+        data: {id: promotId},
+        success: function (data) {
+            if (data.success === "success") {
+                viewModel.id(data.content.id);
+                viewModel.asinId(data.content.asinId);
+                viewModel.productUrl(data.content.productUrl);
+                viewModel.productTitle(data.content.productTitle);
+                viewModel.brand(data.content.brand);
+                viewModel.landingImage(data.content.thumbnail);
+                viewModel.salePrice(data.content.salePrice);
+                viewModel.cashBackConsumption(data.content.cashBackConsumption);
+                viewModel.state(data.content.state);
+                viewModel.addDate(data.content.addDate);
+                viewModel.finishDate(data.content.finishDate);
+                viewModel.guaranteeFund(data.content.guaranteeFund);
+                viewModel.consumption(data.content.consumption);
+                viewModel.needReviewNum(data.content.needReviewNum);
+                viewModel.dayReviewNum(data.content.dayReviewNum);
+                viewModel.buyerNum(data.content.buyerNum);
+                viewModel.cashback(data.content.cashback);
+                viewModel.evaluateNum(data.content.evaluateNum);
+                viewModel.reviewPrice(data.content.reviewPrice);
+                viewModel.remark(data.content.remark);
+            } else if (data.success === "fail") {
+                toastr.warning(data.msg);
+            } else {
+                window.location = '/adminSystemController.admin?goAdminLogin'
+            }
+        },
+        error: function (jqxhr, textStatus, errorThrow) {
+            toastr.success("服务器异常,请联系管理员！");
+        }
+    });
+}
 
 
 

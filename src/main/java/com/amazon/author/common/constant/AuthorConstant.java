@@ -10,5 +10,11 @@ public class AuthorConstant {
      */
     public final static String AUTHOR_SESSION_CONSTANTS = "AUTHOR_SESSION_CONSTANTS";
 
+    public final static Integer AUTHOR_NORMAL_CONSTANTS = 1;
+
+    public final static Integer AUTHOR_FREEZE_CONSTANTS = 2;
+
+
+
 
 }

@@ -66,4 +66,12 @@ public class SkipController extends BaseController{
         return "admin/systemConfig/userManage";
     }
 
+    @RequestMapping(params = "goGeneralManager")
+    public String goGeneralManager(HttpServletRequest request, HttpServletResponse response) {
+        if (globalService.isNotAdminLogin()) {
+            return "/adminSystemController.admin?goAdminLogin";
+        }
+        return "admin/manager/manager";
+    }
+
 }

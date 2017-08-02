@@ -1,6 +1,7 @@
 package org.framework.core.global.service;
 
 import com.amazon.admin.account.entity.AdminSystemEntity;
+import com.amazon.author.account.entity.AuthorUserEntity;
 import com.amazon.buyer.account.entity.BuyerUserEntity;
 import com.amazon.service.user.entity.UserEntity;
 import org.framework.core.common.pojo.EmailCodePojo;
@@ -36,6 +37,8 @@ public interface GlobalService extends BaseService{
     public BuyerUserEntity getBuyerUserEntityFromSession();
 
     public Boolean isNotBuyerUserLogin();
+
+    public AuthorUserEntity getAuthorUserEntityFromSession();
 
 
 

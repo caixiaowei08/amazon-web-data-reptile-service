@@ -47,7 +47,7 @@ public class AuthorUserController extends BaseController {
     @RequestMapping(params = "doLoginOff")
     public void doLoginOff(HttpServletRequest request, HttpServletResponse response) {
         HttpSession session = ContextHolderUtils.getSession();
-        session.invalidate();//清空session中的所有数据
+        session.invalidate();
         ContextHolderUtils.getSession().invalidate();
         try {
             response.sendRedirect("/author/userController.author?login");
@@ -80,11 +80,5 @@ public class AuthorUserController extends BaseController {
             return j;
         }
     }
-
-
-
-
-
-
 
 }

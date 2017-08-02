@@ -211,8 +211,6 @@ function formValidator() {
             }
         }, 'json');
     });
-
-
 }
 
 function submitMemberShipMonth() {

@@ -2,6 +2,8 @@ package org.framework.core.global.service.impl;
 
 import com.amazon.admin.account.entity.AdminSystemEntity;
 import com.amazon.admin.constant.Constants;
+import com.amazon.author.account.entity.AuthorUserEntity;
+import com.amazon.author.common.constant.AuthorConstant;
 import com.amazon.buyer.account.entity.BuyerUserEntity;
 import com.amazon.buyer.account.service.BuyerUserService;
 import com.amazon.buyer.utils.BuyerConstants;
@@ -92,5 +94,10 @@ public class GlobalServiceImpl extends BaseServiceImpl implements GlobalService 
         } else {
             return false;
         }
+    }
+
+    public AuthorUserEntity getAuthorUserEntityFromSession() {
+        AuthorUserEntity authorUserEntity = (AuthorUserEntity) ContextHolderUtils.getSession().getAttribute(AuthorConstant.AUTHOR_SESSION_CONSTANTS);
+        return authorUserEntity;
     }
 }
