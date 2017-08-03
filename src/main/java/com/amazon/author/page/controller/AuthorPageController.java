@@ -21,5 +21,15 @@ public class AuthorPageController extends BaseController {
         return "author/main/main";
     }
 
+    @RequestMapping(params = "evaluate")
+    public String evaluate(HttpServletRequest request, HttpServletResponse response) {
+        return "author/evaluate/evaluate";
+    }
+
+    @RequestMapping(params = "changePwd")
+    public String changePwd(HttpServletRequest request, HttpServletResponse response) {
+        return "author/userInfo/changePwd";
+    }
+
 
 }

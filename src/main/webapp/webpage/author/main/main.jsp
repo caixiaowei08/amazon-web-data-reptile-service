@@ -57,13 +57,13 @@
             </div>
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">
-                    <li><a href="/skipController.admin?goToAdminMain" target="_parent">推广订单管理</a></li>
-                    <li><a href="/evaluateController.admin?goEvaluateDetail" target="_parent">订单评价管理</a></li>
+                    <li><a href="/author/pageController.author?main" target="_parent">推广订单管理</a></li>
+                    <li><a href="/author/pageController.author?evaluate" target="_parent">订单评价管理</a></li>
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle " data-toggle="dropdown" role="button" aria-haspopup="true"
                            aria-expanded="false">我的账号<span class="caret"></span></a>
                         <ul class="dropdown-menu">
-                            <li><a href="/skipController.admin?goAdminChangePwd" target="_parent">修改密码</a></li>
+                            <li><a href="/author/pageController.author?changePwd" target="_parent">修改密码</a></li>
                         </ul>
                     </li>
                     <li>
@@ -117,14 +117,6 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-sm-4">
-                            <div class="form-group">
-                                <label class="col-xs-4 control-label amazon-label" for="amazon_asin">邮箱账号</label>
-                                <div class="col-xs-8">
-                                    <input class="form-control" id="account" type="text"/>
-                                </div>
-                            </div>
-                        </div>
                         <div class="col-sm-8">
                             <div class="form-group">
                                 <label class="col-xs-2 control-label amazon-label" for="amazon_state">

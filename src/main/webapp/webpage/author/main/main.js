@@ -58,7 +58,6 @@ $(function () {
             params.state = $("#amazon_state").val().trim();
             params.addDate_begin = $("#addDate_begin_value").val().trim();
             params.addDate_end = $("#addDate_end_value").val().trim();
-            params.account  = $("#account").val().trim();
             return params;
         },
         columns: [[
@@ -243,8 +242,3 @@ function loadPromotOrder(promotId) {
         }
     });
 }
-
-
-
-
-
