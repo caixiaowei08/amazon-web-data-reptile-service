@@ -194,7 +194,7 @@ var viewModel = {
     remark: ko.observable()
 };
 
-function doPromotSearch() {
+function doPromoteSearch() {
     var addDate_begin = $("#addDate_begin_value").val().trim();
     var addDate_end = $("#addDate_end_value").val().trim();
     if ((addDate_end === "") ^ (addDate_begin === "")) {
@@ -234,7 +234,46 @@ function loadPromotOrder(promotId) {
             } else if (data.success === "fail") {
                 toastr.warning(data.msg);
             } else {
-                window.location = '/author/pageController.author?main';
+                window.location = '/author/userController.author?login';
+            }
+        },
+        error: function (jqxhr, textStatus, errorThrow) {
+            toastr.success("服务器异常,请联系管理员！");
+        }
+    });
+}
+
+//订单Excel下载
+function downLoadPromoteOrderExcel() {
+    var params = new Object();
+    params.id = $("#amazon_id").val().trim();
+    params.asinId = $("#amazon_asin").val().trim();
+    params.state = $("#amazon_state").val().trim();
+    params.addDate_begin = $("#addDate_begin_value").val().trim();
+    params.addDate_end = $("#addDate_end_value").val().trim();
+
+    if ((params.addDate_end === "") ^ (params.addDate_begin === "")) {
+        toastr.warning("若填写查询时间，开始时间和结束时间需要同时填写！");
+        return;
+    }
+
+    $.ajax({
+        url: "/author/userController.author?doLoginCheck",
+        success: function (data) {
+            if (data.success === "success") {
+                window.open(
+                    "/author/promoteController.author?downLoadPromoteOrderExcel&asinId=" + params.asinId
+                    + "&state=" + params.state
+                    + "&addDate_begin=" + params.addDate_begin
+                    + "&addDate_end=" + params.addDate_end
+                )
+            } else if (data.success === "fail") {
+                toastr.warning(data.msg);
+                setTimeout("window.location = '/author/userController.author?login'", 500);
+                return;
+            } else {
+                window.location = '/author/userController.author?login';
+                return;
             }
         },
         error: function (jqxhr, textStatus, errorThrow) {

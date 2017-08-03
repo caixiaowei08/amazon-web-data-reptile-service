@@ -458,10 +458,10 @@ function downEvaluateExcel() {
                     + "&createTime_end=" + params.createTime_end
                 )
             } else if (data.success === "fail") {
-                toastr.warning(data.msg);
+                toastr.error(data.msg);
                 return;
             } else {
-                setTimeout("window.location='/adminSystemController.admin?goAdminLogin'", 1000);
+                window.location='/adminSystemController.admin?goAdminLogin';
                 return;
             }
         },

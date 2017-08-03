@@ -32,13 +32,10 @@
     <script type="text/javascript" src="/webpage/plug-in/toastr/toastr.min.js"></script>
     <script type="text/javascript" src="/webpage/plug-in/knockoutjs/dist/knockout.js"></script>
     <script type="text/javascript" src="/webpage/plug-in/bootstrap-table/dist/bootstrap-table.min.js"></script>
-    <script type="text/javascript"
-            src="/webpage/plug-in/bootstrap-table/dist/bootstrap-table-locale-all.min.js"></script>
+    <script type="text/javascript" src="/webpage/plug-in/bootstrap-table/dist/bootstrap-table-locale-all.min.js"></script>
     <script type="text/javascript" src="/webpage/plug-in/bootstrap-table/dist/locale/bootstrap-table-zh-CN.js"></script>
-    <script type="text/javascript"
-            src="/webpage/plug-in/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
-    <script type="text/javascript"
-            src="/webpage/plug-in/bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js"></script>
+    <script type="text/javascript" src="/webpage/plug-in/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
+    <script type="text/javascript" src="/webpage/plug-in/bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js"></script>
     <script type="text/javascript" src="/webpage/author/main/main.js"></script>
 </head>
 <body style="overflow-y:auto;">
@@ -157,9 +154,9 @@
                     <div class="row">
                         <div class="col-sm-4 col-sm-offset-8">
                             <div class="btn-group" role="group">
-                                <a onclick="downPromotOrderExcel();" class="btn btn-default" style="width: 104px;">导出订单
+                                <a onclick="downLoadPromoteOrderExcel();" class="btn btn-default" style="width: 104px;">导出订单
                                 </a>
-                                <button type="button" onclick="doPromotSearch();" class="btn btn-default"
+                                <button type="button" onclick="doPromoteSearch();" class="btn btn-default"
                                         style="width: 104px;">查询
                                 </button>
                             </div>

@@ -8,6 +8,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.framework.core.common.controller.BaseController;
 import org.framework.core.common.model.json.AjaxJson;
+import org.framework.core.global.service.GlobalService;
 import org.framework.core.utils.ContextHolderUtils;
 import org.framework.core.utils.PasswordUtil;
 import org.hibernate.criterion.DetachedCriteria;
@@ -15,6 +16,7 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -38,6 +40,9 @@ public class AuthorUserController extends BaseController {
     @Autowired
     private AuthorUserService authorUserService;
 
+    @Autowired
+    private GlobalService globalService;
+
     @RequestMapping(params = "login")
     public String login(HttpServletRequest request, HttpServletResponse response) {
         return "author/login/login";
@@ -53,6 +58,22 @@ public class AuthorUserController extends BaseController {
             response.sendRedirect("/author/userController.author?login");
         } catch (IOException e) {
             logger.error("退出登录失败！", e);
+        }
+    }
+
+    @RequestMapping(params = "doLoginCheck")
+    @ResponseBody
+    public AjaxJson doLoginCheck(HttpServletRequest request, HttpServletResponse response) {
+        AjaxJson j = new AjaxJson();
+        AuthorUserEntity authorUserEntity = globalService.getAuthorUserEntityFromSession();
+        if (authorUserEntity != null) {
+            j.setSuccess(AjaxJson.CODE_SUCCESS);
+            j.setMsg("处于登录态！");
+            return j;
+        } else {
+            j.setSuccess(AjaxJson.RELOGIN);
+            j.setMsg("请重新登录！");
+            return j;
         }
     }
 

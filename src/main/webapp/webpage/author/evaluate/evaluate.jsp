@@ -75,6 +75,101 @@
     </nav>
     <div class="main-content">
         <div style="height: 20px;"></div>
+        <div class="container">
+            <div class="panel panel-warning">
+                <div class="panel-heading">
+                    <h3 class="panel-title">订单评价管理</h3>
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <label class="col-xs-4 control-label amazon-label" for="amazon_asin">ASIN</label>
+                                <div class="col-xs-7">
+                                    <input class="form-control" id="amazon_asin" type="text"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <label class="col-xs-4 control-label amazon-label" for="amazon_amzOrderId">亚马逊单号</label>
+                                <div class="col-xs-7">
+                                    <input class="form-control" id="amazon_amzOrderId" type="text"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <label class="col-xs-4 control-label amazon-label" for="amazon_asin">状态</label>
+                                <div class="col-xs-7">
+                                    <select id="amazon_state" class="form-control">
+                                        <option value="">--选择--</option>
+                                        <option value="1">pending</option>
+                                        <option value="2">review</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <label class="col-xs-4 control-label amazon-label" for="amazon_promoteId">订单编号</label>
+                                <div class="col-xs-7">
+                                    <input class="form-control" id="amazon_promoteId" type="text"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-8">
+                            <div class="form-group">
+                                <label class="col-xs-2 control-label amazon-label" for="amazon_state">
+                                    <nobr>单号提交时间</nobr>
+                                </label>
+                                <div class="col-xs-4">
+                                    <div class="input-group date form_date" id="createTime_begin"
+                                         data-date-format="yyyy-mm-dd"
+                                         data-link-field="createTime_begin_input" data-link-format="yyyy-mm-dd">
+                                        <input class="form-control" name="createTime_begin" id="createTime_begin_value"
+                                               size="16" type="text" value="" readonly placeholder="开始时间">
+                                        <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                                        <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                                    </div>
+                                    <input type="hidden" id="createTime_begin_input" value=""/>
+                                </div>
+                                <div class="col-xs-4">
+                                    <div class="input-group date form_date" id="createTime_end"
+                                         data-date-format="yyyy-mm-dd"
+                                         data-link-field="createTime_end_input" data-link-format="yyyy-mm-dd">
+                                        <input class="form-control" name="createTime_end" id="createTime_end_value"
+                                               size="16"
+                                               type="text" value="" readonly placeholder="结束时间">
+                                        <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                                        <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                                    </div>
+                                    <input type="hidden" id="createTime_end_input" value=""/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-footer">
+                    <div class="row">
+                        <div class="col-sm-4 col-sm-offset-8">
+                            <div class="btn-group" role="group">
+                                <a onclick="downEvaluateExcel();" class="btn btn-default" style="width: 104px;">评论导出
+                                </a>
+                                <a type="button" data-target='#addNewReview' class="btn btn-default" data-toggle='modal'
+                                   style="width: 104px;">评论录入
+                                </a>
+                                <button type="button" onclick="downEvaluateSearch();" class="btn btn-default"
+                                        style="width: 104px;">查询
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <table id="evaluateListTable" class="table table-hover">
+            </table>
+        </div>
         <div style="height: 100px;"></div>
     </div>
     <nav class="navbar navbar-default navbar-fixed-bottom">
@@ -88,6 +183,217 @@
             </div>
         </div>
     </nav>
+</div>
+<%--模态框 录入新的--%>
+<div class="modal fade" id="addNewReview" tabindex="-1" role="dialog" aria-labelledby="addNewReviewLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="formAddNewReview" action="/author/evaluateController.author?doAddNewReview">
+                <div class="modal-header">
+                    <button type="button" class="close"
+                            data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                    <h4 class="modal-title" id="addNewReviewLabel">
+                        评论录入
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group" style="height: 50px;">
+                        <div class="input-group" style="width: 100%;">
+                            <span class="input-group-addon" style="width:150px;" id="asin-addon">ASIN编号*</span>
+                            <input type="text" class="form-control" id="asinId" name="asinId" placeholder="ASIN编号"
+                                   aria-describedby="basic-addon1">
+                        </div>
+                    </div>
+                    <div class="form-group" style="height: 50px;">
+                        <div class="input-group" style="width: 100%;">
+                            <span class="input-group-addon" style="width:150px;" id="amzOrderId-addon">亚马逊订单号*</span>
+                            <input type="text" class="form-control" id="amzOrderId" name="amzOrderId"
+                                   placeholder="亚马逊订单号"
+                                   aria-describedby="basic-addon1">
+                        </div>
+                    </div>
+                    <div class="form-group has-warning" style="height: 50px;">
+                        <div class="input-group" style="width: 100%;">
+                            <span class="input-group-addon" style="width:150px;" id="reviewUrl-addon">亚马逊评论链接</span>
+                            <input type="text" class="form-control" id="reviewUrl" name="reviewUrl"
+                                   placeholder="亚马逊评论链接"
+                                   aria-describedby="basic-addon1">
+                        </div>
+                        <small class="help-block">若填写亚马逊评论链接 则必填 微信 支付宝 PayPal其中之一</small>
+                    </div>
+                    <div class="form-group" style="height: 50px;">
+                        <div class="input-group" style="width: 100%;">
+                            <span class="input-group-addon" style="width:150px;"
+                                  id="weChat-addon">微信&nbsp;&nbsp;￥</span>
+                            <input type="number" class="form-control" id="weChat" name="weChat"
+                                   placeholder="微信&nbsp;&nbsp;￥"
+                                   aria-describedby="basic-addon1">
+                        </div>
+                    </div>
+                    <div class="form-group" style="height: 50px;">
+                        <div class="input-group" style="width: 100%;">
+                            <span class="input-group-addon" style="width:150px;" id="zfb-addon">支付宝&nbsp;&nbsp;￥</span>
+                            <input type="number" class="form-control" id="zfb" name="zfb"
+                                   placeholder="支付宝￥"
+                                   aria-describedby="basic-addon1">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="input-group" style="width: 100%;">
+                            <span class="input-group-addon" style="width:150px;"
+                                  id="PayPal-addon">PayPal&nbsp;&nbsp;$</span>
+                            <input type="number" class="form-control" id="payPal" name="payPal"
+                                   placeholder="PayPal$"
+                                   aria-describedby="basic-addon1">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary inputReviewBtn">录入
+                    </button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<%--修改订单号--%>
+<div class="modal fade" id="modifyAmOrderNoModel" tabindex="-1" role="dialog" aria-labelledby="modifyAmOrderNoModel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="formModifyAmOrderNoModel" action="/author/evaluateController.author?doOrderNoUpdate">
+                <div class="modal-header">
+                    <button type="button" class="close"
+                            data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                    <input type="hidden" name="id" data-bind="value:eid">
+                    <h4 class="modal-title">
+                        评论亚马逊订单号修改
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group" style="height: 50px;">
+                        <div class="input-group" style="width: 100%;">
+                            <span class="input-group-addon" style="width:150px;">ASIN编号</span>
+                            <input type="text" class="form-control" readonly="readonly" data-bind="value:asinId"
+                                   placeholder="ASIN编号"
+                                   aria-describedby="basic-addon1">
+                        </div>
+                    </div>
+                    <div class="form-group" style="height: 50px;">
+                        <div class="input-group" style="width: 100%;">
+                            <span class="input-group-addon" style="width:150px;">亚马逊订单号</span>
+                            <input type="text" class="form-control" name="amzOrderId" data-bind="value:amzOrderId"
+                                   placeholder="亚马逊订单号"
+                                   aria-describedby="basic-addon1">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="input-group" style="width: 100%;">
+                            <span class="input-group-addon" style="width:150px;">亚马逊评论链接*</span>
+                            <input type="text" class="form-control" readonly="readonly" name="reviewUrl"
+                                   data-bind="value:reviewUrl"
+                                   placeholder="亚马逊评论链接"
+                                   aria-describedby="basic-addon1">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">修改订单编号
+                    </button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="addEvaluateUrlModel" tabindex="-1" role="dialog" aria-labelledby="addEvaluateUrlModel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="formAddEvaluateUrlModel" action="/author/evaluateController.author?doAddReviewUrl">
+                <div class="modal-header">
+                    <button type="button" class="close"
+                            data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                    <input type="hidden" name="id" data-bind="value:eid">
+                    <h4 class="modal-title">
+                        追加评论链接
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group" style="height: 50px;">
+                        <div class="input-group" style="width: 100%;">
+                            <span class="input-group-addon" style="width:150px;">ASIN编号</span>
+                            <input type="text" class="form-control" readonly="readonly" data-bind="value:asinId"
+                                   placeholder="ASIN编号"
+                                   aria-describedby="basic-addon1">
+                        </div>
+                    </div>
+                    <div class="form-group" style="height: 50px;">
+                        <div class="input-group" style="width: 100%;">
+                            <span class="input-group-addon" style="width:150px;">亚马逊订单号</span>
+                            <input type="text" class="form-control" readonly="readonly" data-bind="value:amzOrderId"
+                                   placeholder="亚马逊订单号"
+                                   aria-describedby="basic-addon1">
+                        </div>
+                    </div>
+                    <div class="form-group" style="height: 50px;">
+                        <div class="input-group" style="width: 100%;">
+                            <span class="input-group-addon" style="width:150px;">亚马逊评论链接*</span>
+                            <input type="text" class="form-control" id="addReviewUrl" name="reviewUrl"
+                                   data-bind="value:reviewUrl"
+                                   placeholder="亚马逊评论链接"
+                                   aria-describedby="basic-addon1">
+                        </div>
+                    </div>
+                    <div class="form-group" style="height: 50px;">
+                        <div class="input-group" style="width: 100%;">
+                            <span class="input-group-addon" style="width:150px;"
+                                  id="weChat-url-addon">微信&nbsp;&nbsp;￥</span>
+                            <input type="number" class="form-control" id="weChat-url" name="weChat"
+                                   placeholder="微信&nbsp;&nbsp;￥"
+                                   aria-describedby="basic-addon1">
+                        </div>
+                    </div>
+                    <div class="form-group" style="height: 50px;">
+                        <div class="input-group" style="width: 100%;">
+                            <span class="input-group-addon" style="width:150px;" id="zfb-url-addon">支付宝&nbsp;&nbsp;￥</span>
+                            <input type="number" class="form-control" id="zfb-url" name="zfb"
+                                   placeholder="支付宝&nbsp;&nbsp;￥"
+                                   aria-describedby="basic-addon1">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="input-group" style="width: 100%;">
+                            <span class="input-group-addon" style="width:150px;"
+                                  id="payPal-url-addon">PayPal&nbsp;&nbsp;$</span>
+                            <input type="number" class="form-control" id="payPal-url" name="payPal"
+                                   placeholder="PayPal&nbsp;&nbsp;$"
+                                   aria-describedby="basic-addon1">
+                        </div>
+                    </div>
+                    <div class="form-group has-warning">
+                        <small class="help-block">必填 微信 支付宝 PayPal 其中之一</small>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" id="addEvaluateUrlBtn" class="btn btn-primary">录入
+                    </button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
 </body>
 </html>

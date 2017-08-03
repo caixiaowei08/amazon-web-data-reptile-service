@@ -61,6 +61,7 @@ public class EvaluateServiceImpl extends BaseServiceImpl implements EvaluateServ
     public AjaxJson doAddEvaluateWithNoReviewUrl(PromotOrderEvaluateFlowEntity promotOrderEvaluateFlowEntity) {
         AjaxJson j = new AjaxJson();
         logger.info("---doAddEvaluateWithNoReviewUrl-start------" + JSON.toJSONString(promotOrderEvaluateFlowEntity));
+        //重复查询
         DetachedCriteria promotOrderEvaluateExistDetachedCriteria = DetachedCriteria.forClass(PromotOrderEvaluateFlowEntity.class);
         promotOrderEvaluateExistDetachedCriteria.add(Restrictions.eq("amzOrderId", promotOrderEvaluateFlowEntity.getAmzOrderId()));
         promotOrderEvaluateExistDetachedCriteria.add(Restrictions.eq("asinId", promotOrderEvaluateFlowEntity.getAsinId()));
@@ -70,9 +71,14 @@ public class EvaluateServiceImpl extends BaseServiceImpl implements EvaluateServ
             j.setMsg("亚马逊订单号和ASIN编号同时相同的评价已存在，勿重复录入！");
             return j;
         }
+        //查询订单
         DetachedCriteria promotOrderDetachedCriteria = DetachedCriteria.forClass(PromotOrderEntity.class);
         promotOrderDetachedCriteria.add(Restrictions.eq("asinId", promotOrderEvaluateFlowEntity.getAsinId()));
         promotOrderDetachedCriteria.add(Restrictions.eq("state", Constant.STATE_Y));
+        //设置普通管理员
+        if (promotOrderEvaluateFlowEntity.getAuthorId() != null) {
+            promotOrderDetachedCriteria.add(Restrictions.eq("authorId", promotOrderEvaluateFlowEntity.getAuthorId()));
+        }
         promotOrderDetachedCriteria.addOrder(Order.desc("addDate"));
         List<PromotOrderEntity> promotOrderEntityList = promotOrderService.getListByCriteriaQuery(promotOrderDetachedCriteria);
         if (CollectionUtils.isEmpty(promotOrderEntityList)) {
@@ -123,6 +129,10 @@ public class EvaluateServiceImpl extends BaseServiceImpl implements EvaluateServ
         DetachedCriteria promotOrderDetachedCriteria = DetachedCriteria.forClass(PromotOrderEntity.class);
         promotOrderDetachedCriteria.add(Restrictions.eq("asinId", promotOrderEvaluateFlowEntity.getAsinId()));
         promotOrderDetachedCriteria.add(Restrictions.eq("state", Constant.STATE_Y));
+        //设置普通管理员
+        if (promotOrderEvaluateFlowEntity.getAuthorId() != null) {
+            promotOrderDetachedCriteria.add(Restrictions.eq("authorId", promotOrderEvaluateFlowEntity.getAuthorId()));
+        }
         promotOrderDetachedCriteria.addOrder(Order.asc("addDate"));
         List<PromotOrderEntity> promotOrderEntityList = promotOrderService.getListByCriteriaQuery(promotOrderDetachedCriteria);
         if (CollectionUtils.isEmpty(promotOrderEntityList)) {
@@ -375,9 +385,9 @@ public class EvaluateServiceImpl extends BaseServiceImpl implements EvaluateServ
         promotOrderEvaluateFlowDb.setComplaint(ComplaintConstant.COMPLAINT_ZERO);
         promotOrderEvaluateFlowDb.setUpdateTime(new Date());
         try {
-            logger.info("------userFundEntity-----"+JSON.toJSONString(userFundEntity));
-            logger.info("------promotOrderEvaluateFlowEntity-----"+JSON.toJSONString(promotOrderEvaluateFlowEntity));
-            logger.info("------promotOrderEntity-----"+JSON.toJSONString(promotOrderEntity));
+            logger.info("------userFundEntity-----" + JSON.toJSONString(userFundEntity));
+            logger.info("------promotOrderEvaluateFlowEntity-----" + JSON.toJSONString(promotOrderEvaluateFlowEntity));
+            logger.info("------promotOrderEntity-----" + JSON.toJSONString(promotOrderEntity));
             userFundService.saveOrUpdate(userFundEntity);
             promotOrderEvaluateFlowService.saveOrUpdate(promotOrderEvaluateFlowDb);
             promotOrderService.saveOrUpdate(promotOrderEntity);

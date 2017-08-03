@@ -40,6 +40,11 @@ public class PromotOrderEvaluateFlowEntity extends IdEntity implements Serializa
     private String asinId;
 
     /**
+     *评价订单号
+     */
+    private Integer authorId;
+
+    /**
      * 状态
      */
     private Integer state;
@@ -135,6 +140,15 @@ public class PromotOrderEvaluateFlowEntity extends IdEntity implements Serializa
 
     public void setBuyerId(Integer buyerId) {
         this.buyerId = buyerId;
+    }
+
+    @Column(name = "authorId", nullable = true, length = 20)
+    public Integer getAuthorId() {
+        return authorId;
+    }
+
+    public void setAuthorId(Integer authorId) {
+        this.authorId = authorId;
     }
 
     @Column(name = "amzOrderId", nullable = true, length = 100)

@@ -1,6 +1,8 @@
 package com.amazon.author.common.filter;
 
+import com.alibaba.fastjson.JSON;
 import com.amazon.author.common.constant.AuthorConstant;
+import org.framework.core.common.model.json.AjaxJson;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
@@ -29,9 +31,17 @@ public class AuthorFilter implements Filter {
             chain.doFilter(request, response);
         } else if (session.getAttribute(AuthorConstant.AUTHOR_SESSION_CONSTANTS) != null) {
             chain.doFilter(request, response);
+        } else if (url.equals("/author/pageController.author")) {
+            res.sendRedirect("/author/userController.author?login");
         } else {
             session.invalidate();
-            res.sendRedirect("/author/userController.author?login");
+            AjaxJson j = new AjaxJson();
+            res.setContentType("application/json");
+            res.setHeader("Cache-Control", "no-store");
+            res.setHeader("Content-type", "application/json;charset=UTF-8");
+            j.setSuccess(AjaxJson.RELOGIN);
+            j.setMsg("请重新登录！");
+            res.getWriter().write(JSON.toJSONString(j));
         }
     }
 
