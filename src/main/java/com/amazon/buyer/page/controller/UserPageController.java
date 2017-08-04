@@ -14,9 +14,9 @@ import javax.servlet.http.HttpServletResponse;
 @Scope("prototype")
 @Controller
 @RequestMapping("/userPageController")
-public class UserPageController extends BaseController{
-
-   @RequestMapping(params = "login")
+public class UserPageController extends BaseController {
+/**
+    @RequestMapping(params = "login")
     public String login(HttpServletRequest request, HttpServletResponse response) {
         return "buyer/user/login";
     }
@@ -50,5 +50,6 @@ public class UserPageController extends BaseController{
     public String goModifyPayment(HttpServletRequest request, HttpServletResponse response) {
         return "buyer/buyer/changeBuyerDetail";
     }
+    */
 
 }
