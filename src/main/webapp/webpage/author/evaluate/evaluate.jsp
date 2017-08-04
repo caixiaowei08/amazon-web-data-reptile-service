@@ -18,6 +18,7 @@
     <link rel="stylesheet" href="/webpage/plug-in/bootstrap-table/dist/bootstrap-table.min.css"/>
     <link rel="stylesheet" href="/webpage/plug-in/toastr/toastr.css"/>
     <link rel="stylesheet" href="/webpage/plug-in/ace/css/ace.css"/>
+    <link rel="stylesheet" href="/webpage/plug-in/rating/css/star-rating.css"/>
     <link rel="stylesheet" href="/webpage/pages/main/index.css"/>
     <link rel="stylesheet" href="/webpage/admin/evaluate/evaluateDetail.css"/>
     <!--[if lte IE 9]>
@@ -36,43 +37,44 @@
     <script type="text/javascript" src="/webpage/plug-in/bootstrap-table/dist/locale/bootstrap-table-zh-CN.js"></script>
     <script type="text/javascript" src="/webpage/plug-in/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
     <script type="text/javascript" src="/webpage/plug-in/bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js"></script>
+    <script type="text/javascript" src="/webpage/plug-in/rating/js/star-rating.js"></script>
     <script type="text/javascript" src="/webpage/author/evaluate/evaluate.js"></script>
 </head>
 <body style="overflow-y:auto;">
 <div class="main-container">
     <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
-        <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
-                        data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-                    <span class="sr-only">Review Tracker订单管理端</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand font-color" href="/author/pageController.author?main" target="_parent">Review Tracker订单管理端</a>
-            </div>
-            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                <ul class="nav navbar-nav navbar-right">
-                    <li><a href="/author/pageController.author?main" target="_parent">推广订单管理</a></li>
-                    <li><a href="/author/pageController.author?evaluate" target="_parent">订单评价管理</a></li>
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle " data-toggle="dropdown" role="button" aria-haspopup="true"
-                           aria-expanded="false">我的账号<span class="caret"></span></a>
-                        <ul class="dropdown-menu">
-                            <li><a href="/author/pageController.author?changePwd" target="_parent">修改密码</a></li>
-                        </ul>
-                    </li>
-                    <li>
-                        <a href="/author/userController.author?doLoginOff">
-                            退出
-                            <i class="fa fa-power-off" style="color: red" aria-hidden="true"></i>
-                        </a>
-                    </li>
-                </ul>
-            </div>
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                    data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                <span class="sr-only">Review Tracker订单管理端</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand font-color" href="/author/pageController.author?main" target="_parent">Review Tracker订单管理端</a>
         </div>
-    </nav>
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="/author/pageController.author?main" target="_parent">推广订单管理</a></li>
+                <li><a href="/author/pageController.author?evaluate" target="_parent">订单评价管理</a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle " data-toggle="dropdown" role="button" aria-haspopup="true"
+                       aria-expanded="false">我的账号<span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="/author/pageController.author?changePwd" target="_parent">修改密码</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="/author/userController.author?doLoginOff">
+                        退出
+                        <i class="fa fa-power-off" style="color: red" aria-hidden="true"></i>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
     <div class="main-content">
         <div style="height: 20px;"></div>
         <div class="container">
@@ -392,6 +394,33 @@
                     </button>
                 </div>
             </form>
+        </div>
+    </div>
+</div>
+<div class="modal fade bs-example-modal-sm" id="deleteEvaluateModel" tabindex="-1" role="dialog"
+     aria-labelledby="deleteEvaluateModel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close"
+                        data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title">
+                    删除评价
+                </h4>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="deleteId" data-bind="value:deleteId">
+                确认删除评价 <span data-bind="text:deleteId"></span>吗？
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" id="deleteEvaluateByIdBtn"
+                        onclick="deleteEvaluateById();">确定
+                </button>
+            </div>
         </div>
     </div>
 </div>

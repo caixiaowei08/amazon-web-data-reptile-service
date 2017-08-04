@@ -3,6 +3,8 @@ package com.amazon.admin.evaluate.controller;
 import com.amazon.admin.constant.Constants;
 import com.amazon.admin.evaluate.service.EvaluateService;
 import com.amazon.admin.poi.service.PoiPromotService;
+import com.amazon.author.account.entity.AuthorUserEntity;
+import com.amazon.author.account.service.AuthorUserService;
 import com.amazon.service.promot.flow.entity.PromotOrderEvaluateFlowEntity;
 import com.amazon.service.promot.flow.service.PromotOrderEvaluateFlowService;
 import com.amazon.service.promot.order.entity.PromotOrderEntity;
@@ -61,6 +63,9 @@ public class EvaluateController extends BaseController {
 
     @Autowired
     private PoiPromotService poiPromotService;
+
+    @Autowired
+    private AuthorUserService authorUserService;
 
     @RequestMapping(params = "goEvaluateDetail")
     public String goAdminPageIndex(HttpServletRequest request, HttpServletResponse response) {
@@ -212,6 +217,18 @@ public class EvaluateController extends BaseController {
                 promotOrderEvaluateVo.setReviewPrice(promotOrderEntity.getReviewPrice());
                 promotOrderEvaluateVo.setIsComment(promotOrderEvaluateFlowEntity.getState());
                 promotOrderEvaluateVo.setRemark(promotOrderEntity.getRemark());
+
+                promotOrderEvaluateVo.setWeChat(promotOrderEvaluateFlowEntity.getWeChat());
+                promotOrderEvaluateVo.setZfb(promotOrderEvaluateFlowEntity.getZfb());
+                promotOrderEvaluateVo.setPayPal(promotOrderEvaluateFlowEntity.getPayPal());
+                promotOrderEvaluateVo.setCashBackDate(promotOrderEvaluateFlowEntity.getEvaluateTime());
+
+                if (promotOrderEvaluateFlowEntity.getAuthorId() != null) {
+                   AuthorUserEntity authorUserEntity =  authorUserService.find(AuthorUserEntity.class,promotOrderEvaluateFlowEntity.getAuthorId());
+                   if(authorUserEntity!=null){
+                       promotOrderEvaluateVo.setAccountName(authorUserEntity.getAccount());
+                   }
+                }
                 promotOrderEvaluateVoList.add(promotOrderEvaluateVo);
             }
         }
@@ -220,6 +237,7 @@ public class EvaluateController extends BaseController {
         try {
             poiPromotService.downEvaluateExcel(promotOrderEvaluateVoList, response, excelFileNameHeader);
         } catch (Exception e) {
+            e.printStackTrace();
             logger.error(e.fillInStackTrace());
         }
     }

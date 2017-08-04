@@ -2,6 +2,7 @@ package com.amazon.author.account.controller;
 
 import com.amazon.author.account.entity.AuthorUserEntity;
 import com.amazon.author.account.service.AuthorUserService;
+import com.amazon.author.account.vo.AuthorUserVo;
 import com.amazon.author.common.constant.AuthorConstant;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.logging.log4j.LogManager;
@@ -77,7 +78,6 @@ public class AuthorUserController extends BaseController {
         }
     }
 
-
     @RequestMapping(params = "doLogin")
     @ResponseBody
     public AjaxJson doLogin(AuthorUserEntity authorUserEntity, HttpServletRequest request) {
@@ -88,6 +88,11 @@ public class AuthorUserController extends BaseController {
         List<AuthorUserEntity> authorUserEntityList = authorUserService.getListByCriteriaQuery(detachedCriteria);
         if (CollectionUtils.isNotEmpty(authorUserEntityList)) {
             AuthorUserEntity sessionAuthorUser = authorUserEntityList.get(0);
+            if (sessionAuthorUser.getStatus().equals(AuthorConstant.AUTHOR_FREEZE_CONSTANTS)) {
+                j.setSuccess(AjaxJson.CODE_FAIL);
+                j.setMsg("该账号已被冻结！");
+                return j;
+            }
             sessionAuthorUser.setLoginTime(new Date());
             authorUserService.saveOrUpdate(sessionAuthorUser);
             sessionAuthorUser.setPwd("");
@@ -101,5 +106,56 @@ public class AuthorUserController extends BaseController {
             return j;
         }
     }
+
+    @RequestMapping(params = "doGet")
+    @ResponseBody
+    public AjaxJson doGet(HttpServletRequest request, HttpServletResponse response) {
+        AjaxJson j = new AjaxJson();
+        AuthorUserEntity authorUserEntity = globalService.getAuthorUserEntityFromSession();
+        if (authorUserEntity == null) {
+            j.setSuccess(AjaxJson.RELOGIN);
+            j.setMsg("请重新登录！");
+            return j;
+        }
+        j.setSuccess(AjaxJson.CODE_SUCCESS);
+        j.setContent(authorUserEntity);
+        return j;
+    }
+
+    @RequestMapping(params = "doChangeAuthorPwdByPwd")
+    @ResponseBody
+    public AjaxJson doChangeAuthorPwdByPwd(AuthorUserVo authorUserVo, HttpServletRequest request, HttpServletResponse response) {
+        AjaxJson j = new AjaxJson();
+        AuthorUserEntity authorUserEntity = globalService.getAuthorUserEntityFromSession();
+        if (authorUserEntity == null) {
+            j.setSuccess(AjaxJson.RELOGIN);
+            j.setMsg("请重新登录！");
+            return j;
+        }
+        DetachedCriteria detachedCriteria = DetachedCriteria.forClass(AuthorUserEntity.class);
+        detachedCriteria.add(Restrictions.eq("id", authorUserEntity.getId()));
+        detachedCriteria.add(Restrictions.eq("account", authorUserEntity.getAccount()));
+        detachedCriteria.add(Restrictions.eq("pwd", PasswordUtil.getMD5Encryp(authorUserVo.getOldPwd())));
+        List<AuthorUserEntity> authorUserEntityList = authorUserService.getListByCriteriaQuery(detachedCriteria);
+        if (CollectionUtils.isEmpty(authorUserEntityList)) {
+            j.setSuccess(AjaxJson.CODE_FAIL);
+            j.setMsg("原始密码错误！");
+            return j;
+        }
+        AuthorUserEntity authorUserDb = authorUserEntityList.get(0);
+        try {
+            authorUserDb.setPwd(PasswordUtil.getMD5Encryp(authorUserVo.getNewPwd()));
+            authorUserDb.setUpdateTime(new Date());
+            authorUserService.saveOrUpdate(authorUserDb);
+        } catch (Exception e) {
+            j.setSuccess(AjaxJson.CODE_FAIL);
+            j.setMsg("修改密码失败！");
+            return j;
+        }
+        j.setSuccess(AjaxJson.CODE_SUCCESS);
+        j.setMsg("修改成功！");
+        return j;
+    }
+
 
 }

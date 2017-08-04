@@ -42,10 +42,14 @@ public class PoiPromotServiceImpl implements PoiPromotService {
         XSSFWorkbook workBook = new XSSFWorkbook();//一个excel文档对象
         XSSFSheet sheet = workBook.createSheet();// 创建一个工作薄对象
         String[] columns = {
-                "推广订单编号", "日期", "ASIN", "亚马逊订单号", "刷单单价(USD)", "刷单佣金(USD)", "是否已上评", "备注"
+                "推广订单编号", "日期", "ASIN", "亚马逊订单号",
+                "刷单单价(USD)", "刷单佣金(USD)", "是否已上评", "备注",
+                "微信", "支付宝", "Paypal", "返现日期", "管理员账号"
         };
         int[] columnsColumnWidth = {
-                4000, 4000, 4000, 8000, 4500, 4000, 4000, 8000
+                4000, 4000, 4000, 8000,
+                4500, 4000, 4000, 8000,
+                4500, 4000, 4000, 4000, 4500,
         };
 
         CellStyle headStyle = workBook.createCellStyle();
@@ -74,6 +78,9 @@ public class PoiPromotServiceImpl implements PoiPromotService {
         if (CollectionUtils.isNotEmpty(promotOrderEvaluateVoList)) {
             BigDecimal totalCashback = new BigDecimal("0.00");
             BigDecimal totalReviewPrice = new BigDecimal("0.00");
+            BigDecimal totalWechat = new BigDecimal("0.00");
+            BigDecimal totalZfb = new BigDecimal("0.00");
+            BigDecimal totalPaypal = new BigDecimal("0.00");
             for (int i = 0; i < promotOrderEvaluateVoList.size(); i++) {
                 PromotOrderEvaluateVo promotOrderEvaluateVo = promotOrderEvaluateVoList.get(i);
                 row = sheet.createRow(i + 1);
@@ -95,10 +102,30 @@ public class PoiPromotServiceImpl implements PoiPromotService {
                 cell.setCellValue(promotOrderEvaluateVo.getIsComment().equals(Constants.EVALUATE_STATE_REVIEW) ? "是" : "否");
                 cell = row.createCell(7);
                 cell.setCellValue(promotOrderEvaluateVo.getRemark());
-                //if (promotOrderEvaluateVo.getIsComment().equals(Constants.EVALUATE_STATE_REVIEW)) {
+                cell = row.createCell(8);
+                cell.setCellType(CellType.NUMERIC);
+                cell.setCellValue(promotOrderEvaluateVo.getWeChat() == null ? 0.00 : Double.parseDouble(promotOrderEvaluateVo.getWeChat().toString()));
+                cell = row.createCell(9);
+                cell.setCellType(CellType.NUMERIC);
+                cell.setCellValue(promotOrderEvaluateVo.getZfb() == null ? 0.00 : Double.parseDouble(promotOrderEvaluateVo.getZfb().toString()));
+                cell.setCellType(CellType.NUMERIC);
+                cell = row.createCell(10);
+                cell.setCellValue(promotOrderEvaluateVo.getPayPal() == null ? 0.00 : Double.parseDouble(promotOrderEvaluateVo.getPayPal().toString()));
+                cell = row.createCell(11);
+                cell.setCellValue(promotOrderEvaluateVo.getCashBackDate() == null ? "" : simpleDateFormat.format(promotOrderEvaluateVo.getCashBackDate()));
+                cell = row.createCell(12);
+                cell.setCellValue(promotOrderEvaluateVo.getAccountName() == null ? "" : promotOrderEvaluateVo.getAccountName());
                 totalCashback = totalCashback.add(promotOrderEvaluateVo.getCashback());
                 totalReviewPrice = totalReviewPrice.add(promotOrderEvaluateVo.getReviewPrice());
-                //}
+                if (promotOrderEvaluateVo.getWeChat() != null) {
+                    totalWechat = totalWechat.add(promotOrderEvaluateVo.getWeChat());
+                }
+                if (promotOrderEvaluateVo.getZfb() != null) {
+                    totalZfb = totalZfb.add(promotOrderEvaluateVo.getZfb());
+                }
+                if (promotOrderEvaluateVo.getPayPal() != null) {
+                    totalPaypal = totalPaypal.add(promotOrderEvaluateVo.getPayPal());
+                }
             }
             row = sheet.createRow(promotOrderEvaluateVoList.size() + 1);
             cell = row.createCell(4);
@@ -107,6 +134,15 @@ public class PoiPromotServiceImpl implements PoiPromotService {
             cell = row.createCell(5);
             cell.setCellType(CellType.NUMERIC);
             cell.setCellValue(Double.parseDouble(totalReviewPrice.toString()));
+            cell = row.createCell(8);
+            cell.setCellType(CellType.NUMERIC);
+            cell.setCellValue(Double.parseDouble(totalWechat.toString()));
+            cell = row.createCell(9);
+            cell.setCellType(CellType.NUMERIC);
+            cell.setCellValue(Double.parseDouble(totalZfb.toString()));
+            cell = row.createCell(10);
+            cell.setCellType(CellType.NUMERIC);
+            cell.setCellValue(Double.parseDouble(totalPaypal.toString()));
         }
 
         ByteArrayOutputStream os = new ByteArrayOutputStream();

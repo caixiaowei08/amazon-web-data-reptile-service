@@ -95,6 +95,9 @@ $(function () {
             toastr.warning("请重新登录！");
             setTimeout("window.location='/adminSystemController.admin?goAdminLogin'", 1000);
         },
+        onLoadSuccess: function () {
+            $('.rating').rating('create');
+        },
         clickToSelect: true,//是否启用点击选中行
         uniqueId: "id",
         locale: "zh-CN",
@@ -168,7 +171,13 @@ $(function () {
                 sortable: true,
                 width: "5%",//宽度
                 align: "center",//水平
-                valign: "middle"//垂直
+                valign: "middle",//垂直
+                formatter: function (value, row, index) {
+                    if (value === undefined) {
+                        return "-"
+                    }
+                    return "<input value='" + value + "' type='text' class='rating' data-min=0 data-max=5 data-step=0.1 data-size='xs' title='评价星级'>";
+                }
             },
             {
                 title: '评价时间',
@@ -439,6 +448,7 @@ function downEvaluateExcel() {
     params.amzOrderId = $("#amazon_amzOrderId").val().trim();
     params.asinId = $("#amazon_asin").val().trim();
     params.state = $("#amazon_state").val().trim();
+    params.promotId = $("#amazon_promoteId").val().trim();
     params.createTime_begin = $("#createTime_begin_value").val().trim();
     params.createTime_end = $("#createTime_end_value").val().trim();
     if ((params.createTime_end === "") ^ (params.createTime_begin === "")) {
@@ -453,6 +463,7 @@ function downEvaluateExcel() {
                 window.open(
                     "/evaluateController.admin?downEvaluateExcel&asinId=" + params.asinId
                     + "&state=" + params.state
+                    + "&promotId=" + params.promotId
                     + "&amzOrderId=" + params.amzOrderId
                     + "&createTime_begin=" + params.createTime_begin
                     + "&createTime_end=" + params.createTime_end

@@ -92,6 +92,10 @@ public class PromotOrderEvaluateFlowEntity extends IdEntity implements Serializa
     private BigDecimal payPal;
 
     private String remark;
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JSONField(format = "yyyy-MM-dd HH:mm:ss")
+    private Date evaluateTime;
     /**
      * 创建时间
      */
@@ -276,5 +280,14 @@ public class PromotOrderEvaluateFlowEntity extends IdEntity implements Serializa
 
     public void setPayPal(BigDecimal payPal) {
         this.payPal = payPal;
+    }
+
+    @Column(name = "evaluateTime", nullable = true, length = 20)
+    public Date getEvaluateTime() {
+        return evaluateTime;
+    }
+
+    public void setEvaluateTime(Date evaluateTime) {
+        this.evaluateTime = evaluateTime;
     }
 }

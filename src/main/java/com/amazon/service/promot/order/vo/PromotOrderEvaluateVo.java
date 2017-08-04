@@ -25,6 +25,16 @@ public class PromotOrderEvaluateVo implements Serializable{
 
     private String remark;
 
+    private BigDecimal weChat;
+
+    private BigDecimal zfb;
+
+    private BigDecimal payPal;
+
+    private Date cashBackDate;
+
+    private String accountName;
+
     public Integer getPromotId() {
         return promotId;
     }
@@ -87,5 +97,46 @@ public class PromotOrderEvaluateVo implements Serializable{
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+
+    public BigDecimal getWeChat() {
+        return weChat;
+    }
+
+    public void setWeChat(BigDecimal weChat) {
+        this.weChat = weChat;
+    }
+
+    public BigDecimal getZfb() {
+        return zfb;
+    }
+
+    public void setZfb(BigDecimal zfb) {
+        this.zfb = zfb;
+    }
+
+    public BigDecimal getPayPal() {
+        return payPal;
+    }
+
+    public void setPayPal(BigDecimal payPal) {
+        this.payPal = payPal;
+    }
+
+    public Date getCashBackDate() {
+        return cashBackDate;
+    }
+
+    public void setCashBackDate(Date cashBackDate) {
+        this.cashBackDate = cashBackDate;
+    }
+
+    public String getAccountName() {
+        return accountName;
+    }
+
+    public void setAccountName(String accountName) {
+        this.accountName = accountName;
     }
 }

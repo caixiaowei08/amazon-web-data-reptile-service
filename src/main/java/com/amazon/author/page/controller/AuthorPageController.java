@@ -31,5 +31,10 @@ public class AuthorPageController extends BaseController {
         return "author/userInfo/changePwd";
     }
 
+    @RequestMapping(params = "promoteEvaluateDetail")
+    public String promoteEvaluateDetail(HttpServletRequest request, HttpServletResponse response) {
+        return "author/evaluate/promotEvaluteList";
+    }
+
 
 }

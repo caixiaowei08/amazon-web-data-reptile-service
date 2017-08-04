@@ -14,6 +14,9 @@ $(function () {
             toastr.warning("请重新登录！");
             setTimeout("window.location='/adminSystemController.admin?goAdminLogin'", 1000);
         },
+        onLoadSuccess: function () {
+            $('.rating').rating('create');
+        },
         height: 650,
         clickToSelect: true,//是否启用点击选中行
         uniqueId: "id",
@@ -43,7 +46,7 @@ $(function () {
                 valign: "middle",//垂直
                 formatter: function (value, row, index) {
                     if (value == 1) {
-                        return "<span class='label label-info'>pending</span>"
+                        return "<span class='label label-warning'>pending</span>"
                     } else if (value == 2) {
                         return "<span class='label label-success'>review</span>"
                     }
@@ -71,7 +74,21 @@ $(function () {
                 }
             },
             {
-                title: '评价日期',
+                title: '评价星级',
+                field: "reviewStar",
+                sortable: true,
+                width: "5%",//宽度
+                align: "center",//水平
+                valign: "middle",//垂直
+                formatter: function (value, row, index) {
+                    if (value === undefined) {
+                        return "-"
+                    }
+                    return "<input value='" + value + "' type='text' class='rating' data-min=0 data-max=5 data-step=0.1 data-size='xs' title='评价星级'>";
+                }
+            },
+            {
+                title: '评价时间',
                 field: "reviewDate",
                 width: "10%",//宽度
                 align: "center",//水平

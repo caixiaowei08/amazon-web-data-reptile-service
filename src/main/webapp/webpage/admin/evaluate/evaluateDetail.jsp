@@ -17,6 +17,7 @@
     <link rel="stylesheet" href="/webpage/plug-in/bootstrap-table/dist/bootstrap-table.min.css"/>
     <link rel="stylesheet" href="/webpage/plug-in/toastr/toastr.css"/>
     <link rel="stylesheet" href="/webpage/plug-in/ace/css/ace.css"/>
+    <link rel="stylesheet" href="/webpage/plug-in/rating/css/star-rating.css"/>
     <link rel="stylesheet" href="/webpage/pages/main/index.css"/>
     <link rel="stylesheet" href="/webpage/admin/evaluate/evaluateDetail.css"/>
 
@@ -39,6 +40,7 @@
             src="/webpage/plug-in/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
     <script type="text/javascript"
             src="/webpage/plug-in/bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js"></script>
+    <script type="text/javascript" src="/webpage/plug-in/rating/js/star-rating.js"></script>
     <script type="text/javascript" src="/webpage/admin/evaluate/evaluateDetail.js"></script>
 </head>
 <body style="overflow-y:auto;">

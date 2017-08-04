@@ -1,6 +1,5 @@
 package com.amazon.admin.poi.service;
 
-import com.amazon.service.promot.flow.entity.PromotOrderEvaluateFlowEntity;
 import com.amazon.service.promot.order.entity.PromotOrderEntity;
 import com.amazon.service.promot.order.vo.PromotOrderEvaluateVo;
 import com.amazon.service.recharge.entity.UserRechargeFundEntity;

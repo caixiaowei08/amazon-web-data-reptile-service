@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="/webpage/plug-in/bootstrap-table/dist/bootstrap-table.min.css"/>
     <link rel="stylesheet" href="/webpage/plug-in/toastr/toastr.css"/>
     <link rel="stylesheet" href="/webpage/plug-in/ace/css/ace.css"/>
+    <link rel="stylesheet" href="/webpage/plug-in/rating/css/star-rating.css"/>
     <link rel="stylesheet" href="/webpage/pages/main/index.css"/>
     <!--[if lte IE 9]>
     <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
@@ -29,6 +30,7 @@
     <script type="text/javascript" src="/webpage/plug-in/bootstrap-table/dist/bootstrap-table.min.js"></script>
     <script type="text/javascript" src="/webpage/plug-in/bootstrap-table/dist/bootstrap-table-locale-all.min.js"></script>
     <script type="text/javascript" src="/webpage/plug-in/bootstrap-table/dist/locale/bootstrap-table-zh-CN.js"></script>
+    <script type="text/javascript" src="/webpage/plug-in/rating/js/star-rating.js"></script>
     <script type="text/javascript" src="/webpage/pages/evaluate/evaluateDetail.js"></script>
 </head>
 <body style="overflow-y:auto;">

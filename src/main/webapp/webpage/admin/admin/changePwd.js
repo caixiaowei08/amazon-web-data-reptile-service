@@ -15,18 +15,7 @@ $(function () {
                     }
                 }
             },
-            emailCode: {
-                validators: {
-                    notEmpty: {
-                        message: '验证码不能为空！'
-                    },
-                    regexp: {
-                        regexp: /^\d{4}$/,
-                        message: '请输入4位数字验证码!'
-                    }
-                }
-            },
-            pwd: {
+            newPwd: {
                 validators: {
                     notEmpty: {
                         message: '请输入您的新密码'

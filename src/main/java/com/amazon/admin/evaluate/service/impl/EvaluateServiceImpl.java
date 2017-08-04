@@ -106,7 +106,9 @@ public class EvaluateServiceImpl extends BaseServiceImpl implements EvaluateServ
         promotOrderEvaluateFlowEntity.setCreateTime(new Date());
         promotOrderEvaluateFlowEntity.setUpdateTime(new Date());
         promotOrderEvaluateFlowEntity.setState(Constants.EVALUATE_STATE_PENDING);
-
+        if (promotOrderEvaluateFlowEntity.getAuthorId() == null) {
+            promotOrderEvaluateFlowEntity.setAuthorId(currentPromotOrder.getAuthorId());
+        }
         currentPromotOrder.setBuyerNum(currentPromotOrder.getBuyerNum() + 1);
         currentPromotOrder.setUpdateTime(new Date());
         promotOrderService.saveOrUpdate(currentPromotOrder);
@@ -231,8 +233,12 @@ public class EvaluateServiceImpl extends BaseServiceImpl implements EvaluateServ
         promotOrderEvaluateFlowEntity.setReviewStar(Double.parseDouble(amazonEvaluateReviewPojo.getReviewStar().trim().substring(0, 2)));
         promotOrderEvaluateFlowEntity.setReviewDate(amazonEvaluateReviewPojo.getReviewDate());
         promotOrderEvaluateFlowEntity.setComplaint(ComplaintConstant.COMPLAINT_ZERO);
+        if (promotOrderEvaluateFlowEntity.getAuthorId() == null) {
+            promotOrderEvaluateFlowEntity.setAuthorId(currentPromotOrder.getAuthorId());
+        }
         promotOrderEvaluateFlowEntity.setUpdateTime(new Date());
         promotOrderEvaluateFlowEntity.setCreateTime(new Date());
+        promotOrderEvaluateFlowEntity.setEvaluateTime(new Date());
 
         try {
             userFundService.saveOrUpdate(userFundEntity);
@@ -384,6 +390,7 @@ public class EvaluateServiceImpl extends BaseServiceImpl implements EvaluateServ
         promotOrderEvaluateFlowDb.setReviewDate(amazonEvaluateReviewPojo.getReviewDate());
         promotOrderEvaluateFlowDb.setComplaint(ComplaintConstant.COMPLAINT_ZERO);
         promotOrderEvaluateFlowDb.setUpdateTime(new Date());
+        promotOrderEvaluateFlowDb.setEvaluateTime(new Date());
         try {
             logger.info("------userFundEntity-----" + JSON.toJSONString(userFundEntity));
             logger.info("------promotOrderEvaluateFlowEntity-----" + JSON.toJSONString(promotOrderEvaluateFlowEntity));

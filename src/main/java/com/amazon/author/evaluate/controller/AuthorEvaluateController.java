@@ -3,8 +3,12 @@ package com.amazon.author.evaluate.controller;
 import com.amazon.admin.constant.Constants;
 import com.amazon.admin.evaluate.service.EvaluateService;
 import com.amazon.author.account.entity.AuthorUserEntity;
+import com.amazon.author.poi.service.AuthorPoiService;
 import com.amazon.service.promot.flow.entity.PromotOrderEvaluateFlowEntity;
 import com.amazon.service.promot.flow.service.PromotOrderEvaluateFlowService;
+import com.amazon.service.promot.order.entity.PromotOrderEntity;
+import com.amazon.service.promot.order.service.PromotOrderService;
+import com.amazon.service.promot.order.vo.PromotOrderEvaluateVo;
 import com.amazon.system.Constant;
 import com.amazon.system.system.bootstrap.hibernate.CriteriaQuery;
 import com.amazon.system.system.bootstrap.json.DataGrid;
@@ -16,8 +20,10 @@ import org.apache.logging.log4j.Logger;
 import org.framework.core.common.controller.BaseController;
 import org.framework.core.common.model.json.AjaxJson;
 import org.framework.core.global.service.GlobalService;
+import org.framework.core.utils.DateUtils.DateUtils;
 import org.framework.core.utils.RegularExpressionUtils;
 import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -28,6 +34,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -48,6 +56,12 @@ public class AuthorEvaluateController extends BaseController {
 
     @Autowired
     private PromotOrderEvaluateFlowService promotOrderEvaluateFlowService;
+
+    @Autowired
+    private PromotOrderService promotOrderService;
+
+    @Autowired
+    private AuthorPoiService authorPoiService;
 
 
     @RequestMapping(params = "dataGrid")
@@ -209,13 +223,17 @@ public class AuthorEvaluateController extends BaseController {
             return j;
         }
 
-        PromotOrderEvaluateFlowEntity promotOrderEvaluateFlowDb = promotOrderEvaluateFlowService.find(PromotOrderEvaluateFlowEntity.class, promotOrderEvaluateFlowEntity.getId());
-
-        if (promotOrderEvaluateFlowDb == null) {
-            j.setSuccess(AjaxJson.RELOGIN);
-            j.setMsg("评论已被删除！");
+        DetachedCriteria promotOrderEvaluateDetachedCriteria = DetachedCriteria.forClass(PromotOrderEvaluateFlowEntity.class);
+        promotOrderEvaluateDetachedCriteria.add(Restrictions.eq("id", promotOrderEvaluateFlowEntity.getId()));
+        promotOrderEvaluateDetachedCriteria.add(Restrictions.eq("authorId", authorUserEntity.getId()));
+        List<PromotOrderEvaluateFlowEntity> promotOrderEvaluateFlowEntityList = promotOrderEvaluateFlowService.getListByCriteriaQuery(promotOrderEvaluateDetachedCriteria);
+        if (CollectionUtils.isEmpty(promotOrderEvaluateFlowEntityList)) {
+            j.setSuccess(AjaxJson.CODE_FAIL);
+            j.setMsg("评价不存在或者已被删除!");
             return j;
         }
+
+        PromotOrderEvaluateFlowEntity promotOrderEvaluateFlowDb = promotOrderEvaluateFlowEntityList.get(0);
 
         if (promotOrderEvaluateFlowDb.getState().equals(Constants.EVALUATE_STATE_REVIEW)) {
             j.setSuccess(AjaxJson.CODE_FAIL);
@@ -244,5 +262,82 @@ public class AuthorEvaluateController extends BaseController {
         return j;
     }
 
+    @RequestMapping(params = "doDel")
+    @ResponseBody
+    public AjaxJson doDel(PromotOrderEvaluateFlowEntity promotOrderEvaluateFlowEntity, HttpServletRequest request) {
+        AjaxJson j = new AjaxJson();
+        AuthorUserEntity authorUserEntity = globalService.getAuthorUserEntityFromSession();
+        if (authorUserEntity == null) {
+            j.setSuccess(AjaxJson.RELOGIN);
+            j.setMsg("请重新登录！");
+            return j;
+        }
+        DetachedCriteria promotOrderEvaluateDetachedCriteria = DetachedCriteria.forClass(PromotOrderEvaluateFlowEntity.class);
+        promotOrderEvaluateDetachedCriteria.add(Restrictions.eq("id", promotOrderEvaluateFlowEntity.getId()));
+        promotOrderEvaluateDetachedCriteria.add(Restrictions.eq("authorId", authorUserEntity.getId()));
+        List<PromotOrderEvaluateFlowEntity> promotOrderEvaluateFlowEntityList = promotOrderEvaluateFlowService.getListByCriteriaQuery(promotOrderEvaluateDetachedCriteria);
+        if (CollectionUtils.isEmpty(promotOrderEvaluateFlowEntityList)) {
+            j.setSuccess(AjaxJson.CODE_FAIL);
+            j.setMsg("评价不存在或者已被删除!");
+            return j;
+        }
+        PromotOrderEvaluateFlowEntity promotOrderEvaluateFlowDb = promotOrderEvaluateFlowEntityList.get(0);
+        try {
+            j = evaluateService.doDelPromotOrderEvaluate(promotOrderEvaluateFlowDb);
+        } catch (Exception e) {
+            logger.error(e.fillInStackTrace());
+            j.setSuccess(AjaxJson.CODE_FAIL);
+            j.setMsg("删除失败！");
+            return j;
+        }
+        return j;
+    }
 
+    @RequestMapping(params = "downEvaluateExcel")
+    public void downEvaluateExcel(DataGrid dataGrid, HttpServletRequest request, HttpServletResponse response) {
+        AuthorUserEntity authorUserEntity = globalService.getAuthorUserEntityFromSession();
+        if (authorUserEntity == null) {
+            return;
+        }
+        CriteriaQuery criteriaQuery = new CriteriaQuery(PromotOrderEvaluateFlowEntity.class, null, request.getParameterMap());
+        try {
+            criteriaQuery.installHqlParams();
+        } catch (Exception e) {
+            logger.error(e.fillInStackTrace());
+        }
+        criteriaQuery.getDetachedCriteria().add(Restrictions.eq("authorId", authorUserEntity.getId()));
+        criteriaQuery.getDetachedCriteria().addOrder(Order.desc("promotId"));
+        List<PromotOrderEvaluateFlowEntity> promotOrderEvaluateFlowEntityList = promotOrderEvaluateFlowService.getListByCriteriaQuery(criteriaQuery.getDetachedCriteria());
+        List<PromotOrderEvaluateVo> promotOrderEvaluateVoList = new ArrayList<PromotOrderEvaluateVo>();
+        PromotOrderEntity promotOrderEntity = null;
+        if (CollectionUtils.isNotEmpty(promotOrderEvaluateFlowEntityList)) {
+            for (PromotOrderEvaluateFlowEntity promotOrderEvaluateFlowEntity : promotOrderEvaluateFlowEntityList) {
+                if (promotOrderEntity == null || !promotOrderEvaluateFlowEntity.getPromotId().equals(promotOrderEntity.getId())) {
+                    promotOrderEntity = promotOrderService.find(PromotOrderEntity.class, promotOrderEvaluateFlowEntity.getPromotId());
+                }
+                PromotOrderEvaluateVo promotOrderEvaluateVo = new PromotOrderEvaluateVo();
+                promotOrderEvaluateVo.setPromotId(promotOrderEvaluateFlowEntity.getPromotId());
+                promotOrderEvaluateVo.setAmzOrderId(promotOrderEvaluateFlowEntity.getAmzOrderId());
+                promotOrderEvaluateVo.setUpdateTime(promotOrderEvaluateFlowEntity.getUpdateTime());
+                promotOrderEvaluateVo.setAsin(promotOrderEvaluateFlowEntity.getAsinId());
+                promotOrderEvaluateVo.setCashback(promotOrderEntity.getCashback());
+                promotOrderEvaluateVo.setReviewPrice(promotOrderEntity.getReviewPrice());
+                promotOrderEvaluateVo.setIsComment(promotOrderEvaluateFlowEntity.getState());
+                promotOrderEvaluateVo.setRemark(promotOrderEntity.getRemark());
+                promotOrderEvaluateVo.setWeChat(promotOrderEvaluateFlowEntity.getWeChat());
+                promotOrderEvaluateVo.setZfb(promotOrderEvaluateFlowEntity.getZfb());
+                promotOrderEvaluateVo.setPayPal(promotOrderEvaluateFlowEntity.getPayPal());
+                promotOrderEvaluateVo.setCashBackDate(promotOrderEvaluateFlowEntity.getEvaluateTime());
+                promotOrderEvaluateVoList.add(promotOrderEvaluateVo);
+            }
+        }
+
+        String excelFileNameHeader = "评论导出(订单管理端)" + authorUserEntity.getAccount() + "--" + DateUtils.getDate(new Date());
+        try {
+            authorPoiService.downEvaluateExcel(promotOrderEvaluateVoList, response, excelFileNameHeader);
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error(e.fillInStackTrace());
+        }
+    }
 }

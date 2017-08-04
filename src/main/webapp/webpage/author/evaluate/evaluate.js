@@ -55,7 +55,10 @@ $(function () {
         },
         onLoadError: function () {
             toastr.warning("请重新登录！");
-            //setTimeout("window.location = '/author/userController.author?login'", 1000);
+            setTimeout("window.location = '/author/userController.author?login'", 1000);
+        },
+        onLoadSuccess: function () {
+            $('.rating').rating('create');
         },
         clickToSelect: true,//是否启用点击选中行
         uniqueId: "id",
@@ -130,7 +133,13 @@ $(function () {
                 sortable: true,
                 width: "5%",//宽度
                 align: "center",//水平
-                valign: "middle"//垂直
+                valign: "middle",//垂直
+                formatter: function (value, row, index) {
+                    if (value === undefined) {
+                        return "-"
+                    }
+                    return "<input value='" + value + "' type='text' class='rating' data-min=0 data-max=5 data-step=0.1 data-size='xs' title='评价星级'>";
+                }
             },
             {
                 title: '评价时间',
@@ -162,6 +171,10 @@ $(function () {
     formAddEvaluateUrlModelValidator();
     ko.applyBindings(viewModel);
 })
+/*查询*/
+function downEvaluateSearch() {
+    $('#evaluateListTable').bootstrapTable("refresh");
+}
 
 var viewModel = {
     deleteId: ko.observable(),
@@ -264,6 +277,8 @@ function formAddNewReviewValidator() {
         }, 'json');
     });
 }
+
+
 //修改亚马逊订单编号
 function clickModifyAmOrderNoModel(id) {
     $.ajax({
@@ -435,6 +450,86 @@ function formAddEvaluateUrlModelValidator() {
             $("#addEvaluateUrlBtn").removeClass("disabled"); // Disables visually
             $("#addEvaluateUrlBtn").prop("disabled", false); // Disables visually + functionally
         }, 'json');
+    });
+}
+
+function clickEvaluateModel(id) {
+    viewModel.deleteId(id);
+}
+
+function deleteEvaluateById() {
+    var deleteId = $("#deleteId").val();
+    $.ajax({
+        url: "/author/evaluateController.author?doDel",
+        type: 'post',
+        beforeSend: beforeDeleteEvaluateSend,
+        data: {id: deleteId},
+        success: function (data) {
+            if (data.success === "success") {
+                $('#evaluateListTable').bootstrapTable("refresh");
+                toastr.success("关闭成功！");
+            } else if (data.success === "fail") {
+                toastr.warning(data.msg);
+            } else {
+                window.location = '/author/userController.author?login';
+            }
+        },
+        complete: function () {
+            $('#deleteEvaluateModel').modal('hide');
+            afterDeleteEvaluateSend()
+        },
+        error: function (jqxhr, textStatus, errorThrow) {
+            toastr.success("服务器异常,请联系管理员！");
+        }
+    })
+}
+
+function beforeDeleteEvaluateSend() {
+    $("#addEvaluateUrlBtn").addClass("disabled"); // Disables visually
+    $("#addEvaluateUrlBtn").prop("disabled", true); // Disables visually + functionally
+}
+
+function afterDeleteEvaluateSend() {
+    $("#addEvaluateUrlBtn").removeClass("disabled"); // Disables visually
+    $("#addEvaluateUrlBtn").prop("disabled", false); // Disables visually + functionally
+}
+
+function downEvaluateExcel() {
+    var params = new Object();
+    params.amzOrderId = $("#amazon_amzOrderId").val().trim();
+    params.asinId = $("#amazon_asin").val().trim();
+    params.state = $("#amazon_state").val().trim();
+    params.promotId = $("#amazon_promoteId").val().trim();
+    params.createTime_begin = $("#createTime_begin_value").val().trim();
+    params.createTime_end = $("#createTime_end_value").val().trim();
+    if ((params.createTime_end === "") ^ (params.createTime_begin === "")) {
+        toastr.warning("若填写查询时间，开始时间和结束时间需要同时填写！");
+        return;
+    }
+    $.ajax({
+        url: "/author/userController.author?doLoginCheck",
+        type: 'post',
+        success: function (data) {
+            if (data.success === "success") {
+                window.open(
+                    "/author/evaluateController.author?downEvaluateExcel&asinId=" + params.asinId
+                    + "&state=" + params.state
+                    + "&promotId=" + params.promotId
+                    + "&amzOrderId=" + params.amzOrderId
+                    + "&createTime_begin=" + params.createTime_begin
+                    + "&createTime_end=" + params.createTime_end
+                )
+            } else if (data.success === "fail") {
+                toastr.error(data.msg);
+                return;
+            } else {
+                window.location = '/author/userController.author?login';
+                return;
+            }
+        },
+        error: function (jqxhr, textStatus, errorThrow) {
+            toastr.success("服务器异常,请联系管理员！");
+        }
     });
 }
 
