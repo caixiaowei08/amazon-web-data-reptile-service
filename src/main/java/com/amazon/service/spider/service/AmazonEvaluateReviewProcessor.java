@@ -26,16 +26,43 @@ public class AmazonEvaluateReviewProcessor implements PageProcessor {
         amazonEvaluateReviewPojo.setReviewDate(page.getHtml().xpath("//table/tbody/tr[1]/td[@valign='top'][1]/div[1]/div[1]/nobr/text()").toString());
         amazonEvaluateReviewPojo.setReviewStar(page.getHtml().xpath("//table/tbody/tr[1]/td[@valign='top'][1]/div[1]/div[1]/span[1]/img/@title").toString());
 
-        if(!StringUtils.hasText(amazonEvaluateReviewPojo.getReviewContent())){
+        if (!StringUtils.hasText(amazonEvaluateReviewPojo.getReviewContent())) {
             amazonEvaluateReviewPojo.setReviewContent(page.getHtml().xpath("//table/tbody/tr[1]/td[@valign='top'][1]/div[1]/div[2]/b/text()").toString());
         }
-        if(!StringUtils.hasText(amazonEvaluateReviewPojo.getReviewDate())){
+        if (!StringUtils.hasText(amazonEvaluateReviewPojo.getReviewDate())) {
             amazonEvaluateReviewPojo.setReviewDate(page.getHtml().xpath("//table/tbody/tr[1]/td[@valign='top'][1]/div[1]/div[2]/nobr/text()").toString());
         }
-        if(!StringUtils.hasText(amazonEvaluateReviewPojo.getReviewStar())){
+        if (!StringUtils.hasText(amazonEvaluateReviewPojo.getReviewStar())) {
             amazonEvaluateReviewPojo.setReviewStar(page.getHtml().xpath("//table/tbody/tr[1]/td[@valign='top'][1]/div[1]/div[2]/span[1]/img/@title").toString());
         }
-        page.putField(SpiderConstant.AMAZON_EVALUATE_REVIEW_POJO,amazonEvaluateReviewPojo);
+
+        //20170820补充
+        if (StringUtils.isEmpty(amazonEvaluateReviewPojo.getAsin())) {
+            String url = page.getHtml().xpath("//div[@id='cm_cr-review_list']/div[1]/div[1]/div[1]/a[1]/@href").toString();
+            if (StringUtils.hasText(url)) {
+                if (url.contains("ASIN=")) {
+                    amazonEvaluateReviewPojo.setAsin(url.substring(url.indexOf("ASIN=") + 5));
+                }
+            }
+        }
+
+        if (StringUtils.isEmpty(amazonEvaluateReviewPojo.getReviewCode())) {
+            amazonEvaluateReviewPojo.setReviewCode(page.getHtml().xpath("//div[@id='cm_cr-review_list']/div/@id").toString());
+        }
+
+        if (StringUtils.isEmpty(amazonEvaluateReviewPojo.getReviewContent())) {
+            amazonEvaluateReviewPojo.setReviewContent(page.getHtml().xpath("//div[@id='cm_cr-review_list']//a[@data-hook='review-title']/text()").toString());
+        }
+
+        if (StringUtils.isEmpty(amazonEvaluateReviewPojo.getReviewStar())) {
+            amazonEvaluateReviewPojo.setReviewStar(page.getHtml().xpath("//div[@id='cm_cr-review_list']/div[1]/div[1]/div[1]/a[1]/@title").toString());
+        }
+
+        if (StringUtils.isEmpty(amazonEvaluateReviewPojo.getReviewDate())) {
+            amazonEvaluateReviewPojo.setReviewDate(page.getHtml().xpath("//div[@id='cm_cr-review_list']/div[1]/div[1]/div[2]/span[4]/text()").toString().substring(3));
+        }
+
+        page.putField(SpiderConstant.AMAZON_EVALUATE_REVIEW_POJO, amazonEvaluateReviewPojo);
     }
 
     public Site getSite() {

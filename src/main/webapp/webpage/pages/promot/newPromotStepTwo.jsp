@@ -384,9 +384,6 @@
             s3 = this.priceblockSaleprice().toString();
             s1 = s1.substring(1, s1.length);
             s3 = s3.substring(1, s3.length);
-            console.log(s1);
-            console.log(s3);
-            console.log(Number(s1) + Number(s3));
             s4 = (Number(s1) + Number(s3)).toString();
             try {
                 m += s4.split(".")[1].length
