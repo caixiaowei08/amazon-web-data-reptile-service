@@ -45,31 +45,38 @@
                             <h3>欢迎登录AM Review Tracker</h3>
                         </div>
                         <p>&nbsp;</p>
-                        <form id="formobj" class="form-horizontal" action="/userController.do?doLogin" onsubmit="return false;">
+                        <form id="formobj" class="form-horizontal" action="/userController.do?doLogin"
+                              onsubmit="return false;">
                             <div class="form-group" style="height: 54px;">
                                 <label for="email" class="col-sm-3 control-label">电子邮箱:</label>
                                 <div class="col-sm-7">
-                                    <input type="email" name="account" id="email"  class="form-control" onkeydown="if(event.keyCode==13){event.keyCode=0;event.returnValue=false;}"
+                                    <input type="email" name="account" id="email" class="form-control"
+                                           onkeydown="if(event.keyCode==13){event.keyCode=0;event.returnValue=false;}"
                                            placeholder="请输入邮箱账号!">
                                 </div>
                             </div>
                             <div class="form-group" style="height: 54px;">
                                 <label for="password" class="col-sm-3 control-label">密&nbsp;&nbsp;&nbsp;&nbsp;码:</label>
                                 <div class="col-sm-7">
-                                    <input type="password" name="pwd" id="password" class="form-control" onkeydown="if(event.keyCode==13){event.keyCode=0;event.returnValue=false;}"
+                                    <input type="password" name="pwd" id="password" class="form-control"
+                                           onkeydown="if(event.keyCode==13){event.keyCode=0;event.returnValue=false;}"
                                            placeholder="请输入密码！">
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-sm-7  col-sm-offset-3">
-                                    <input type="submit" id="login_submit" onclick="loginSubmit()"; value="登录" class="btn btn-primary btn-block">
+                                    <input type="submit" id="login_submit" onclick="loginSubmit()" ; value="登录"
+                                           class="btn btn-primary btn-block">
                                 </div>
                             </div>
                         </form>
                         <p>&nbsp;</p>
                         <div class="row" style="border-top: 1px solid #e4e5e6">
-                            <div class="col-sm-5 col-sm-offset-1">
+                            <%--<div class="col-sm-5 col-sm-offset-1">
                                 <a href="/loginController.do?register" style="text-decoration: none;color:#03a9f4">没有账号？注册</a>
+                            </div>--%>
+                            <div class="col-sm-5 col-sm-offset-1">
+                                <span style="color: green">暂停注册</span>
                             </div>
                             <div class="col-sm-4 col-sm-offset-2">
                                 <a href="/loginController.do?lookForPwd" style="text-decoration: none;color:#78808a">忘记密码？</a>
@@ -87,7 +94,7 @@
             <div class="row">
                 <div class="col-sm-8 col-sm-offset-2">
                     <div style="text-align:center;line-height: 28px;">
-                        Copyright&copy;Viscal Technology Services Ltd  All Rights Reserved&reg;ICP备17013383号
+                        Copyright&copy;Viscal Technology Services Ltd All Rights Reserved&reg;ICP备17013383号
                     </div>
                 </div>
             </div>

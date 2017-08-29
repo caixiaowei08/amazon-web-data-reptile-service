@@ -21,11 +21,11 @@ public class LoginController extends BaseController{
         return "pages/login/login";
     }
 
-    @RequestMapping(params = "register")
+   /* @RequestMapping(params = "register")
     public String register(HttpServletRequest request, HttpServletResponse response) {
         return "pages/login/register";
     }
-
+*/
     @RequestMapping(params = "lookForPwd")
     public String lookForPwd(HttpServletRequest request, HttpServletResponse response) {
         return "pages/login/lookForPwd";

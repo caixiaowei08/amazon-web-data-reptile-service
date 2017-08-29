@@ -384,7 +384,11 @@ public class EvaluateServiceImpl extends BaseServiceImpl implements EvaluateServ
         //评价新增
         promotOrderEvaluateFlowDb.setState(Constants.EVALUATE_STATE_REVIEW);
         promotOrderEvaluateFlowDb.setReviewCode(amazonEvaluateReviewPojo.getReviewCode());
-        promotOrderEvaluateFlowDb.setReviewContent(amazonEvaluateReviewPojo.getReviewContent());
+
+        //特殊符号替换
+        String reviewContent = amazonEvaluateReviewPojo.getReviewContent().replaceAll("[\\ud83c\\udc00-\\ud83c\\udfff]|[\\ud83d\\udc00-\\ud83d\\udfff]|[\\u2600-\\u27ff]", "*");
+        promotOrderEvaluateFlowDb.setReviewContent(reviewContent);
+
         promotOrderEvaluateFlowDb.setReviewUrl(amazonEvaluateReviewPojo.getReviewUrl());
         promotOrderEvaluateFlowDb.setReviewStar(Double.parseDouble(amazonEvaluateReviewPojo.getReviewStar().trim().substring(0, 2)));
         promotOrderEvaluateFlowDb.setReviewDate(amazonEvaluateReviewPojo.getReviewDate());
