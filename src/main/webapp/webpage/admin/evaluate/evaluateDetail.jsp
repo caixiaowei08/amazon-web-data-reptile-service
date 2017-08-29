@@ -358,7 +358,8 @@
                     </div>
                     <div class="form-group" style="height: 50px;">
                         <div class="input-group" style="width: 100%;">
-                            <span class="input-group-addon" style="width:150px;" id="zfb-url-addon">支付宝&nbsp;&nbsp;￥</span>
+                            <span class="input-group-addon" style="width:150px;"
+                                  id="zfb-url-addon">支付宝&nbsp;&nbsp;￥</span>
                             <input type="number" class="form-control" id="zfb-url" name="zfb"
                                    placeholder="支付宝&nbsp;&nbsp;￥"
                                    aria-describedby="basic-addon1">
@@ -378,7 +379,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button"  id="addEvaluateUrlBtn" class="btn btn-primary">录入
+                    <button type="button" id="addEvaluateUrlBtn" class="btn btn-primary">录入
                     </button>
                     <button type="button" class="btn btn-default" data-dismiss="modal">关闭
                     </button>
@@ -415,16 +416,17 @@
                     <div class="form-group" style="height: 50px;">
                         <div class="input-group" style="width: 100%;">
                             <span class="input-group-addon" style="width:150px;">亚马逊订单号</span>
-                            <input type="text" class="form-control" name="amzOrderId" data-bind="value:amzOrderId"
+                            <input type="text" class="form-control" name="amzOrderId"
+                                   data-bind="value:amzOrderId"
                                    placeholder="亚马逊订单号"
                                    aria-describedby="basic-addon1">
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="input-group" style="width: 100%;">
-                            <span class="input-group-addon" style="width:150px;">亚马逊评论链接*</span>
-                            <input type="text" class="form-control" readonly="readonly" name="reviewUrl"
-                                   data-bind="value:reviewUrl"
+                            <span class="input-group-addon" style="width:150px;">亚马逊评论链接</span>
+                            <input type="text" class="form-control" name="reviewUrl"
+                                   data-bind="value:reviewUrl,enable:state"
                                    placeholder="亚马逊评论链接"
                                    aria-describedby="basic-addon1">
                         </div>

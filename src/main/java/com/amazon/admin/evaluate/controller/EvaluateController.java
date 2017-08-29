@@ -1,5 +1,6 @@
 package com.amazon.admin.evaluate.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.amazon.admin.constant.Constants;
 import com.amazon.admin.evaluate.service.EvaluateService;
 import com.amazon.admin.poi.service.PoiPromotService;
@@ -10,12 +11,15 @@ import com.amazon.service.promot.flow.service.PromotOrderEvaluateFlowService;
 import com.amazon.service.promot.order.entity.PromotOrderEntity;
 import com.amazon.service.promot.order.service.PromotOrderService;
 import com.amazon.service.promot.order.vo.PromotOrderEvaluateVo;
+import com.amazon.service.spider.pojo.AmazonEvaluateReviewPojo;
+import com.amazon.service.spider.service.SpiderService;
 import com.amazon.system.Constant;
 import com.amazon.system.system.bootstrap.hibernate.CriteriaQuery;
 import com.amazon.system.system.bootstrap.json.DataGrid;
 import com.amazon.system.system.bootstrap.json.DataGridReturn;
 import com.amazon.system.system.bootstrap.utils.DatagridJsonUtils;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.framework.core.common.controller.BaseController;
@@ -66,6 +70,10 @@ public class EvaluateController extends BaseController {
 
     @Autowired
     private AuthorUserService authorUserService;
+
+    @Autowired
+    private SpiderService spiderService;
+
 
     @RequestMapping(params = "goEvaluateDetail")
     public String goAdminPageIndex(HttpServletRequest request, HttpServletResponse response) {
@@ -224,10 +232,10 @@ public class EvaluateController extends BaseController {
                 promotOrderEvaluateVo.setCashBackDate(promotOrderEvaluateFlowEntity.getEvaluateTime());
 
                 if (promotOrderEvaluateFlowEntity.getAuthorId() != null) {
-                   AuthorUserEntity authorUserEntity =  authorUserService.find(AuthorUserEntity.class,promotOrderEvaluateFlowEntity.getAuthorId());
-                   if(authorUserEntity!=null){
-                       promotOrderEvaluateVo.setAccountName(authorUserEntity.getAccount());
-                   }
+                    AuthorUserEntity authorUserEntity = authorUserService.find(AuthorUserEntity.class, promotOrderEvaluateFlowEntity.getAuthorId());
+                    if (authorUserEntity != null) {
+                        promotOrderEvaluateVo.setAccountName(authorUserEntity.getAccount());
+                    }
                 }
                 promotOrderEvaluateVoList.add(promotOrderEvaluateVo);
             }
@@ -337,11 +345,17 @@ public class EvaluateController extends BaseController {
             return j;
         }
 
-
         PromotOrderEvaluateFlowEntity promotOrderEvaluateFlowDb = evaluateService.find(PromotOrderEvaluateFlowEntity.class, promotOrderEvaluateFlowEntity.getId());
+        if (promotOrderEvaluateFlowDb == null) {
+            j.setSuccess(AjaxJson.CODE_FAIL);
+            j.setMsg("评价已被删除或者不存在！");
+            return j;
+        }
+
         DetachedCriteria promotOrderEvaluateExistDetachedCriteria = DetachedCriteria.forClass(PromotOrderEvaluateFlowEntity.class);
         promotOrderEvaluateExistDetachedCriteria.add(Restrictions.eq("amzOrderId", promotOrderEvaluateFlowEntity.getAmzOrderId()));
         promotOrderEvaluateExistDetachedCriteria.add(Restrictions.eq("asinId", promotOrderEvaluateFlowDb.getAsinId()));
+        promotOrderEvaluateExistDetachedCriteria.add(Restrictions.ne("id",promotOrderEvaluateFlowDb.getId()));
         List<PromotOrderEvaluateFlowEntity> promotOrderExistFlowEntityList = promotOrderService.getListByCriteriaQuery(promotOrderEvaluateExistDetachedCriteria);
         if (CollectionUtils.isNotEmpty(promotOrderExistFlowEntityList)) {
             j.setSuccess(AjaxJson.CODE_FAIL);
@@ -349,10 +363,65 @@ public class EvaluateController extends BaseController {
             return j;
         }
 
-        if (promotOrderEvaluateFlowDb == null) {
-            j.setSuccess(AjaxJson.CODE_FAIL);
-            j.setMsg("评价已被删除或者不存在！");
-            return j;
+        if (StringUtils.hasText(promotOrderEvaluateFlowDb.getReviewUrl())
+                && !promotOrderEvaluateFlowDb.getReviewUrl().trim().equals(promotOrderEvaluateFlowEntity.getReviewUrl().trim())&&
+                promotOrderEvaluateFlowDb.getState().equals(Constants.EVALUATE_STATE_REVIEW)) {
+            String reviewUrl = promotOrderEvaluateFlowEntity.getReviewUrl();
+            if (StringUtils.isEmpty(reviewUrl)
+                    || !RegularExpressionUtils.isHttpOrHttps(reviewUrl)) {
+                j.setSuccess(AjaxJson.CODE_FAIL);
+                j.setMsg("请输入评价链接或者有效的评价链接！");
+                return j;
+            }
+
+            if (reviewUrl.contains(Constant.AMAZON_URL_PRODUCT_COMMENT_PHONE_FLAG)) {//手机网站
+                promotOrderEvaluateFlowEntity.setReviewUrl(
+                        Constant.AMAZON_URL_PRODUCT_COMMENT.replace("#",
+                                reviewUrl.substring(reviewUrl.lastIndexOf("/") + 1, reviewUrl.lastIndexOf("?")))
+                );
+            }
+
+            if(promotOrderEvaluateFlowDb.getState().equals(Constants.EVALUATE_STATE_PENDING)){
+
+            }
+
+            AmazonEvaluateReviewPojo amazonEvaluateReviewPojo = spiderService.spiderAmazonEvaluateReviewPojo(reviewUrl, 4);
+            logger.info("----------doAddEvaluateWithReviewUrl--amazonEvaluateReviewPojo--------" + JSON.toJSONString(amazonEvaluateReviewPojo));
+
+            if (StringUtils.isEmpty(amazonEvaluateReviewPojo.getReviewContent()) ||
+                    StringUtils.isEmpty(amazonEvaluateReviewPojo.getReviewStar()) ||
+                    StringUtils.isEmpty(amazonEvaluateReviewPojo.getReviewDate())) {
+                j.setSuccess(AjaxJson.CODE_FAIL);
+                j.setMsg("请确认给定的评价链接是否正确！");
+                return j;
+            }
+
+
+            //开始校验 订单评价是否已经被使用
+            DetachedCriteria promotOrderEvaluateDetachedCriteria = DetachedCriteria.forClass(PromotOrderEvaluateFlowEntity.class);
+            promotOrderEvaluateDetachedCriteria.add(Restrictions.eq("reviewCode", amazonEvaluateReviewPojo.getReviewCode()));
+            List<PromotOrderEvaluateFlowEntity> promotOrderEvaluateFlowEntityList = promotOrderService.getListByCriteriaQuery(promotOrderEvaluateDetachedCriteria);
+            if (CollectionUtils.isNotEmpty(promotOrderEvaluateFlowEntityList)) {
+                j.setSuccess(AjaxJson.CODE_FAIL);
+                j.setMsg("该评价已经被使用，请核对！");
+                logger.log(Level.ERROR, "该评价已经被使用，请核对！----reviewCode:" + amazonEvaluateReviewPojo.getReviewCode());
+                return j;
+            }
+
+            //ASIN 是否正确
+            if (!promotOrderEvaluateFlowDb.getAsinId().equals(amazonEvaluateReviewPojo.getAsin())) {
+                j.setSuccess(AjaxJson.CODE_FAIL);
+                j.setMsg("评价ASIN编号和商品ASIN不匹配！");
+                logger.log(Level.ERROR, "评价ASIN编号和商品ASIN不匹配！----ASIN:" + amazonEvaluateReviewPojo.getAsin());
+                return j;
+            }
+            promotOrderEvaluateFlowDb.setReviewCode(amazonEvaluateReviewPojo.getReviewCode());
+            promotOrderEvaluateFlowDb.setReviewUrl(amazonEvaluateReviewPojo.getReviewUrl());
+            promotOrderEvaluateFlowDb.setReviewStar(Double.parseDouble(amazonEvaluateReviewPojo.getReviewStar().trim().substring(0, 2)));
+            promotOrderEvaluateFlowDb.setReviewDate(amazonEvaluateReviewPojo.getReviewDate());
+            //特殊符号替换
+            String reviewContent = amazonEvaluateReviewPojo.getReviewContent().replaceAll("[\\ud83c\\udc00-\\ud83c\\udfff]|[\\ud83d\\udc00-\\ud83d\\udfff]|[\\u2600-\\u27ff]", "*");
+            promotOrderEvaluateFlowDb.setReviewContent(reviewContent);
         }
 
         try {

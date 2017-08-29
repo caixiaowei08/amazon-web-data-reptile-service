@@ -222,6 +222,7 @@ var viewModel = {
     deleteId: ko.observable(),
     eid: ko.observable(),
     asinId: ko.observable(),
+    state: ko.observable(),
     amzOrderId: ko.observable(),
     reviewUrl: ko.observable()
 }
@@ -266,6 +267,7 @@ function clickModifyAmOrderNoModel(id) {
             if (data.success === "success") {
                 viewModel.eid(data.content.id);
                 viewModel.asinId(data.content.asinId);
+                viewModel.state(data.content.state==2);
                 viewModel.amzOrderId(data.content.amzOrderId);
                 viewModel.reviewUrl(data.content.reviewUrl);
             } else if (data.success === "fail") {
