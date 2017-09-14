@@ -35,6 +35,11 @@ public class AmazonPageProcessor implements PageProcessor {
         if(StringUtils.isEmpty(amazonPageInfoPojo.getPriceblockSaleprice())){
             amazonPageInfoPojo.setPriceblockSaleprice(page.getHtml().xpath("//span[@id='priceblock_ourprice']/text()").toString());
         }
+
+        if(StringUtils.isEmpty(amazonPageInfoPojo.getPriceblockSaleprice())){
+            amazonPageInfoPojo.setPriceblockSaleprice(page.getHtml().xpath("//span[@class='a-size-medium a-color-price']/text()").toString());
+        }
+
         page.putField(SpiderConstant.AMAZON_PAGE_INFO_POJO,amazonPageInfoPojo);
     }
 
