@@ -46,8 +46,8 @@ $(function () {
                         message: '亚马逊单号不能为空！'
                     },
                     regexp: {
-                        regexp: /[0-9]+[\-]+[0-9\-]*$/,
-                        message: '亚马逊订单号必须是数字和-组合！'
+                        regexp: /^[0-9]{3}[-]{1}[0-9]{7}[-]{1}[0-9]{7}$/,
+                        message: '由数字和-组合成，必须满足格式xxx-xxxxxxx-xxxxxxx！'
                     }
                 }
             }
@@ -341,8 +341,8 @@ function formValidator() {
                         message: '请输入亚马逊订单号!'
                     },
                     regexp: {
-                        regexp: /[0-9]+[\-]+[0-9\-]*$/,
-                        message: '亚马逊订单号必须是数字和-组合！'
+                        regexp: /^[0-9]{3}[-]{1}[0-9]{7}[-]{1}[0-9]{7}$/,
+                        message: '由数字和-组合成，必须满足格式xxx-xxxxxxx-xxxxxxx！'
                     }
                 }
             },
